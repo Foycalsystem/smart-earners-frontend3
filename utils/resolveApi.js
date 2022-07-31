@@ -8,7 +8,7 @@ const resolveApi = {
         try{
             if(Cookies.get('refreshtoken')){
 
-                const res = await axios.get(`${BACKEND_BASE_URL}/auth/generate-accesstoken`, {
+                const res = await axios.get(`/auth/generate-accesstoken`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('refreshtoken')}`
                     }
@@ -29,7 +29,7 @@ const resolveApi = {
         try{
             if(Cookies.get('accesstoken')){
 
-                const res = await axios.get(`${BACKEND_BASE_URL}/auth/authorize`, {
+                const res = await axios.get(`/auth/authorize`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -47,7 +47,7 @@ const resolveApi = {
 
     resolveInvestment: async()=>{
         try{
-            const res = await axios.get(`${BACKEND_BASE_URL}/investment/resolve`)
+            const res = await axios.get(`/investment/resolve`)
             return;
         }
         catch(err){
@@ -57,7 +57,7 @@ const resolveApi = {
 
     removeUnverifiedusers: async()=>{
         try{
-            const res = await axios.delete(`${BACKEND_BASE_URL}/auth/remove-unverified-users`)
+            const res = await axios.delete(`/auth/remove-unverified-users`)
             return;
         }
         catch(err){

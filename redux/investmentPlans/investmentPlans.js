@@ -8,7 +8,7 @@ export const getPlans= createAsyncThunk(
     'config/getPlans',
     async(data, {rejectWithValue})=>{
         try{
-            const res = await axios.get(`${BACKEND_BASE_URL}/investment/get-all-plans`)
+            const res = await axios.get(`/investment/get-all-plans`)
             return res.data
             
         }
@@ -28,7 +28,7 @@ export const handleAdd= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.post(`${BACKEND_BASE_URL}/investment/set-plan`, data, {
+                const res = await axios.post(`/investment/set-plan`, data, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -52,7 +52,7 @@ export const handleUpdate= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.put(`${BACKEND_BASE_URL}/investment/update-plan/${data.id}`, data.data, {
+                const res = await axios.put(`/investment/update-plan/${data.id}`, data.data, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -77,7 +77,7 @@ export const handleDelete= createAsyncThunk(
     async(id, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.delete(`${BACKEND_BASE_URL}/investment/delete-plan/${id}`,{
+                const res = await axios.delete(`/investment/delete-plan/${id}`,{
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }

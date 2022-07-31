@@ -8,7 +8,7 @@ export const getSelectedTestimonials= createAsyncThunk(
     'testimonial/getSelectedTestimonials',
     async(data, {rejectWithValue})=>{
         try{
-            const res = await axios.get(`${BACKEND_BASE_URL}/testimonials/get-selected`);
+            const res = await axios.get(`/testimonials/get-selected`);
             return res.data
         }
         catch(err){
@@ -26,7 +26,7 @@ export const postTestimonial= createAsyncThunk(
     'testimonial/postTestimonial',
     async(data, {rejectWithValue})=>{
         try{
-            const res = await axios.post(`${BACKEND_BASE_URL}/testimonials/post`, data)
+            const res = await axios.post(`/testimonials/post`, data)
             return res.data
         }
         catch(err){
@@ -45,7 +45,7 @@ export const getAllTestimonials= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.get(`${BACKEND_BASE_URL}/testimonials/get-all`, {
+                const res = await axios.get(`/testimonials/get-all`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -69,7 +69,7 @@ export const handleRemove= createAsyncThunk(
     async(id, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.put(`${BACKEND_BASE_URL}/testimonials/remove/${id}`,{}, {
+                const res = await axios.put(`/testimonials/remove/${id}`,{}, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -93,7 +93,7 @@ export const handleDelete= createAsyncThunk(
     async(id, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.delete(`${BACKEND_BASE_URL}/testimonials/delete/${id}`, {
+                const res = await axios.delete(`/testimonials/delete/${id}`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }

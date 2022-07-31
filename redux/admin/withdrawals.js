@@ -10,7 +10,7 @@ export const withdawalRequest= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.post(`${BACKEND_BASE_URL}/withdrawal/request`, data, {
+                const res = await axios.post(`/withdrawal/request`, data, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -35,7 +35,7 @@ export const getWithdrawals= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.get(`${BACKEND_BASE_URL}/withdrawal/get-all-transactions`, {
+                const res = await axios.get(`/withdrawal/get-all-transactions`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -60,7 +60,7 @@ export const getWithdrawal= createAsyncThunk(
     async(id, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.get(`${BACKEND_BASE_URL}/withdrawal/get-transaction/${id}`, {
+                const res = await axios.get(`/withdrawal/get-transaction/${id}`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -86,7 +86,7 @@ export const handleRejected= createAsyncThunk(
     async(id, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.get(`${BACKEND_BASE_URL}/withdrawal/rejected/${id}`, {
+                const res = await axios.get(`/withdrawal/rejected/${id}`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -111,7 +111,7 @@ export const handleConfirmed= createAsyncThunk(
     async(id, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.put(`${BACKEND_BASE_URL}/withdrawal/confirm/${id}`, {}, {
+                const res = await axios.put(`/withdrawal/confirm/${id}`, {}, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }

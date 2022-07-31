@@ -15,15 +15,16 @@ const nextConfig = {
     }
   },
   
-  // async rewrites(){
-  //   return [
-  //     {
-  //       source: "/:slug*",
-  //       destination: "http://localhost:5000/:slug*",
-  //       // destination: "https://seal-app-uuoo5.ondigitalocean.app/:slug*"
-  //     }
-  //   ]
-  // }
+  async rewrites(){
+    return [
+      {
+        source: "/:slug*",
+        // destination: "http://localhost:4000/:slug*",
+        destination: "https://api.teamsmartearners.com/:slug*",
+        // destination: "https://squid-app-cqsgv.ondigitalocean.app/:slug*"
+      }
+    ]
+  }
    
 }
 

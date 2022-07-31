@@ -9,7 +9,7 @@ export const getTxn= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.get(`${BACKEND_BASE_URL}/investment/get-all-investments`, {
+                const res = await axios.get(`/investment/get-all-investments`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
@@ -34,7 +34,7 @@ export const investPlan= createAsyncThunk(
         console.log(data)
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.post(`${BACKEND_BASE_URL}/investment/invest/${data.id}`, {amount: data.amount}, {
+                const res = await axios.post(`/investment/invest/${data.id}`, {amount: data.amount}, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }

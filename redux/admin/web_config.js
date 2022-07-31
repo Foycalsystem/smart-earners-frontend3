@@ -8,7 +8,9 @@ export const getConfig= createAsyncThunk(
     'config/getConfig',
     async(data, {rejectWithValue})=>{
         try{
-            const res = await axios.get(`${BACKEND_BASE_URL}/config/get`)
+            
+            const res = await axios.get(`/config/get`)
+            console.log(res.data)
             return res.data
         }
         catch(err){
@@ -28,7 +30,7 @@ export const updateConfig= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             if(Cookies.get('accesstoken')){
-                const res = await axios.put(`${BACKEND_BASE_URL}/config/update`, data, {
+                const res = await axios.put(`/config/update`, data, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                     }
