@@ -8,13 +8,14 @@ import { mobileAndTabletCheck } from '../../utils/mobileAndTabletCheck';
 
 
 
+
 export default function DashboardLayout({children, userInfo}) {
 
   const [isMobile, setIsMobile] = useState(false);
   useEffect(()=>{
       setIsMobile(mobileAndTabletCheck(window))
 
-      // setIsMobile(true)
+      setIsMobile(true)
 
   }, [])
 

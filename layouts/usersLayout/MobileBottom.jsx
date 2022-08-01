@@ -5,6 +5,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PaidIcon from '@mui/icons-material/Paid';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import Link from 'next/link'
+import SavingsIcon from '@mui/icons-material/Savings';
 import { useRouter } from 'next/router';
 
 export default function MobileBottom() {
@@ -15,6 +16,11 @@ export default function MobileBottom() {
             link: 'Dashboard',
             url: '/dashboard',
             icon: <DashboardRoundedIcon style={{fontSize: '.8rem'}}/>
+        },
+        {
+            link: 'Deposit',
+            url: '/dashboard/deposit',
+            icon: <SavingsIcon />
         },
         {
             link: 'Withdrawals',
@@ -88,7 +94,7 @@ const BottomNav = styled.div`
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
-        margin: 0 3px;
+        margin: 0 2px;
     }
 
     .link-icon {
@@ -102,7 +108,7 @@ const BottomNav = styled.div`
 
     .link{
         margin-top: 0px;
-        font-size: .65rem;
+        font-size: .6rem;
     }
 
     .bottom-link {
