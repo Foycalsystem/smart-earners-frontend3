@@ -23,7 +23,6 @@ export default function PopUpModal({showModal, setFeedback, setShowModal, userIn
      }
      
      useEffect(() => {
-        console.log('modal rerendered')
         if(showModal){
             // get the body and set overflow to hidden
             document.body.style.overflow = 'hidden'

@@ -40,7 +40,7 @@ const Profile = ({userInfo}) => {
           !user.data ?
          
           (
-              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{user.msg || 'No Data Currently Available'}</div>
+              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{user.msg || 'No Data Currently Available, Refresh the browser'}</div>
           ):
           (
             <ProfileComp data={user.data}/>

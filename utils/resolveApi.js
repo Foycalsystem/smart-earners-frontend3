@@ -6,14 +6,14 @@ import { BACKEND_BASE_URL } from './config';
 const resolveApi = {
     generateAccesstoken: async()=>{
         try{
+           
             if(Cookies.get('refreshtoken')){
-
+               
                 const res = await axios.get(`/auth/generate-accesstoken`, {
                     headers: {
                         "Authorization": `Bearer ${Cookies.get('refreshtoken')}`
                     }
                 })
-
                 return;
             }
             else{

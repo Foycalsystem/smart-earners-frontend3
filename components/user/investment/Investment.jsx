@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getUser } from "../../../redux/auth/auth";
 import {useSelector, useDispatch} from 'react-redux';
 import { investPlan, getTxn } from "../../../redux/invest/invest";
 import Feedback from "../../Feedback";
@@ -10,6 +11,7 @@ import styled from 'styled-components';
 import Active from "./Active";
 import Profile from "./Profile";
 import Mature from "./Mature";
+import Loader_ from "../loader/Loader";
 import PopUpModal from "../../modals/popUpModal/PopUpModal";
 
 
@@ -36,10 +38,12 @@ const Plans = ({userInfo}) => {
     const state = useSelector(state=>state);
     const [shwowActive, setShowActive] = useState(true)
     const {plans} = state.plans;
+    const {user} = state.auth;
     const [showModal, setShowModal] = useState(false)
     const [masterPlanData, setMasterPlanData] = useState('')
     const [activeTxn, setActiveTxn] = useState([])
     const [maturedTxn, setMaturedTxn] = useState([])
+    const [isLoading, setLoading] = useState(true)
 
     const {invest, txn} = state.investment
     const [feedback, setFeedback] = useState({
@@ -48,9 +52,16 @@ const Plans = ({userInfo}) => {
     })
 
     useEffect(()=>{
+      setTimeout(()=>{
+        user.isLoading ? setLoading(true) : setLoading(false)
+      }, 2000)
+    }, [])
+
+    useEffect(()=>{
       dispatch(getPlans())
       dispatch(getTxn())
-  }, [])
+      dispatch(getUser())
+    }, [])
 
     const investBtn=(data)=>{
       if(data.type.toLowerCase() === 'master'){
@@ -65,23 +76,31 @@ const Plans = ({userInfo}) => {
         dispatch(investPlan(data_))
       }
     }
-    useEffect(()=>{
-     
+    useEffect(()=>{  
       setFeedback({
         msg: invest.msg,
         status: true
       })
+
     }, [invest])
 
+    
     useEffect(()=>{
-      setActiveTxn(txn.data.filter(data=> data.isActive));
-  
-      setMaturedTxn(txn.data.filter(data=> !data.status));     
+      txn && setActiveTxn(txn.data.filter(data=> data.isActive));
+      txn && setMaturedTxn(txn.data.filter(data=> !data.status)); 
     }, [txn])
 
   return (
-    <Plan>
-      <Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
+    isLoading ? <Loader_ />  :
+    //check if empty
+    !user.data ?
+         
+    (
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{user.msg || 'No Data Currently Available, fresh the broswer'}</div>
+    ):
+    (
+      <Plan>
+      `<Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
       <div style={{padding: '10px 20px 2px 20px', fontWeight: 'bold'}}>Plans</div>
       <div className="center"> {
         invest.isLoading ? <Spinner size="24px"/> : ''
@@ -172,6 +191,7 @@ const Plans = ({userInfo}) => {
       }
       
     </Plan>
+    )
     )
   }
 

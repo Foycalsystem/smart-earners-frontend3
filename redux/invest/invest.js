@@ -15,7 +15,9 @@ export const getTxn= createAsyncThunk(
                     }
                 });
                 return res.data;
-            }   
+            }else{
+                return rejectWithValue({status: false, msg: ''});
+            }  
         }
         catch(err){
             if(err.response.data){

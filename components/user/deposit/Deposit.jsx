@@ -68,7 +68,7 @@ export default function Deposit({userInfo}){
       setTimeout(()=>{
         user.isLoading ? setLoading(true) : setLoading(false)
       }, 2000)
-    }, [])
+      }, [])
 
     useEffect(()=>{
       if(deposit.status && deposit.msg === "charge created"){

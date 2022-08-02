@@ -29,7 +29,7 @@ const Form = styled.form`
   min-width: 200px;
   max-width: 400px;
   margin: auto;
-  padding: 20px;
+  padding: 20px 10px;
 
   .title{
     test-align: center;
@@ -44,7 +44,7 @@ const InputWrapper = styled.div`
 const Input = styled.input`
   width: 100%;
   display block;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #aaa;
   border-radius: 5px;
 
