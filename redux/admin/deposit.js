@@ -20,7 +20,6 @@ export const makeDeposit= createAsyncThunk(
         }
         catch(err){
             if(err.response.data){
-                console.log(err.response.data)
                 return rejectWithValue({status: false, msg: err.response.data.msg});
             }
             else{

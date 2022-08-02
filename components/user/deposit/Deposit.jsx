@@ -51,9 +51,9 @@ export default function Deposit({userInfo}){
     }
 
     useEffect(()=>{
-      if(deposit.status){
-        setInp(initialState)
-      }
+      // if(deposit.status){
+      //   setInp(initialState)
+      // }
 
       setFeedback({
         msg: deposit.msg,
@@ -68,10 +68,17 @@ export default function Deposit({userInfo}){
       setTimeout(()=>{
         user.isLoading ? setLoading(true) : setLoading(false)
       }, 2000)
+
+      setFeedback({
+        msg: '',
+        status: false
+      });
+
       }, [])
 
     useEffect(()=>{
-      if(deposit.status && deposit.msg === "charge created"){
+      if(deposit.status){
+        setInp(initialState)
         // redirect to coinbase commerce using the returned url (hostedUrl)
         window.open(deposit.data.hostedUrl)
       }
