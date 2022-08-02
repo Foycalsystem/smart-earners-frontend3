@@ -31,7 +31,6 @@ export const getTxn= createAsyncThunk(
 export const investPlan= createAsyncThunk(
     'investment/invest',
     async(data, {rejectWithValue})=>{
-        console.log(data)
         try{
             if(Cookies.get('accesstoken')){
                 const res = await axios.post(`/investment/invest/${data.id}`, {amount: data.amount}, {
@@ -43,7 +42,6 @@ export const investPlan= createAsyncThunk(
             }   
         }
         catch(err){
-            console.log(err)
             if(err.response.data){
                 return rejectWithValue({status: false, msg: err.response.data.msg});
             }
@@ -95,6 +93,7 @@ export const investmentReducer = createSlice({
             state.invest.isLoading = false;
             state.invest.status = payload.status;
             state.invest.msg = payload.msg;
+            state.txn.data.push(payload.data)
         },
         [investPlan.rejected]: (state, {payload})=>{
             state.invest.isLoading = false;

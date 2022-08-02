@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import SideMenu_ from './SideMenu';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Head from 'next/head';
 
 
 
@@ -13,6 +14,9 @@ export default function AdminLayout({children, userInfo, toggleState}) {
 
     return (
       <>
+        <Head>
+          <title>{process.env.adminTitle}</title>
+        </Head>
         <Header>
           <Header_
             userInfo={userInfo}

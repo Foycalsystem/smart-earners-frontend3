@@ -1,39 +1,39 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
 import Spinner from '../../../loaders/Spinner';
-import {useSelector, useDispatch} from 'react-redux';
-import { getTxn } from "../../../redux/invest/invest";
+// import {useDispatch} from 'react-redux';
+// import { getTxn } from "../../../redux/invest/invest";
 
-export default function Mature() {
-    const dispatch = useDispatch()
-    const state = useSelector(state=>state);
-    const {txn} = state.investment
+export default function Mature({data, txn}) {
+    // const dispatch = useDispatch()
+    const [isLoading, setLoading] = useState(true)
+
+    // useEffect(()=>{
+    //   dispatch(getTxn())
+    // }, [])
 
     useEffect(()=>{
-      dispatch(getTxn())
-    }, [])
+      if(!txn.isLoading){
+        setTimeout(()=>{
+          setLoading(false)
+        }, 1600)
+      }
+    }, [txn])
 
     const month = ['Jan', 'Feb','Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     return (
       <>
         <div style={{fontWeight: 'bold', margin: '0 0 10px 40px'}}>Matured</div>
         {
-            txn.isLoading ? <div className="center"><Spinner size="20px"/></div> :
-            txn.data.matured && txn.data.matured.length < 1 ? <Msg /> :
+            isLoading ? <div className="center"><Spinner size="20px"/></div> :
+            data.length < 1 ? <Msg /> :
             <Wrapper>
             {
-            txn.data.matured && txn.data.matured.slice(0, 5).map(data=>{
+            data && data.slice(0, 5).map(data=>{
                 return (
                   <Card key={data._id}>
                     <div className="title">
-                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                          <div>{data.type.toUpperCase()}</div>
-                          <div style={{color: '#c20'}}>
-                            {
-                              data.userId.isAdmin ? 'Admin' : ''
-                            }
-                        </div>
-                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>{data.type.toUpperCase()}</div>
                       <div className="line">
                         <div className="progres"></div>
                       </div>
@@ -122,7 +122,7 @@ const Card = styled.div`
     align-items: center;   
     
     .progres{
-      width: 90%;
+      width: 100%;
       height: 2px;
       background: green;
     }

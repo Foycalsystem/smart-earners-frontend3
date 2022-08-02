@@ -2,13 +2,16 @@ import { Main, Header, Footer } from '../../styles/globalStyle'
 import Header_ from './Header';
 import { CopyRight } from '../../styles/globalStyle';
 import PostFeedback from './PostFeedback';
-
+import Head from 'next/head';
 
 
 export default function PublicLayout({children, userInfo}) {
 
     return (
       <>
+        <Head>
+          <title>{process.env.homeTitle}</title>
+        </Head>
         <Header headerHeight="90px">
           <Header_ userInfo={userInfo}/>
         </Header>

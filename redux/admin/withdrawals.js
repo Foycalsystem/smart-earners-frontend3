@@ -199,17 +199,15 @@ export const withdrawalsReducer = createSlice({
             state.confirm.status = payload.status;
             state.confirm.msg = payload.msg;
 
-            if(typeof current !== 'undefined'){
-                //get the returned data and replace the existing one
-                const currentState = current(state).withdrawals.data;
-                // find the id index and replace the data in payload
-                const index = currentState.findIndex(data=>{
-                    return payload.data._id === data._id
-                })
-                
-                state.plans.data[index] = payload.data;
-    
-            }
+            // get the current state
+           const currentState = JSON.parse(JSON.stringify(state.withdrawals.data));
+
+           // find the id index and replace the data in payload
+           const newState = currentState.filter(d=>{
+               return d._id !== payload.data._id
+           })
+           
+           state.withdrawals.data = newState;
         },
         [handleConfirmed.rejected]: (state, {payload})=>{
             state.confirm.isLoading = false;
@@ -233,17 +231,15 @@ export const withdrawalsReducer = createSlice({
             state.reject.status = payload.status;
             state.reject.msg = payload.msg;
 
-           if(typeof current !== 'undefined'){
-             //get the returned data and replace the existing one
-             const currentState = current(state.withdrawals.data);
-             // find the id index and replace the data in payload
-             const index = currentState.findIndex(data=>{
-                 return payload.data._id === data._id
-             })
-             
-             state.plans.data[index] = payload.data;
- 
-           }
+           // get the current state
+           const currentState = JSON.parse(JSON.stringify(state.withdrawals.data));
+
+           // find the id index and replace the data in payload
+           const newState = currentState.filter(d=>{
+               return d._id !== payload.data._id
+           })
+           
+           state.withdrawals.data = newState;
         },
         [handleRejected.rejected]: (state, {payload})=>{
             state.reject.isLoading = false;

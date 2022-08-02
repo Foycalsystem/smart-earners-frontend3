@@ -1,5 +1,5 @@
 import { ServerStyleSheet } from 'styled-components';
-import Document from 'next/document';
+import Document, {Head, Html, Main, NextScript} from 'next/document';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx){
@@ -26,5 +26,22 @@ export default class MyDocument extends Document {
     } finally {
       sheet.seal()
     }
+  }
+
+  render(){
+    return (
+      <html>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </html>
+    )
   }
 }

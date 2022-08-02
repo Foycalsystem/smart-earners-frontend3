@@ -29,11 +29,9 @@ export const signin= createAsyncThunk(
     async(data, {rejectWithValue})=>{
         try{
             const res = await axios.post(`/auth/signin`, data);
-            console.log(res.data)
             return res.data
         }
         catch(err){
-            console.log(err)
             if(err.response.data){
                 return rejectWithValue({status: false, msg: err.response.data.msg});
             }
@@ -62,7 +60,6 @@ export const logout= createAsyncThunk(
         }
     }
 )
-
 
 // reset password request
 export const resetPasswordRequest= createAsyncThunk(
@@ -136,7 +133,9 @@ export const getUser= createAsyncThunk(
                     }
                 });
                 return res.data;
-            }            
+            }else{
+                return rejectWithValue({status: false, msg: ''});
+            }           
         }
         catch(err){
             if(err.response.data){

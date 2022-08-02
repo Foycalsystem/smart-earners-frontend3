@@ -1,7 +1,7 @@
 // import { getUser } from "../../../redux/auth/auth";
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
-import { AdminWrapper } from "./styles";
+import { AdminWrapper } from "../styles";
 import Loader_ from "../loader/Loader";
 
 

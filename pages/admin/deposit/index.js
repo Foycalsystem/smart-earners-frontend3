@@ -1,5 +1,5 @@
 import React from 'react'
-import Deposit from '../../../components/user/deposit/Deposit'
+import Deposit from '../../../components/admin/deposit/Deposit'
 
 export default function deposit() {
   return <Deposit />

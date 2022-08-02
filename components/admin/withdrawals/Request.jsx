@@ -146,7 +146,7 @@ export default function Request({data}) {
                     <span style={{fontWeight: 'bold'}}>
                       {selectedItem && selectedItem.userId.username}
                     </span>
-                    <span> is Requesting to make a Withdraw of the Sum of </span>
+                    <span> is requesting to make a withdrawal of the Sum of </span>
                     <span style={{fontWeight: 'bold'}}>
                       {selectedItem && selectedItem.convertedAmount} {selectedItem && selectedItem.tradeCurrency.toUpperCase()}
                     </span>

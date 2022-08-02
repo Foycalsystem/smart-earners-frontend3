@@ -163,12 +163,12 @@ export default function Withdrawals({userInfo}){
                   </Select>
                 </InputWrapper>
 
-                <div className="center">{request.isLoading ? <Spinner /> : ""}</div>
+                <div className="center">{request.isLoading ? <Spinner size="20px"/> : ""}</div>
                  
                 <InputWrapper>
                   <Input
                     {...snap()}
-                    // disabled={balanceExceed || belowWithdrawalLimit || belowWithdrawalLimit || aboveWithdrawalLimit || outBoundWithdrawalAmount}
+                    disabled={balanceExceed || request.isLoading|| belowWithdrawalLimit || belowWithdrawalLimit || aboveWithdrawalLimit || outBoundWithdrawalAmount}
                     type="submit"
                     value={request.isLoading ? 'Loading...' : 'Proceed'}
                   />

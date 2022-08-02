@@ -1,10 +1,10 @@
 import { Main, Header, Footer } from '../../styles/globalStyle'
 import { useState, useEffect } from "react";
-// import Header_ from '../../components/user/header/Header';
 import DesktopHeader from './DesktopHeader';
 import MobileHeader from './MobileHeader';
 import { CopyRight } from '../../styles/globalStyle';
 import { mobileAndTabletCheck } from '../../utils/mobileAndTabletCheck';
+import Head from 'next/head';
 
 
 
@@ -15,7 +15,7 @@ export default function DashboardLayout({children, userInfo}) {
   useEffect(()=>{
       setIsMobile(mobileAndTabletCheck(window))
 
-      setIsMobile(true)
+      // setIsMobile(true)
 
   }, [])
 
@@ -75,6 +75,9 @@ export default function DashboardLayout({children, userInfo}) {
 
   return (
     <>
+      <Head>
+        <title>{process.env.dashboardTitle}</title>
+      </Head>
       <Header headerHeight="90px">
         {
           isMobile ?

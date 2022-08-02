@@ -201,13 +201,14 @@ export const testimonialReducer = createSlice({
             state.del.isLoading = false;
             state.del.status = payload.status;
             state.del.msg = payload.msg;
+
             // get the returned data and replace the existing one
-            // const currentState = current(state).selectedTestimonials.data
-            // const newState = currentState.filter(d=>{
-            //     return d._id !== payload.data._id
-            // })
-            // state.selectedTestimonials.data = newState;
-            // console.log(current(selectedTestimonials))
+            const currentState = JSON.parse(JSON.stringify(state.selectedTestimonials.data));
+
+            const newState = currentState.filter(d=>{
+                return d._id !== payload.data._id
+            })
+            state.selectedTestimonials.data = newState;
             
         },
         [handleDelete.rejected]: (state, {payload})=>{
@@ -230,13 +231,16 @@ export const testimonialReducer = createSlice({
             state.remove.isLoading = false;
             state.remove.status = payload.status;
             state.remove.msg = payload.msg;
-            // const currentState = current(state.selectedTestimonials.data);
-            // // find the id index and replace the data in payload
-            // const index = currentState.findIndex(data=>{
-            //     return payload.data._id === data._id
-            // })
+
+            // get the current state
+            const currentState = JSON.parse(JSON.stringify(state.selectedTestimonials.data));
+
+            // find the id index and replace the data in payload
+            const newState = currentState.filter(d=>{
+                return d._id !== payload.data._id
+            })
             
-            // state.selectedTestimonials.data[index] = payload.data;
+            state.selectedTestimonials.data = newState;
         },
         [handleRemove.rejected]: (state, {payload})=>{
             state.remove.isLoading = false;

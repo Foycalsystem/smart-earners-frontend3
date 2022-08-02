@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
-import { investPlan } from "../../../redux/invest/invest";
+import { investPlan, getTxn } from "../../../redux/invest/invest";
 import Feedback from "../../Feedback";
 import { getPlans } from '../../../redux/investmentPlans/investmentPlans.js';
 import {useSnap} from '@mozeyinedu/hooks-lab'
@@ -9,7 +9,6 @@ import resolveInvestmentLifespan from "../../../utils/resolveInvestmentLifeSpan"
 import styled from 'styled-components';
 import Active from "./Active";
 import Profile from "./Profile";
-import { getUser } from "../../../redux/auth/auth";
 import Mature from "./Mature";
 import PopUpModal from "../../modals/popUpModal/PopUpModal";
 
@@ -37,19 +36,20 @@ const Plans = ({userInfo}) => {
     const state = useSelector(state=>state);
     const [shwowActive, setShowActive] = useState(true)
     const {plans} = state.plans;
-    const {user} = state.auth;
     const [showModal, setShowModal] = useState(false)
     const [masterPlanData, setMasterPlanData] = useState('')
+    const [activeTxn, setActiveTxn] = useState([])
+    const [maturedTxn, setMaturedTxn] = useState([])
 
-    const {invest} = state.investment
+    const {invest, txn} = state.investment
     const [feedback, setFeedback] = useState({
       msg: invest.msg,
       status: false
     })
 
     useEffect(()=>{
-      dispatch(getUser())
       dispatch(getPlans())
+      dispatch(getTxn())
   }, [])
 
     const investBtn=(data)=>{
@@ -65,13 +65,19 @@ const Plans = ({userInfo}) => {
         dispatch(investPlan(data_))
       }
     }
-
     useEffect(()=>{
+     
       setFeedback({
         msg: invest.msg,
         status: true
       })
     }, [invest])
+
+    useEffect(()=>{
+      setActiveTxn(txn.data.filter(data=> data.isActive));
+  
+      setMaturedTxn(txn.data.filter(data=> !data.status));     
+    }, [txn])
 
   return (
     <Plan>
@@ -162,7 +168,7 @@ const Plans = ({userInfo}) => {
       <h3 style={{padding: '20px 5px 5px 20px'}}>INVESTMENT SUMMARY</h3>
 
       {
-        shwowActive ? <Active user={user.data.isAdmin}/> : <Mature user={user.data.isAdmin}/>
+        shwowActive ? <Active data={activeTxn} txn={txn}/> : <Mature data={maturedTxn} txn={txn}/>
       }
       
     </Plan>

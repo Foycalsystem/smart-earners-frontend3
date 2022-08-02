@@ -1,17 +1,24 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
 import Spinner from '../../../loaders/Spinner';
-import {useSelector, useDispatch} from 'react-redux';
-import { getTxn } from "../../../redux/invest/invest";
+// import { getTxn } from "../../../redux/invest/invest";
+// import { useDispatch} from 'react-redux';
 
-export default function Active() {
-    const dispatch = useDispatch()
-    const state = useSelector(state=>state);
-    const {txn} = state.investment
+export default function Active({data, txn}) {
+    // const dispatch = useDispatch()
+    const [isLoading, setLoading] = useState(true)
+
+    // useEffect(()=>{
+    //   dispatch(getTxn())
+    // }, [])
 
     useEffect(()=>{
-      dispatch(getTxn())
-    }, [])
+      if(!txn.isLoading){
+        setTimeout(()=>{
+          setLoading(false)
+        }, 1600)
+      }
+    }, [txn])
 
     const month = ['Jan', 'Feb','Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
@@ -20,10 +27,10 @@ export default function Active() {
         <div style={{fontWeight: 'bold', margin: '0 0 10px 40px', color: 'var(--bright-color'}}>Active</div>
         <Wrapper>
             {
-              txn.isLoading ? <div className="center"><Spinner size="20px"/></div> :
-              txn.data.active && txn.data.active.length < 1 ? <Msg /> :
+              isLoading ? <div className="center"><Spinner size="20px"/></div> :
+              data && data.length < 1 ? <Msg /> :
               (
-                txn.data.active && txn.data.active.map(data=>{
+                data && data.map(data=>{
                   return (
                     <Card key={data._id}>
                       <div className="title">
@@ -60,7 +67,7 @@ export default function Active() {
                             <div style={{fontWeight: 600}}>Matures</div>
                             {
                               (function(){
-                                let maturein = txn.data.active && new Date(txn.data.active[0].createdAt).getTime() / 1000 + txn.data.active[0].lifespan
+                                let maturein = data && new Date(data.createdAt).getTime() / 1000 + data.lifespan
                                 let formated = new Date(maturein * 1000);
 
                                 return (

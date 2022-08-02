@@ -36,6 +36,8 @@ export default function Transactions() {
       withdrawals.isLoading ? setLoading(true) : setLoading(false)
     }, 1000)
   }, [])
+
+
   useEffect(()=>{
     setPending(withdrawals.data.filter(data=> data.status === 'pending'));
 

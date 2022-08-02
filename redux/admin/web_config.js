@@ -10,7 +10,6 @@ export const getConfig= createAsyncThunk(
         try{
             
             const res = await axios.get(`/config/get`)
-            console.log(res.data)
             return res.data
         }
         catch(err){

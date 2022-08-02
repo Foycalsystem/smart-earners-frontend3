@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import { getUser } from "../../../redux/auth/auth";
 import styled from 'styled-components'
 import {useSnap} from '@mozeyinedu/hooks-lab'
+import { getTxn } from "../../../redux/invest/invest";
 
 
 export default function Profile({setShowActive, shwowActive}) {
@@ -17,9 +18,11 @@ export default function Profile({setShowActive, shwowActive}) {
 
     const handleActive=()=>{
         setShowActive(true)
+         
     }
     const handleMatured=()=>{
         setShowActive(false)
+        //  dispatch(getTxn())
     }
 
     return (
