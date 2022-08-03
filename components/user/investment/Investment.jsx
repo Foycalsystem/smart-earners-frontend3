@@ -87,111 +87,105 @@ const Plans = ({userInfo}) => {
     
     useEffect(()=>{
       txn && setActiveTxn(txn.data.filter(data=> data.isActive));
-      txn && setMaturedTxn(txn.data.filter(data=> !data.status)); 
+      txn && setMaturedTxn(txn.data.filter(data=> !data.status));
     }, [txn])
 
   return (
-    isLoading ? <Loader_ />  :
-    //check if empty
-    !user.data ?
-         
-    (
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{user.msg || 'No Data Currently Available, fresh the broswer'}</div>
-    ):
-    (
-      <Plan>
-      `<Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
-      <div style={{padding: '10px 20px 2px 20px', fontWeight: 'bold'}}>Plans</div>
-      <div className="center"> {
-        invest.isLoading ? <Spinner size="24px"/> : ''
-      } </div>
-      <div className="center">
-        <Feedback
-          msg={invest.msg}
-          status={invest.status}
-          feedback={feedback}
-          setFeedback={setFeedback}
-        />
-      </div>
-      <AllPlan>
-        {
-          plans.isLoading ?
-            <div className="center"><Spinner size="30px" /></div>:
-          (
-            plans.data.length < 1 ? <div className="center">No Plan available at this moment</div> : 
+      isLoading ? <Loader_ />  :
+      (
+        <Plan>
+        `<Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
+        <div style={{padding: '10px 20px 2px 20px', fontWeight: 'bold'}}>Plans</div>
+        <div className="center"> {
+          invest.isLoading ? <Spinner size="24px"/> : ''
+        } </div>
+        <div className="center">
+          <Feedback
+            msg={invest.msg}
+            status={invest.status}
+            feedback={feedback}
+            setFeedback={setFeedback}
+          />
+        </div>
+        <AllPlan>
+          {
+            plans.isLoading ?
+              <div className="center"><Spinner size="30px" /></div>:
             (
-              <div>
-              <SwipeWrapper_>
-                  {
-                    plans.isLoading ? <div className="center">
-                    <Spinner size="30px" />
-                    </div>:
-                    (
-                      plans.data.length < 1 ? <div className="center">No Plan available at this moment</div> : 
+              plans.data.length < 1 ? <div className="center">No Plan available at this moment</div> : 
+              (
+                <div>
+                <SwipeWrapper_>
+                    {
+                      plans.isLoading ? <div className="center">
+                      <Spinner size="30px" />
+                      </div>:
                       (
-                  <Swiper
-                    className='swiper'
-                    modules={[Navigation, Pagination, Scrollbar, Autoplay, A11y]}
-                    spaceBetween={10}
-                    autoplay = { {delay: 5000}}
-                    scrollbar={{draggable: true}}
-                    // loop
-                    pagination = {{ clickable: true}}
-                    slidesPerView={3}
-                    breakpoints={
-                        {
-                            0:{
-                                width: 0,
-                                slidesPerView: 1,
-                                spaceBetween: 10
-                            },
-                            500:{
-                                width: 700,
-                                slidesPerView: 2,
-                                spaceBetween: 10
-                            },
-                            680:{
-                                width: 680,
-                                slidesPerView: 2,
-                                spaceBetween: 10
-                            },
-                            920:{
-                                width: 920,
-                                slidesPerView: 3,
-                                spaceBetween: 10
-                            },
-                        }
-                      }>
-                      {plans.data.map((each, idx) => 
-                          (
-                            <SwiperSlide className="swipe" key={idx}>
-                                <SinglePlan data={each} setFeedback={setFeedback} feedback={feedback} invest={invest} investBtn={investBtn}/>
-                            </SwiperSlide>
-                          )
-                      ) }
-                  </Swiper>
+                        plans.data.length < 1 ? <div className="center">No Plan available at this moment</div> : 
+                        (
+                    <Swiper
+                      className='swiper'
+                      modules={[Navigation, Pagination, Scrollbar, Autoplay, A11y]}
+                      spaceBetween={10}
+                      autoplay = { {delay: 5000}}
+                      scrollbar={{draggable: true}}
+                      // loop
+                      pagination = {{ clickable: true}}
+                      slidesPerView={3}
+                      breakpoints={
+                          {
+                              0:{
+                                  width: 0,
+                                  slidesPerView: 1,
+                                  spaceBetween: 10
+                              },
+                              500:{
+                                  width: 700,
+                                  slidesPerView: 2,
+                                  spaceBetween: 10
+                              },
+                              680:{
+                                  width: 680,
+                                  slidesPerView: 2,
+                                  spaceBetween: 10
+                              },
+                              920:{
+                                  width: 920,
+                                  slidesPerView: 3,
+                                  spaceBetween: 10
+                              },
+                          }
+                        }>
+                        {plans.data.map((each, idx) => 
+                            (
+                              <SwiperSlide className="swipe" key={idx}>
+                                  <SinglePlan data={each} setFeedback={setFeedback} feedback={feedback} invest={invest} investBtn={investBtn}/>
+                              </SwiperSlide>
+                            )
+                        ) }
+                    </Swiper>
+                        )
                       )
-                    )
-                  }
-              </SwipeWrapper_>   
-      
+                    }
+                </SwipeWrapper_>   
+        
 
-              </div>
+                </div>
+              )
             )
-          )
-        }  
-      </AllPlan>
+          }  
+        </AllPlan>
 
-      <MasterPlan data={masterPlanData} showModal={showModal} setShowModal={setShowModal}/>
+        <MasterPlan data={masterPlanData} showModal={showModal} setShowModal={setShowModal}/>
 
-      <h3 style={{padding: '20px 5px 5px 20px'}}>INVESTMENT SUMMARY</h3>
+        <h3 style={{padding: '20px 5px 5px 20px'}}>INVESTMENT SUMMARY</h3>
 
-      {
-        shwowActive ? <Active data={activeTxn} txn={txn}/> : <Mature data={maturedTxn} txn={txn}/>
-      }
-      
-    </Plan>
-    )
+        {
+          shwowActive ? <Active data={activeTxn} txn={txn}/> : <Mature data={maturedTxn} txn={txn}/>
+        }
+        
+        </Plan>
+      )
     )
   }
 

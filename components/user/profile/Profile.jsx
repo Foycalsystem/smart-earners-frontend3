@@ -26,27 +26,7 @@ const Profile = ({userInfo}) => {
       }, 2000)
     }, [])
     
-    return (
-    
-        //check if user exist
-    
-        isLoading ? 
-        (
-          // set loading div
-          <Loader_ />
-        ) :
-        (
-          //check if empty
-          !user.data ?
-         
-          (
-              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{user.msg || 'No Data Currently Available, Refresh the browser'}</div>
-          ):
-          (
-            <ProfileComp data={user.data}/>
-          )
-        )    
-    )
+    return isLoading ? <Loader_ /> : <ProfileComp data={user.data}/> 
 }
 
 

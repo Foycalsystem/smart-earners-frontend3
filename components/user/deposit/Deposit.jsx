@@ -92,14 +92,7 @@ export default function Deposit({userInfo}){
           <Loader_ />
         ) :
         (
-          //check if empty
-          !user.data ?
-         
-          (
-              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{user.msg || 'No Data Currently Available'}</div>
-          ):
-          (
-            <Wrapper>
+          <Wrapper>
               <div className="account-balance" style={{color: 'var(--major-color-purest)'}}>Total Balance: {user.data.amount} {config.data.nativeCurrency}</div>
               <Form onSubmit={submit}>
                 <h3 className="title">
@@ -118,6 +111,7 @@ export default function Deposit({userInfo}){
 
                 <InputWrapper>
                   <Input
+                    autoFocus
                     type="number"
                     placeholder="Enter Amount in Dollar"
                     name='amount'
@@ -145,7 +139,6 @@ export default function Deposit({userInfo}){
 
               </Form>
             </Wrapper>
-          )
         )    
     )
 }

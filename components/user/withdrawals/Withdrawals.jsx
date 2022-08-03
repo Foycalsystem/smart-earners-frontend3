@@ -107,14 +107,7 @@ export default function Withdrawals({userInfo}){
           <Loader_ />
         ) :
         (
-          //check if empty
-          !user.data ?
-         
-          (
-              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{user.msg || 'No Data Currently Available'}</div>
-          ):
-          (
-            <Wrapper>
+          <Wrapper>
               <div className="account-balance" style={{color: balanceExceed ? '#c20' : 'var(--major-color-purest)'}}>Total Balance: {user.data.amount} {config.data.nativeCurrency}</div>
               <Form onSubmit={submit}>
                 <h3 className="title">Withdrawals</h3>
@@ -189,8 +182,7 @@ export default function Withdrawals({userInfo}){
                 </InputWrapper>
 
               </Form>
-            </Wrapper>
-          )
+          </Wrapper>
         )    
     )
 }
