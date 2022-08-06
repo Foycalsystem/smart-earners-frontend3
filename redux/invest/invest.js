@@ -8,16 +8,12 @@ export const getTxn= createAsyncThunk(
     'investment/getTxn',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.get(`/investment/get-all-investments`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }else{
-                return rejectWithValue({status: false, msg: ''});
-            }  
+            const res = await axios.get(`/investment/get-all-investments`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
         }
         catch(err){
             if(err.response.data){
@@ -33,15 +29,13 @@ export const getTxn= createAsyncThunk(
 export const investPlan= createAsyncThunk(
     'investment/invest',
     async(data, {rejectWithValue})=>{
-        try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.post(`/investment/invest/${data.id}`, {amount: data.amount}, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }   
+    try{
+            const res = await axios.post(`/investment/invest/${data.id}`, {amount: data.amount}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
         }
         catch(err){
             if(err.response.data){

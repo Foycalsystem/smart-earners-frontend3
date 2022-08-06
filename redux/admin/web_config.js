@@ -8,7 +8,6 @@ export const getConfig= createAsyncThunk(
     'config/getConfig',
     async(data, {rejectWithValue})=>{
         try{
-            
             const res = await axios.get(`/config/get`)
             return res.data
         }
@@ -28,14 +27,12 @@ export const updateConfig= createAsyncThunk(
     'auth/updateConfig',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/config/update`, data, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }           
+            const res = await axios.put(`/config/update`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
         }
         catch(err){      
             if(err.response.data){

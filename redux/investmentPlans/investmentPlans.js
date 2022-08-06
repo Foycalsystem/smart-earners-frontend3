@@ -27,14 +27,12 @@ export const handleAdd= createAsyncThunk(
     'config/handleAdd',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.post(`/investment/set-plan`, data, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }   
+            const res = await axios.post(`/investment/set-plan`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;  
         }
         catch(err){
             if(err.response.data){
@@ -51,14 +49,12 @@ export const handleUpdate= createAsyncThunk(
     'config/handleUpdate',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/investment/update-plan/${data.id}`, data.data, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }   
+            const res = await axios.put(`/investment/update-plan/${data.id}`, data.data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;
         }
         catch(err){
             if(err.response.data){
@@ -76,14 +72,12 @@ export const handleDelete= createAsyncThunk(
     'config/handleDelete',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.delete(`/investment/delete-plan/${id}`,{
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }   
+            const res = await axios.delete(`/investment/delete-plan/${id}`,{
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;  
         }
         catch(err){
             if(err.response.data){

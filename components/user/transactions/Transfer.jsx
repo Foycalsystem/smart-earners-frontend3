@@ -16,7 +16,7 @@ export default function Transfer({toggleState, data, id}) {
     const [inp, setInp] = useState('');
     const [filteredData, setFilter] = useState(data);
     const [clicked, setClicked] = useState(false)
-
+  
     useEffect(()=>{
         const newData = filter({
         data: data,
@@ -60,7 +60,7 @@ export default function Transfer({toggleState, data, id}) {
             data.length < 1 ? <Msg />:
             <Wrapper>
                 {
-                  filteredData.map((data, index)=>{
+                  filteredData && filteredData.map((data, index)=>{
                    return (
                     <Card toggleState={toggleState} key={data._id}>
                       <div style={

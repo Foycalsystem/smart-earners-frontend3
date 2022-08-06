@@ -9,14 +9,12 @@ export const checkUser= createAsyncThunk(
     'transfer/check-user',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.post(`/transfer/check-user`, data, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.post(`/transfer/check-user`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
         }
         catch(err){
             if(err.response.data){
