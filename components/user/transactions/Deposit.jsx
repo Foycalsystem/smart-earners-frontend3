@@ -33,7 +33,7 @@ export default function Deposit({data, toggleState}) {
       }
       setClicked(index)
     }
-
+        
     return (
         <div>
           <Header_Table>
@@ -83,7 +83,7 @@ export default function Deposit({data, toggleState}) {
                               <div>
                                 <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
                                 <div className='item'>
-                                  <span>You have Successfully Deposited the sum of <span style={{fontWeight: 'bold'}}>{data.nativeAmountReceived.toFixed(2)} {data.currency}</span> to your account</span>
+                                  <span>You have Successfully Deposited the sum of <span style={{fontWeight: 'bold'}}>{data.nativeAmountReceived && data.nativeAmountReceived.toFixed(2)} {data.currency}</span> to your account</span>
                                 </div>
 
                                 {
@@ -101,9 +101,9 @@ export default function Deposit({data, toggleState}) {
                           else if(data.status === 'pending'){
                             return (
                               <div style={{cursor: 'pointer', fontSize: '.6rem'}}>
-                                <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{cdate. reatedDate(data)}</div>
+                                <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
                                 <div className='item'>
-                                  <span>You have Successfully Deposited the sum of <span style={{fontWeight: 'bold'}}>{data.nativeAmountReceived.toFixed(2)} {data.currency}</span> to your account</span>
+                                  <span>You have Successfully Deposited the sum of <span style={{fontWeight: 'bold'}}>{data.nativeAmountReceived && data.nativeAmountReceived.toFixed(2)} {data.currency}</span> to your account</span>
                                 </div>
 
                                 {
@@ -123,7 +123,7 @@ export default function Deposit({data, toggleState}) {
                               <div style={{cursor: 'pointer'}}>
                                 <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
                                 <div className='item'>
-                                  <span>You Initiated a Deposit request of <span style={{fontWeight: 'bold'}}>{data.nativeAmountExpected.toFixed(2)} {data.currency}</span></span>
+                                  <span>You Initiated a Deposit request of <span style={{fontWeight: 'bold'}}>{data.nativeAmountExpected && data.nativeAmountExpected.toFixed(2)} {data.currency}</span></span>
                                 </div>
 
                                 {

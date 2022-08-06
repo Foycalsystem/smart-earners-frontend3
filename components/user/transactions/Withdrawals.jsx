@@ -21,7 +21,7 @@ export default function Withdrawals({data, toggleState}) {
     useEffect(()=>{
         const newData = filter({
         data: data,
-        keys: [ "username", "email", "amount", "accountNumber", "transactionId"],
+        keys: [ "username", "email", "walletAddress", "amount", "accountNumber", "transactionId"],
         input: inp
         })
 
@@ -46,7 +46,7 @@ export default function Withdrawals({data, toggleState}) {
                   <div className="search">
                       <input
                       type="text"
-                      placeholder="Search by username, email, amount or id"
+                      placeholder="Search by amount, walletAddress or id"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                       />
