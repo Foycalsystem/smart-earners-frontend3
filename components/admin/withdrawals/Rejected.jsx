@@ -2,7 +2,11 @@ import styled from 'styled-components';
 import filter from "@mozeyinedu/filter";
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect } from "react";
-import { ScrollBar } from "../../../styles/globalStyle";
+
+import {
+  Header_Table,
+  Table
+} from '../styles';
 
 
 export default function Rejected({data}) {
@@ -14,7 +18,7 @@ export default function Rejected({data}) {
     useEffect(()=>{
         const newData = filter({
         data: data,
-        keys: [ "username", "email", "amount", "accountNumber"],
+        keys: [ "username", "email", "amount", "accountNumber", "_id"],
         input: inp
         })
 
@@ -24,7 +28,7 @@ export default function Rejected({data}) {
 
     return (
         <div>
-          <Header>
+          <Header_Table>
             {
               data.length < 1 ? '' :
               (
@@ -32,7 +36,7 @@ export default function Rejected({data}) {
                   <div className="search">
                       <input
                       type="text"
-                      placeholder="Search by username, email, amount"
+                      placeholder="Search by username, email, amount or id"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                       />
@@ -41,13 +45,10 @@ export default function Rejected({data}) {
                 </div>
               )
             }
-          </Header>
+          </Header_Table>
 
           {
-            data.length < 1 ?
-            (
-              <Msg />
-            ):
+            data.length < 1 ? <Msg />:
             (
               <Table>
                 <table>
@@ -58,11 +59,12 @@ export default function Rejected({data}) {
                             <th>Date Rejected</th>
                             <th>Email</th>
                             <th>Username</th>
-                            <th>Amount {`(${data && data[0].currency.toUpperCase()})`}</th>
-                            <th>{data && data[0].tradeCurrency.toUpperCase()}</th>
+                            <th>Amount {`(${data && data[0] && data[0].currency.toUpperCase()})`}</th>
+                            <th>Amount {`(${data && data[0] && data[0].tradeCurrency.toUpperCase()})`}</th>
                             <th>Coin</th>
                             <th>Wallet</th>
                             <th>Status</th>
+                            <th>Id</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,7 +91,7 @@ export default function Rejected({data}) {
                             <td>{data.coin}</td>
                             <td>{data.walletAddress}</td>
                             <td style={{color: 'var(--bright-color'}}>{data.status}</td>
-                            
+                            <td>{data._id}</td>  
                           </tr>
                         )
                       })}
@@ -101,94 +103,6 @@ export default function Rejected({data}) {
         </div>
     )
 }
-
-
-
-const Header = styled.div`
-  margin-bottom: 0px;
-  padding: 5px;
-  display: grid;
-  grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
-
-  .row{
-    padding: 3px;
-    font-size: .8rem;
-    justify-self: center;
-  }
-
-  .search{
-    width: 250px;
-    height: 30px;
-    border: 1px solid var(--major-color-purest);
-    border-radius: 12px;
-    background: #fff;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .icon{
-    width:30px;
-    background: var(--major-color-purest);
-    height: 100%;
-    display: flex;
-    color:#fff;
-    justify-content: center;
-    align-items: center;
-  }
-  input{
-    width: calc(100% - 30px);
-    padding: 0 8px;
-    border: none;
-
-    &:focus{
-      outline: none;
-      // border: 2px solid green;
-    }
-  }
-`
-
-const Table = styled.div`
-  padding: 0 10px;
-  overflow: auto;
-  margin: 0px auto 10px auto;
-
-
-  ${ScrollBar()}
-
-  table{
-    font-size: .8rem;
-    margin: auto;
-    border-spacing: 0.5rem;
-    height: 100%;
-    border-collapse: collapse;
-    width: 800px;
-    text-align: left;
-    cursor: default;
-  }
-
-  td, th {
-    border: 1px solid #999;
-    padding: 0.5rem;
-    text-align: left;
-    padding: 0.25rem;
-  }
-
-  th{
-    background: var(--major-color-purest);
-    color: #fff;
-  }
-
-  tr:nth-child(even) {
-    background: #ddd;
-  }
-
-  tbody tr:hover {
-    background: var(--major-color-30A);
-  }
-
-`
-
 
 
 

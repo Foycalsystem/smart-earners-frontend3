@@ -1,16 +1,22 @@
 import React from 'react'
 import Investment from '../../components/user/investment/Investment'
+import { resolveApi } from '../../utils/resolveApi';
 
-export default function investment() {
-  return <Investment />
+export default function investment({accesstoken}) {
+  return <Investment accesstoken={accesstoken} />
 }
 
 
 
 // handle redirect if user sign up
-export function getServerSideProps(context){
+export async function getServerSideProps(context){
   const cookies = context.req.cookies;
   const refreshtoken = cookies.refreshtoken;
+  const accesstoken = cookies.accesstoken;
+
+  await resolveApi.refreshToken(context, refreshtoken)
+  await resolveApi.resolveInvestment()
+  await resolveApi.removeUnverifiedusers()
 
   if(!refreshtoken){
     return {
@@ -22,7 +28,8 @@ export function getServerSideProps(context){
     }
   }else{
     return {
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
 }
+

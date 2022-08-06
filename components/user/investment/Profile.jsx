@@ -4,6 +4,8 @@ import { getUser } from "../../../redux/auth/auth";
 import styled from 'styled-components'
 import {useSnap} from '@mozeyinedu/hooks-lab'
 import { getTxn } from "../../../redux/invest/invest";
+import { resolveApi } from "../../../utils/resolveApi";
+import Cookies from "js-cookie";
 
 
 export default function Profile({setShowActive, shwowActive}) {
@@ -16,23 +18,30 @@ export default function Profile({setShowActive, shwowActive}) {
         dispatch(getUser())
     }, [])
 
-    const handleActive=()=>{
+    const handleActive = async()=>{
+        if(!Cookies.get('accesstoken')){
+            await resolveApi.refreshTokenClinetSide()
+        }
+        await resolveApi.resolveInvestmentClientSide()
         setShowActive(true)
          
     }
-    const handleMatured=()=>{
+    const handleMatured = async()=>{
+        if(!Cookies.get('accesstoken')){
+            await resolveApi.refreshTokenClinetSide()
+        }
+        await resolveApi.resolveInvestmentClientSide()
         setShowActive(false)
-        //  dispatch(getTxn())
     }
 
     return (
         <Profile_ shwowActive={shwowActive}>
-            <h3 className="name">Hello {user.data.username},</h3>
+            <h3 className="name">Hello {user.data.username}!</h3>
             <div>Invest and Earn with Us</div>
 
             <div className="wrapper">
                 <div className="content">
-                    <div style={{textAlign: 'center'}}>Available Balance</div>
+                    <h3 style={{textAlign: 'center'}}>Available Balance</h3>
                     <div style={{textAlign: 'center', padding: '10px'}}>
                         <span style={{fontWeight: 'bold', }}>{user.data.amount && user.data.amount.toFixed(2)} {user.data.currency}</span>
                     </div>

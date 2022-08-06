@@ -1,17 +1,10 @@
 import React from 'react'
-import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import SavingsIcon from '@mui/icons-material/Savings';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import styled from 'styled-components'
 import {
   ServiceSectionWrapper,
-  HeroSection,
-  HeroSectionTitle,
-  HeroSectionSubTitle,
-  HeroSectionText,
-  CardWrapper,
-  LandscapeCard
 } from './styles'
 import { SectionTitle } from '../../../styles/globalStyle'
 import ServiceCard from './ServiceCard'
@@ -50,13 +43,22 @@ const OurServices = () => {
             OUR SERVICES
           </SectionTitle>
 
-          <section className="meso-layer">
+          <CardWrapper className="meso-layer">
                 {
                   data && data.map((each, idx) => (<ServiceCard key={idx} datum={each} />)  )
                 }
-          </section>
+          </CardWrapper>
       </ServiceSectionWrapper>
   )
 }
 
 export default OurServices
+
+const CardWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+
+  @media (max-width: 366px){
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  }
+`

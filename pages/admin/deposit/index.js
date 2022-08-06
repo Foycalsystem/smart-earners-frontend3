@@ -1,16 +1,22 @@
 import React from 'react'
 import Deposit from '../../../components/admin/deposit/Deposit'
+import { resolveApi } from "../../../utils/resolveApi";
 
-export default function deposit() {
-  return <Deposit />
+export default function deposit({accesstoken}) {
+  return <Deposit accesstoken={accesstoken}/>
 }
 
 
 // handle redirect if user sign in
-export function getServerSideProps(context){
+export async function getServerSideProps(context){
   const cookies = context.req.cookies;
   const refreshtoken = cookies.refreshtoken;
+  const accesstoken = cookies.accesstoken;
   const type = cookies.type;
+
+  await resolveApi.refreshToken(context, refreshtoken)
+  await resolveApi.resolveInvestment()
+  await resolveApi.removeUnverifiedusers()
 
   if(!refreshtoken){
     return {
@@ -18,7 +24,7 @@ export function getServerSideProps(context){
         destination: '/signin',
         permanent: false,
       },
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
   else if(refreshtoken && type !=='admin'){
@@ -27,12 +33,16 @@ export function getServerSideProps(context){
         destination: '/dashboard',
         permanent: false,
       },
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
   else{
     return {
-      props: {}
+        redirect: {
+            destination: '/admin/deposit/transactions',
+            permanent: false,
+        },
+        props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
 }

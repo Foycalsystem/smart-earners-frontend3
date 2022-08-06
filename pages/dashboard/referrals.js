@@ -1,16 +1,22 @@
 import React from 'react'
 import Referrals from '../../components/user/referrals/Referrals'
+import { resolveApi } from '../../utils/resolveApi';
 
-export default function referrals() {
-  return <Referrals />
+export default function referrals({accesstoken}) {
+  return <Referrals accesstoken={accesstoken}/>
 }
 
 
 
 // handle redirect if user sign up
-export function getServerSideProps(context){
+export async function getServerSideProps(context){
   const cookies = context.req.cookies;
   const refreshtoken = cookies.refreshtoken;
+  const accesstoken = cookies.accesstoken;
+
+  await resolveApi.refreshToken(context, refreshtoken)
+  await resolveApi.resolveInvestment()
+  await resolveApi.removeUnverifiedusers()
 
   if(!refreshtoken){
     return {
@@ -22,7 +28,7 @@ export function getServerSideProps(context){
     }
   }else{
     return {
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
 }

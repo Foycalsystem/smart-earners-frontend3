@@ -1,5 +1,5 @@
 import { getUser } from "../../../redux/auth/auth";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import Spinner from "../../../loaders/Spinner";
@@ -8,6 +8,8 @@ import Feedback from "../../Feedback";
 import PopUpModal from "../../modals/popUpModal/PopUpModal";
 import { checkUser, payUser } from "../../../redux/admin/transfer";
 import { getConfig } from "../../../redux/admin/web_config";
+import { resolveApi } from "../../../utils/resolveApi";
+import Cookies from 'js-cookie'
 
 import { 
   Wrapper,
@@ -49,8 +51,12 @@ export default function Transfer({userInfo}){
       setInp({...inp, [name]:value});
     }
 
-    const submit =(e)=>{
+    const submit = async(e)=>{
       e.preventDefault()
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
+
       dispatch(checkUser(inp))
     }
     
@@ -79,10 +85,12 @@ export default function Transfer({userInfo}){
     useEffect(()=>{
       dispatch(getUser())
       dispatch(getConfig())
+
+      user.isLoading ? setLoading(true) : setLoading(false)
   
-      setTimeout(()=>{
-        user.isLoading ? setLoading(true) : setLoading(false)
-      }, 2000)
+      // setTimeout(()=>{
+      //   user.isLoading ? setLoading(true) : setLoading(false)
+      // }, 2000)
     }, [])
 
 
@@ -101,14 +109,10 @@ export default function Transfer({userInfo}){
     
         //check if user exist
     
-        isLoading ? 
-        (
-          // set loading div
-          <Loader_ />
-        ) :
+        isLoading ? <Loader_ />:
         (
           <Wrapper>
-              <div className="account-balance" style={{color: balanceExceed ? '#c20' : 'var(--major-color-purest)'}}>Total Balance: {user.data.amount} {user.data.nativeCurrency}</div>
+              <div className="account-balance" style={{color: balanceExceed ? '#c20' : 'var(--major-color-purest)'}}>Account Balance: {user.data.amount} {config.data.nativeCurrency}</div>
               <Form onSubmit={submit}>
                 <h3 className="title">Transfer</h3>
 
@@ -190,7 +194,10 @@ function PayUser({data, showModal, setShowModal, config}){
     setShowModal(false)
   }
 
-  const proceed =()=>{
+  const proceed = async()=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
     const userData = {
       amount: data.amount,
       accountNumber: data.accountNumber

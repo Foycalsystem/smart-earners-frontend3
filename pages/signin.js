@@ -9,13 +9,13 @@ export default function signin({userInfo}) {
 export const getServerSideProps =(context)=>{
   const cookies = context.req.cookies;
   const refreshtoken = cookies.refreshtoken;
-  const type = cookies.type;
+  const status = cookies.status;
 
   const handlePath=()=>{
-    if(refreshtoken && type === 'admin'){
+    if(refreshtoken && status === 'admin'){
       return '/admin'
     }
-    else if(refreshtoken && type !== 'admin'){
+    else if(refreshtoken && status !== 'admin'){
       return '/dashboard'
     }else{
       

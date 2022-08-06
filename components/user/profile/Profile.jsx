@@ -20,10 +20,12 @@ const Profile = ({userInfo}) => {
   
     useEffect(()=>{
       dispatch(getUser())
+
+      user.isLoading ? setLoading(true) : setLoading(false)
   
-      setTimeout(()=>{
-        user.isLoading ? setLoading(true) : setLoading(false)
-      }, 2000)
+    //   setTimeout(()=>{
+    //     user.isLoading ? setLoading(true) : setLoading(false)
+    //   }, 1000)
     }, [])
     
     return isLoading ? <Loader_ /> : <ProfileComp data={user.data}/> 

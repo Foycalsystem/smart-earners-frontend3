@@ -4,6 +4,9 @@ import Loader_ from "../loader/Loader";
 import { getConfig, updateConfig} from "../../../redux/admin/web_config";
 import EditIcon from '@mui/icons-material/Edit';
 import {useSnap} from '@mozeyinedu/hooks-lab';
+import { resolveApi } from "../../../utils/resolveApi";
+import Cookies from "js-cookie";
+
 
 import {
   AdminWrapper,
@@ -13,13 +16,13 @@ import {
   Input,
   Label
 } from "../styles";
-import TextLoader from "../../../loaders/TextLoader";
+import Spinner from "../../../loaders/Spinner";
 
 export default function Referrals({userInfo}) {
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const [isLoading, setLoading] = useState(true)
-  const {config} = state.config;
+  const {config, update} = state.config;
 
   const initialState = {  
     referralBonusPercentage: config.data.referralBonusPercentage,
@@ -29,35 +32,23 @@ export default function Referrals({userInfo}) {
 
 
   useEffect(()=>{
-    setLoading(true)
     dispatch(getConfig())
 
-    setTimeout(()=>{
-      config.isLoading ? setLoading(true) : setLoading(false)
-    }, 1000)
+    // setTimeout(()=>{
+    //   config.isLoading ? setLoading(true) : setLoading(false)
+    // }, 1000)
+    config.isLoading ? setLoading(true) : setLoading(false)
 
   }, [])
 
   return (
     
     //check if config exist
-    isLoading ? 
+    isLoading ? <Loader_ />:
     (
-      // set loading div
-      <Loader_ />
-    ) :
-    (
-      //check if empty
-
-      !config.status ? 
-      (
-          <div style={{textAlign: 'center'}}>{config.msg || 'No data currently available'}</div>
-      ):
-      (
-        <AdminWrapper>
-          <SetForm config={config} initialState={initialState}/>
-        </AdminWrapper>
-      )
+      <AdminWrapper>
+        <SetForm config={config} update={update} initialState={initialState}/>
+      </AdminWrapper>
     )    
   )
 }
@@ -65,8 +56,7 @@ export default function Referrals({userInfo}) {
 
 
 
-
-function SetForm({config, initialState}) {
+function SetForm({config, update, initialState}) {
     const {snap} = useSnap(.5);
     const [edit, setEdit] = useState(false);
     const dispatch = useDispatch()
@@ -80,13 +70,16 @@ function SetForm({config, initialState}) {
       setInp({...inp, [name]:value})
     }
 
-    // console.log(config.data.unverifyUserLifeSpan)
+    const submit = async(e)=>{
+      e.preventDefault();
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
 
-    const submit=(e)=>{
-        e.preventDefault();
-        dispatch(updateConfig(inp));
-        
-        setInp(initialState);
+      dispatch(updateConfig(inp));
+      
+      setInp(initialState);
+      setEdit(false)
     }
 
     useEffect(()=>{
@@ -94,9 +87,28 @@ function SetForm({config, initialState}) {
     }, [config])
   
     return (
-      <Form>
+      <Form style={{position: 'relative'}}>
+          {
+            !update.isLoading ? "" : 
+            (
+              <div style={{
+                position: 'absolute', 
+                top: 0,
+                bottom:0,
+                left: 0,
+                right: 0,
+                display: 'flex',
+                justifyContent:'center',
+                alignItems: 'center',
+                zIndex: 2
+                }}>
+                  <Spinner size="20px"/>
+  
+              </div>
+            )
+          }
+          
           <Container>
-
               <div {...snap()} onClick={()=>setEdit(!edit)} className="title">
                   <span style={{fontSize: '1rem'}}>Referrals</span>
                   <span className="edit">

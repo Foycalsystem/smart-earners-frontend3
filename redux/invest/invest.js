@@ -93,9 +93,9 @@ export const investmentReducer = createSlice({
         },
         [investPlan.fulfilled]: (state, {payload})=>{
             state.invest.isLoading = false;
-            state.invest.status = payload.status;
-            state.invest.msg = payload.msg;
-            state.txn.data.push(payload.data)
+            // state.invest.status = payload.status;
+            // state.invest.msg = payload.msg;
+            // state.txn.data.push(payload.data)
         },
         [investPlan.rejected]: (state, {payload})=>{
             state.invest.isLoading = false;

@@ -38,6 +38,8 @@ export const Signup=()=>{
     const [showPassword, setShowPassword] = useState(false)
     const [showCPassword, setShowCPassword] = useState(false);
 
+    const {refcode} = router.query;
+
     const [feedback, setFeedback] = useState({
         msg: auth.signup.msg,
         status: false
@@ -63,7 +65,7 @@ export const Signup=()=>{
     const submit =(e)=>{
         e.preventDefault();
 
-        dispatch(signup(inp))
+        dispatch(signup({inp, refcode}))
 
         setFeedback({
             msg: auth.signup.msg,

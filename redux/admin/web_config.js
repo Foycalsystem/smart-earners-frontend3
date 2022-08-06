@@ -52,6 +52,7 @@ export const updateConfig= createAsyncThunk(
 
 const initialState = {
     config: { isLoading: false, status: false, msg: '', data: ''},
+    update: { isLoading: false, status: false, msg: ''},
 }
 
 export const configReducer = createSlice({
@@ -83,23 +84,23 @@ export const configReducer = createSlice({
         
         // updated config data
         [updateConfig.pending]: (state)=>{
-            state.config.isLoading = true;
+            state.update.isLoading = true;
         },
         [updateConfig.fulfilled]: (state, {payload})=>{
-            state.config.isLoading = false;
-            state.config.status = payload.status;
-            state.config.msg = payload.msg;
+            state.update.isLoading = false;
+            state.update.status = payload.status;
+            state.update.msg = payload.msg;
             state.config.data = payload.data
         },
         [updateConfig.rejected]: (state, {payload})=>{
-            state.config.isLoading = false;
+            state.update.isLoading = false;
             if(payload){
-                state.config.status = payload.status;
-                state.config.msg = payload.msg;
+                state.update.status = payload.status;
+                state.update.msg = payload.msg;
             }else{
                 // to get rid of next js server error
-                state.config.status = false;
-                state.config.msg = 'Error occured';
+                state.update.status = false;
+                state.update.msg = 'Error occured';
             }
         }, 
     }

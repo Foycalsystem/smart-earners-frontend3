@@ -9,14 +9,12 @@ export const makeDeposit= createAsyncThunk(
     'deposit/makeDeposit',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.post(`/deposit`, data, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.post(`/deposit`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
         }
         catch(err){
             if(err.response.data){
@@ -29,19 +27,40 @@ export const makeDeposit= createAsyncThunk(
     }
 )
 
-// make deposit
+// get deposit
 export const getDepositTnx= createAsyncThunk(
     'deposit/getDepositTnx',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.get(`/deposit/get-all`, data, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.get(`/deposit/get-all`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;           
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message, data: ''});
+            }
+        }
+    }
+)
+
+// resolve deposit
+export const handleResolve= createAsyncThunk(
+    'deposit/handleResolve',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.put(`/deposit/resolve/${data.id}`, data.data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
         }
         catch(err){
             if(err.response.data){
@@ -60,6 +79,7 @@ export const getDepositTnx= createAsyncThunk(
 const initialState = {
     deposit: { isLoading: false, status: false, msg: ''},
     txns: { isLoading: false, status: false, msg: '', data:[]},
+    resolveDeposit: { isLoading: false, status: false, msg: '', data:''},
 }
 
 export const depositeReducer = createSlice({
@@ -67,7 +87,7 @@ export const depositeReducer = createSlice({
     initialState,
     extraReducers: {
 
-        // make withdrawal request
+        // make deposit request
         [makeDeposit.pending]: (state)=>{
             state.deposit.isLoading = true;
         },
@@ -89,7 +109,8 @@ export const depositeReducer = createSlice({
                 state.deposit.msg = 'Error occured';
             }
         },
-        // make withdrawal request
+        
+        // get deposit txn
         [getDepositTnx.pending]: (state)=>{
             state.txns.isLoading = true;
         },
@@ -112,9 +133,39 @@ export const depositeReducer = createSlice({
             }
         },
 
+         // get deposit txn
+         [handleResolve.pending]: (state)=>{
+            state.resolveDeposit.isLoading = true;
+        },
+        [handleResolve.fulfilled]: (state, {payload})=>{
+            state.resolveDeposit.isLoading = false;
+            state.resolveDeposit.status = payload.status;
+            state.resolveDeposit.msg = payload.msg;
 
+            // get the current state
+            const currentState = JSON.parse(JSON.stringify(state.txns.data));
+            
+
+            // find the id index and replace the data in payload
+            const newState = currentState.filter(d=>{
+                return d._id !== payload.data._id
+            })
+            
+            state.txns.data = newState;
+        },
+        [handleResolve.rejected]: (state, {payload})=>{
+            state.resolveDeposit.isLoading = false;
+            if(payload){
+                state.resolveDeposit.status = payload.status;
+                state.resolveDeposit.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.resolveDeposit.status = false;
+                state.resolveDeposit.msg = 'Error occured';
+            }
+        },
     }
-    
 })
 
 export default depositeReducer.reducer

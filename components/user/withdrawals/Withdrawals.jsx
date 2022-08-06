@@ -7,6 +7,8 @@ import {useSnap} from '@mozeyinedu/hooks-lab'
 import Feedback from "../../Feedback";
 import { withdawalRequest} from "../../../redux/admin/withdrawals";
 import { getConfig } from "../../../redux/admin/web_config";
+import { resolveApi } from "../../../utils/resolveApi"
+import Cookies from 'js-cookie'
 
 import { 
   Wrapper,
@@ -53,8 +55,12 @@ export default function Withdrawals({userInfo}){
       setInp({...inp, [name]:value});
     }
 
-    const submit =(e)=>{
+    const submit = async(e)=>{
       e.preventDefault()
+
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
       dispatch(withdawalRequest(inp))
     }
 
@@ -72,10 +78,12 @@ export default function Withdrawals({userInfo}){
     useEffect(()=>{
       dispatch(getUser())
       dispatch(getConfig())
+
+      user.isLoading ? setLoading(true) : setLoading(false)
   
-      setTimeout(()=>{
-        user.isLoading ? setLoading(true) : setLoading(false)
-      }, 2000)
+      // setTimeout(()=>{
+      //   user.isLoading ? setLoading(true) : setLoading(false)
+      // }, 2000)
     }, [])
 
     useEffect(()=>{
@@ -101,14 +109,10 @@ export default function Withdrawals({userInfo}){
     
         //check if user exist
     
-        isLoading ? 
-        (
-          // set loading div
-          <Loader_ />
-        ) :
+        isLoading ?  <Loader_ /> :
         (
           <Wrapper>
-              <div className="account-balance" style={{color: balanceExceed ? '#c20' : 'var(--major-color-purest)'}}>Total Balance: {user.data.amount} {config.data.nativeCurrency}</div>
+              <div className="account-balance" style={{color: balanceExceed ? '#c20' : 'var(--major-color-purest)'}}>Account Balance: {user.data.amount} {config.data.nativeCurrency}</div>
               <Form onSubmit={submit}>
                 <h3 className="title">Withdrawals</h3>
                 

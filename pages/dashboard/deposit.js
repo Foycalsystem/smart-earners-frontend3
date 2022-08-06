@@ -1,16 +1,23 @@
 import React from 'react'
 import Deposit from '../../components/user/deposit/Deposit'
+import { resolveApi } from '../../utils/resolveApi';
 
-export default function deposit() {
-  return <Deposit />
+export default function deposit({accesstoken}) {
+  return <Deposit accesstoken={accesstoken}/>
 }
 
 
-
 // handle redirect if user sign up
-export function getServerSideProps(context){
+export async function getServerSideProps(context){
   const cookies = context.req.cookies;
   const refreshtoken = cookies.refreshtoken;
+  const accesstoken = cookies.accesstoken;
+
+  console.log(accesstoken)
+
+  await resolveApi.refreshToken(context, refreshtoken)
+  await resolveApi.resolveInvestment()
+  await resolveApi.removeUnverifiedusers()
 
   if(!refreshtoken){
     return {
@@ -22,7 +29,8 @@ export function getServerSideProps(context){
     }
   }else{
     return {
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
 }
+

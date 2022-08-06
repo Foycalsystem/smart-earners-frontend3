@@ -13,11 +13,9 @@ export default function Active({data, txn}) {
     // }, [])
 
     useEffect(()=>{
-      if(!txn.isLoading){
-        setTimeout(()=>{
-          setLoading(false)
-        }, 1600)
-      }
+      setTimeout(()=>{
+        txn.isLoading ? setLoading(true) : setLoading(false)
+      }, 1000)
     }, [txn])
 
     const month = ['Jan', 'Feb','Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -27,7 +25,7 @@ export default function Active({data, txn}) {
         <div style={{fontWeight: 'bold', margin: '0 0 10px 40px', color: 'var(--bright-color'}}>Active</div>
         <Wrapper>
             {
-              isLoading ? <div className="center"><Spinner size="20px"/></div> :
+              txn.isLoading ? <div className="center"><Spinner size="20px"/></div> :
               data && data.length < 1 ? <Msg /> :
               (
                 data && data.map(data=>{

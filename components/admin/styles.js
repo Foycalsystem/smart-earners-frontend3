@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-const InputWrapperHeight = '80px'
-const InputHeight = '30px'
+import { ScrollBar } from '../../styles/globalStyle';
 
 const AdminWrapper = styled.div`
     width: 100%;
@@ -142,7 +141,89 @@ const Header = styled.div`
         color: var(--bright-color);
     }
 `
+const Header_Table = styled.div`
+  margin-bottom: 0px;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
 
+  .row{
+    padding: 3px;
+    font-size: .8rem;
+    justify-self: center;
+  }
+
+  .search{
+    width: 250px;
+    height: 30px;
+    border: 1px solid var(--major-color-purest);
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .icon{
+    width:30px;
+    background: var(--major-color-purest);
+    height: 100%;
+    display: flex;
+    color:#fff;
+    justify-content: center;
+    align-items: center;
+  }
+  input{
+    width: calc(100% - 30px);
+    padding: 0 8px;
+    border: none;
+
+    &:focus{
+      outline: none;
+      // border: 2px solid green;
+    }
+  }
+  `
+
+  const Table = styled.div`
+  padding: 0 10px;
+  overflow: auto;
+  margin: 0px auto 10px auto;
+
+  ${ScrollBar()}
+
+  table{
+    font-size: .7rem;
+    margin: auto;
+    border-spacing: 0.5rem;
+    height: 100%;
+    border-collapse: collapse;
+    width: 1000px;
+    text-align: left;
+    cursor: default;
+  }
+
+  td, th {
+    border: 1px solid #999;
+    padding: 0.5rem;
+    text-align: left;
+    padding: 0.25rem;
+  }
+
+  th{
+    background: var(--major-color-purest);
+    color: #fff;
+  }
+
+  tr:nth-child(even) {
+    background: #ddd;
+  }
+
+  tbody tr:hover {
+    background: var(--major-color-30A);
+  }
+
+`
 
 
 export {
@@ -154,5 +235,7 @@ export {
     Input,
     TransactionStyle,
     Header,
-    Title
+    Title,
+    Header_Table,
+    Table
 }

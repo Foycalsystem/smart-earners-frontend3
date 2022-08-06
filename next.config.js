@@ -1,7 +1,4 @@
 /** @type {import('next').NextConfig} */
-const url = "http://localhost:4000/";
-const url_slug = "http://localhost:4000/";
-
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -21,8 +18,7 @@ const nextConfig = {
       // {
         {
           source: "/:slug*",
-          // destination: "http://localhost:4000/:slug*",
-          destination: "https://api.teamsmartearners.com/:slug*"
+          destination: process.env.NODE_ENV === 'development' ? 'http://localhost:4000/:slug*' : 'https://api.teamsmartearners.com/:slug*'
         }
       //   // de 1qastination: "https://squid-app-cqsgv.ondigitalocean.app/:slug*"
       // },

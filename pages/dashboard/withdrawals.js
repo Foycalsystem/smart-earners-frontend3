@@ -1,16 +1,22 @@
 import React from 'react'
 import Withdrawals from '../../components/user/withdrawals/Withdrawals';
+import { resolveApi } from '../../utils/resolveApi';
 
-export default function withdrawals() {
-  return <Withdrawals />
+export default function withdrawals({accesstoken}) {
+  return <Withdrawals accesstoken={accesstoken}/>
 }
 
 
 
 // handle redirect if user sign up
-export function getServerSideProps(context){
+export async function getServerSideProps(context){
   const cookies = context.req.cookies;
   const refreshtoken = cookies.refreshtoken;
+  const accesstoken = cookies.accesstoken;
+
+  await resolveApi.refreshToken(context, refreshtoken)
+  await resolveApi.resolveInvestment()
+  await resolveApi.removeUnverifiedusers()
 
   if(!refreshtoken){
     return {
@@ -22,7 +28,7 @@ export function getServerSideProps(context){
     }
   }else{
     return {
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
 }

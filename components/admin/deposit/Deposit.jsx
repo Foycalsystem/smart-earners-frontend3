@@ -1,54 +1,42 @@
-// import { getUser } from "../../../redux/auth/auth";
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import { AdminWrapper } from "../styles";
 import Loader_ from "../loader/Loader";
-
+import { getUser } from "../../../redux/auth/auth";
+import { getConfig } from "../../../redux/admin/web_config";
 
 
 export default function Deposit({userInfo}) {
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
+  const {user} = state.auth;
+  const {config} = state.config;
   const [isLoading, setLoading] = useState(true)
-  // const {deposit} = state.aDeposit;
 
   useEffect(()=>{
-    setLoading(true)
-    // dispatch(getUser())
+    dispatch(getUser())
+    dispatch(getConfig())
 
-    setTimeout(()=>{
-    //   user.isLoading ? setLoading(true) : setLoading(false)
-        setLoading(false)
-    }, 1000)
+    // setTimeout(()=>{
+    //   user.isLoading && config.isLoading  ? setLoading(true) : setLoading(false)
+    // }, 2000 )
+
+    user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+
   }, [])
 
-  const deposit = {
-    data: ''
-  }
 
   return (
     
     <>
-    <div></div>
+      <div></div>
       {
         //check if deposit exist
-        isLoading ? 
+        isLoading ?  <Loader_ /> :
         (
-          // set loading div
-          <Loader_ />
-        ) :
-        (
-          //check if empty
-
-          !deposit.data ? 
-          (
-              <div style={{textAlign: 'center'}}>No data currently available</div>
-          ):
-          (
-            <AdminWrapper>
-              display data here
-            </AdminWrapper>
-          )
+          <AdminWrapper>
+            Deposit Config Coming soon...
+          </AdminWrapper>
         )
       }
     </>
