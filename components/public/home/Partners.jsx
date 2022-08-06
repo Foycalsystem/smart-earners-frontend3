@@ -1,10 +1,6 @@
 import Image from 'next/image'
+import styled from 'styled-components'
 import {
-    HeroSectionWrapper,
-    HeroSection,
-    CardWrapper,
-    LandscapeCard,
-    ImageCard,
     PartnersWrapper
 } from './styles'
 
@@ -16,29 +12,39 @@ const Partners = () => {
       <SectionTitle subtitle={"We never walk alone, our strategic and key partners over the years"}> OUR PARTNERS </SectionTitle>
 
       
-        <section className="content">
-         
+        <Card>       
 
             <ImageCard>
-              <Image src={"/trademarks/infinox.jpg"}  layout="intrinsic" width="70" height="50" alt="" />
+              <Image src={"/trademarks/infinox.png"}  layout="intrinsic" width="50" height="30" alt="partners" />
             </ImageCard>
 
             <ImageCard>
-              <Image src={"/trademarks/binance.png"}  layout="intrinsic" width="85s" height="50" alt="" />
+              <Image src={"/trademarks/bnc.png"}  layout="intrinsic" width="70" height="30" alt="partners" />
             </ImageCard>
 
             <ImageCard>
-              <Image src={"/trademarks/fxtm.png"}  layout="intrinsic" width="85" height="50" alt="" />
+              <Image src={"/trademarks/fxtm.png"}  layout="intrinsic" width="40" height="20" alt="partners" />
             </ImageCard>
 
             <ImageCard>
-              <Image src={"/trademarks/afx-logo.png"}  layout="intrinsic" width="70" height="70" alt="" />
+              <Image src={"/trademarks/afx-logo.png"}  layout="intrinsic" width="30" height="30" alt="partners" />
             </ImageCard>
             
         
-        </section>
+        </Card>
       </PartnersWrapper>
   )
 }
 
 export default Partners
+
+const Card = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const ImageCard = styled.div`
+ display: inline-block;
+ margin : auto 5px
+
+`

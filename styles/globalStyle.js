@@ -58,12 +58,14 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body{
+    
     transition: background .3s ease-in;
     background: ${({toggleState})=>toggleState ? 'var(--light-theme)' : 'var(--dark-theme)'};
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
     color: var(--major-color-purest);
+   
 
     ${ScrollBar()}
 
