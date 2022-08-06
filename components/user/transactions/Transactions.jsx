@@ -111,7 +111,7 @@ export default function Transactions({toggleState}) {
             (
               (function(){
                 if(type==='all'){
-                  return <All toggleState={toggleState} data={all} id={txns.id}/>
+                  return <All txns={txns} toggleState={toggleState} data={all} id={txns.id}/>
                 }
                 else if(type==='deposit'){
                   return <Deposit toggleState={toggleState} data={deposit}/>
