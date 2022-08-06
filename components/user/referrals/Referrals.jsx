@@ -33,7 +33,7 @@ export default function Referrals({userInfo}) {
         isLoading ? <Loader_ /> :
         <Wrapper>
           <div className="input">
-            <div>Refer</div>
+            <div className="title">Refer</div>
           </div>
         </Wrapper>
        } 
@@ -59,6 +59,10 @@ const Wrapper = styled.div`
   margin: auto;
   position: relative;
 
+  .title{
+    text-align: center;
+    font-size: .8rem;
+  }
   .input{
     border: 1px solid red;
     height: 120px;

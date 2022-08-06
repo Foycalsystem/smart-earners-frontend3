@@ -50,7 +50,7 @@ export default function Transactions({toggleState}) {
 
     setTransfer(txns.data.filter(data=> data.type === 'transfer'));
 
-    setAll(txns.data);
+    setAll(txns.data.filter(data=> data.status !== 'canceled'));
     
   }, [txns])
 

@@ -60,39 +60,21 @@ export default function All({data, toggleState, txns, id}) {
               data.length < 1 ? <Msg /> : 
               <Wrapper>
                   {
-                    filteredData.map((data, index)=>{
+                    filteredData && filteredData.map((data, index)=>{
                     return (
                       <Card toggleState={toggleState} key={data._id}>
                         <div style={
                           (function(){
                               // deposit transactions``
-                              if(data.status === 'charge-created'){
-                              return {color: '#c20'}
+                              if(data.type === 'deposit'){
+                                return {color: 'var(--major-color-purest)'}
                               }
-                              else if(data.status === 'pending'){
-                                  return {color: 'var(--major-color-purest'}
-                              }
-                              else if(data.status === 'successful'){
-                                  return {color: 'green'}
-                              }
-
                               // transfer transactions
-                              if(id === data.sender._id){
-                              return {color: '#c20'}
+                              else if(data.type === 'transfer'){
+                                return {color: '#c20'}
                               }
-                              else if(id === data.receiver._id){
+                              else if(data.type === 'withdrawal'){
                                   return {color: 'green'}
-                              }
-
-                              // withdrawal transactions
-                              if(data.status === 'successful'){
-                              return {color: 'green'}
-                              }
-                              else if(data.status === 'pending'){
-                                  return {color: 'gold'}
-                              }
-                              else if(data.status === 'rejected'){
-                                  return {color: '#c20'}
                               }
                           }())
                         }  onClick={()=>toggle(index)} className='arrow'>
@@ -102,6 +84,7 @@ export default function All({data, toggleState, txns, id}) {
                           (function(){
                               // deposit transactions``
                               if(data.type === 'deposit' && data.status==='successful'){
+                               
                                   return (
                                   <div>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
