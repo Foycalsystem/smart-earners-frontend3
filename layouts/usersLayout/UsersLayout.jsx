@@ -15,7 +15,7 @@ export default function DashboardLayout({children, userInfo}) {
   useEffect(()=>{
       setIsMobile(mobileAndTabletCheck(window))
 
-      // setIsMobile(true)
+      setIsMobile(true)
 
   }, [])
 

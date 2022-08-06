@@ -343,7 +343,7 @@ const Msg = ()=>{
 
     return (
       <MsgWrapper className="none">
-        No Any Successful Deposit Transactions At The Moment
+        No Any Transactions At The Moment
       </MsgWrapper>
     )
 }

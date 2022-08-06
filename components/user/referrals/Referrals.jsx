@@ -14,7 +14,6 @@ export default function Referrals({userInfo}) {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(()=>{
-    setLoading(true)
     dispatch(getUser())
     dispatch(getBounus())
 
@@ -29,18 +28,45 @@ export default function Referrals({userInfo}) {
   // console.log(bonus)
 
   return (
-    
-    isLoading ? <Loader_ /> :
-    (
-      <Wrapper>
-        display data here
-      </Wrapper>
-    )   
+    <Div>
+       {
+        isLoading ? <Loader_ /> :
+        <Wrapper>
+          <div className="input">
+            <div>Refer</div>
+          </div>
+        </Wrapper>
+       } 
+    </Div>
   )
 }
 
 
+const Div = styled.div`
+  width: 100%;
+  height: 78vh;
+  background: url('/referral.png');
+  background-size: 450px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment:fixed;
+`
 const Wrapper = styled.div`
   width: 100%;
+  max-width: 600px;
+  height: 100%;
+  border: 1px solid red;
+  margin: auto;
+  position: relative;
+
+  .input{
+    border: 1px solid red;
+    height: 120px;
+    width: 250px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 10px;
+  }
 
 `
