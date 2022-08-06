@@ -20,7 +20,7 @@ export default function Transfer({toggleState, data, id}) {
     useEffect(()=>{
         const newData = filter({
         data: data,
-        keys: [ "amount", "id",],
+        keys: [ "amount", "id", "accountNumber"],
         input: inp
         })
 
@@ -35,6 +35,7 @@ export default function Transfer({toggleState, data, id}) {
       }
       setClicked(index)
     }
+
     
     return (
         <div>
@@ -46,7 +47,7 @@ export default function Transfer({toggleState, data, id}) {
                   <div className="search">
                       <input
                       type="text"
-                      placeholder="Search by amount, id"
+                      placeholder="Search by amount, account number, id"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                       />
@@ -73,7 +74,7 @@ export default function Transfer({toggleState, data, id}) {
                           }
                         }())
                       }  onClick={()=>toggle(index)} className='arrow'>
-                        {clicked==index ? <ArrowDropDownIcon />:<ArrowDropUpIcon /> }
+                        {clicked==index ? <ArrowDropUpIcon />:< ArrowDropDownIcon/> }
                       </div>
                       {
                         (function(){
@@ -89,8 +90,7 @@ export default function Transfer({toggleState, data, id}) {
                                   clicked === index ?
                                   <div className="dropdown">
                                     <div>Receiver: {data.receiver.username}</div>
-                                    <div>Email: {data.receiver.email}</div>
-                                    <div>Account No: {data.receiver.accountNumber}</div>
+                                    <div>Account No: {data.accountNumber}</div>
                                     <div>Id: {data._id}</div>
                                   </div> : null
                                 }
@@ -111,8 +111,7 @@ export default function Transfer({toggleState, data, id}) {
                                   clicked === index ?
                                   <div className="dropdown">
                                     <div>Sender: {data.sender.username}</div>
-                                    <div>Email: {data.sender.email}</div>
-                                    <div>Account No: {data.sender.accountNumber}</div>
+                                    <div>Account No: {data.accountNumber}</div>
                                     <div>Id: {data._id}</div>
                                   </div> : null
                                 }

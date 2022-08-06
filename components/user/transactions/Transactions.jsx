@@ -4,11 +4,12 @@ import Loader_ from "../loader/Loader";
 import styled from 'styled-components';
 import Deposit from "./Deposit.jsx";
 import Withdrawals from "./Withdrawals.jsx";
+import All from "./All.jsx";
 import Transfer from "./Transfer.jsx";
 import Spinner from "../../../loaders/Spinner";
 import { getUser } from "../../../redux/auth/auth";
 import { getConfig } from "../../../redux/admin/web_config";
-import { getTnx, getTrfTnx } from "../../../redux/transactions/transactions";
+import { getTnx } from "../../../redux/transactions/transactions";
 
 import {
   AdminWrapper,
@@ -20,19 +21,18 @@ export default function Transactions({toggleState}) {
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const {txns} = state.transactions;
-  const {trfTxns} = state.transactions;
   const {user} = state.auth;
   const {config} = state.config;
   const [isLoading, setLoading] = useState(true)
 
-  const [type, setType] = useState('deposit') // deposit, withdrawals or transfer
+  const [type, setType] = useState('all') // deposit, withdrawals or transfer
   const [deposit, setDeposit] = useState([])
   const [withdrawals, setWithdrawals] = useState([])
   const [transfer, setTransfer] = useState([])
+  const [all, setAll] = useState([])
 
   useEffect(()=>{
     dispatch(getTnx())
-    dispatch(getTrfTnx())
     dispatch(getUser())
     dispatch(getConfig())
 
@@ -40,26 +40,39 @@ export default function Transactions({toggleState}) {
     //     config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
     // }, 1000)
 
-    config.isLoadin && user.isLoadin && txns.isLoading  && trfTxns.isLoading ? setLoading(true) : setLoading(false)
+    config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
   }, [])
-
   
   useEffect(()=>{
     setDeposit(txns.data.filter(data=> data.type === 'deposit' && data.status !== 'canceled'));
 
     setWithdrawals(txns.data.filter(data=> data.type === 'withdrawal'));
+
+    setTransfer(txns.data.filter(data=> data.type === 'transfer'));
+
+    setAll(txns.data);
     
-    setTransfer(trfTxns.data);
-   
   }, [txns])
+
 
   return (
     <div>
       <AdminWrapper>
           <Head type={type}>
             <div className="col">
-              <button onClick={()=>setType('deposit')} className="deposit">deposit</button>
-              <div style={{display: 'flex', justifyContent: 'center', color: '#c20'}}>
+              <button onClick={()=>setType('all')} className="all">All</button>
+              <div style={{display: 'flex', justifyContent: 'center'}}>
+                {
+                  txns.isLoading ? <Spinner size='10px' /> :
+                  (
+                    all.length < 1 ? '---' : all.length
+                  )
+                }
+              </div>
+            </div>
+            <div className="col">
+              <button onClick={()=>setType('deposit')} className="deposit">Deposit</button>
+              <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
                   txns.isLoading ? <Spinner size='10px' /> :
                   (
@@ -71,7 +84,7 @@ export default function Transactions({toggleState}) {
 
             <div className="col">
               <button onClick={()=>setType('withdrawals')} className="withdrawals">Withdrawals</button>
-              <div style={{display: 'flex', justifyContent: 'center', color: '#c20'}}>
+              <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
                   txns.isLoading ? <Spinner size='10px' /> :
                   (
@@ -85,7 +98,7 @@ export default function Transactions({toggleState}) {
               <button onClick={()=>setType('transfer')} className="transfer">Transfer</button>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
-                  trfTxns.isLoading ? <Spinner size='10px' /> :
+                  txns.isLoading ? <Spinner size='10px' /> :
                   (
                     transfer.length < 1 ? '---' : transfer.length
                   )
@@ -97,14 +110,17 @@ export default function Transactions({toggleState}) {
             isLoading ? <div style={{display: 'flex', justifyContent: 'center'}}><Loader_ /></div> : 
             (
               (function(){
-                if(type==='deposit'){
+                if(type==='all'){
+                  return <All toggleState={toggleState} data={all} id={txns.id}/>
+                }
+                else if(type==='deposit'){
                   return <Deposit toggleState={toggleState} data={deposit}/>
                 }
                 else if(type==='withdrawals'){
                   return <Withdrawals toggleState={toggleState} data={withdrawals}/>
                 }
                 else if(type==='transfer'){
-                    return <Transfer toggleState={toggleState} data={transfer} id={trfTxns.id}/>
+                    return <Transfer toggleState={toggleState} data={transfer} id={txns.id}/>
                 }
                 else{
                   return ''
@@ -148,18 +164,23 @@ const Head = styled.div`
     .deposit{
         background: transparent;
         color: var(--major-color-purest);
-        border: ${({type})=>type==='deposit' ? '2px solid green': '1px solid #ccc'}
+        border: ${({type})=>type==='deposit' ? '2px solid green': '1px solid #dfdfdf'}
     };
 
+    .all{
+        background: transparent;
+        color: var(--major-color-purest);
+        border: ${({type})=>type==='all' ? '2px solid green': '1px solid #dfdfdf'}
+    };
     .withdrawals{
         background: transparent;
         color: var(--major-color-purest);
-        border: ${({type})=>type==='withdrawals' ? '2px solid green': '1px solid #ccc'}
+        border: ${({type})=>type==='withdrawals' ? '2px solid green': '1px solid #dfdfdf'}
     }
 
     .transfer{
         background: transparent;
         color: var(--major-color-purest);
-        border: ${({type})=>type==='transfer' ? '2px solid green': '1px solid #ccc'}
+        border: ${({type})=>type==='transfer' ? '2px solid green': '1px solid #dfdfdf'}
     }
 `
