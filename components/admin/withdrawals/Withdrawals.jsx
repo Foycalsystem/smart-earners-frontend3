@@ -6,6 +6,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import {useSnap} from '@mozeyinedu/hooks-lab';
 import Link from 'next/link'
 import { useRouter } from "next/router";
+import { getUser } from "../../../redux/auth/auth";
+import Spinner from "../../../loaders/Spinner";
+import { resolveApi } from "../../../utils/resolveApi";
+import Cookies from "js-cookie";
+
 
 
 import {
@@ -17,14 +22,15 @@ import {
   Header,
   Label
 } from "../styles";
-import Transactions from "../transactionsModal/Transactions";
+
 
 
 export default function Withdrawals({userInfo}) {
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const [isLoading, setLoading] = useState(true)
-  const {config} = state.config;
+  const {config, update} = state.config;
+  const {user} = state.auth;
   const router = useRouter()
 
   const initialState = {  
@@ -38,10 +44,13 @@ export default function Withdrawals({userInfo}) {
   useEffect(()=>{
     setLoading(true)
     dispatch(getConfig())
+    dispatch(getUser())
 
-    setTimeout(()=>{
-      config.isLoading ? setLoading(true) : setLoading(false)
-    }, 1000)
+    // setTimeout(()=>{
+    //   user.isLoading ? setLoading(true) : setLoading(false)
+    // }, 1000)
+
+    user.isLoading &&  config.isLoading ? setLoading(true) : setLoading(false)
 
   }, [])
 
@@ -58,23 +67,11 @@ export default function Withdrawals({userInfo}) {
 
       {
         //check if config exist
-        isLoading ? 
+        isLoading ? <Loader_ /> :
         (
-          // set loading div
-          <Loader_ />
-        ) :
-        (
-          //check if empty
-
-          !config.status ? 
-          (
-              <div style={{textAlign: 'center'}}>{config.msg || 'No data currently available'}</div>
-          ):
-          (
-            <AdminWrapper>
-              <SetForm config={config} initialState={initialState}/>
-            </AdminWrapper>
-          )
+          <AdminWrapper>
+            <SetForm config={config} update={update} initialState={initialState}/>
+          </AdminWrapper>
         ) 
       }
     </>   
@@ -85,7 +82,7 @@ export default function Withdrawals({userInfo}) {
 
 
 
-function SetForm({config, initialState}) {
+function SetForm({config, update, initialState}) {
     const {snap} = useSnap(.5);
     const [edit, setEdit] = useState(false);
     const dispatch = useDispatch()
@@ -99,13 +96,16 @@ function SetForm({config, initialState}) {
       setInp({...inp, [name]:value})
     }
 
-    // console.log(config.data.unverifyUserLifeSpan)
-
-    const submit=(e)=>{
+    const submit = async(e)=>{
         e.preventDefault();
+        if(!Cookies.get('accesstoken')){
+          await resolveApi.refreshTokenClinetSide()
+        }
+
         dispatch(updateConfig(inp));
         
         setInp(initialState);
+        setEdit(false)
     }
 
     useEffect(()=>{
@@ -114,7 +114,26 @@ function SetForm({config, initialState}) {
   
     return (
       <div>
-          <Form>
+          <Form style={{position: 'relative'}}>
+              {
+                !update.isLoading ? "" : 
+                (
+                  <div style={{
+                    position: 'absolute', 
+                    top: 0,
+                    bottom:0,
+                    left: 0,
+                    right: 0,
+                    display: 'flex',
+                    justifyContent:'center',
+                    alignItems: 'center',
+                    zIndex: 2
+                    }}>
+                      <Spinner size="20px"/>
+      
+                  </div>
+                )
+              }
               <Container>
 
                   <div {...snap()} onClick={()=>setEdit(!edit)} className="title">
@@ -167,7 +186,7 @@ function SetForm({config, initialState}) {
                   <InputWrapper title="Add in comma seperated strings with the last comma preserved to avoid lost of data">
                       <Label htmlFor="">Withdrawable Coins: {" "} 
                       {
-                        config.data.withdrawalCoins.map((coins, i)=><span key={i} style={{paddingRight: '4px'}} className="item">{coins}</span>)
+                        config.data.withdrawalCoins && config.data.withdrawalCoins.map((coins, i)=><span key={i} style={{paddingRight: '4px'}} className="item">{coins}</span>)
                       }
                       </Label>
                       <Input

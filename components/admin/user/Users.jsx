@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
-import { blockUser, getUsers, deleteUser, unBlockUser, makeAdmin, removeAdmin } from "../../../redux/auth/auth";
+import { blockUser, getUsers, getUser, deleteUser, unBlockUser, makeAdmin, removeAdmin } from "../../../redux/auth/auth";
 import styled from 'styled-components'
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import moment from 'moment'
 import Spinner from "../../../loaders/Spinner";
 import filter from "@mozeyinedu/filter";
+import { getConfig } from "../../../redux/admin/web_config";
 import SearchIcon from '@mui/icons-material/Search';
+import Cookies from "js-cookie";
+import { resolveApi } from "../../../utils/resolveApi";
 
 import {
   AdminWrapper,
+  Header_Table,
+  Table
 } from "../styles";
 import { ScrollBar } from "../../../styles/globalStyle";
 
@@ -18,7 +22,9 @@ export default function Users({userInfo}) {
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const [isLoading, setLoading] = useState(true)
-  const {users, del, block, unblock, makeadmin, removeadmin} = state.auth;
+  const {users, user, del, block, unblock, makeadmin, removeadmin} = state.auth;
+  const {config} = state.config;
+
   const [investor, setInvestor] = useState(0);
   const [balance, setBalance] = useState(0)
   const [admin, setAdmin] = useState(0);
@@ -66,30 +72,43 @@ export default function Users({userInfo}) {
 
   
   useEffect(()=>{
-    setLoading(true)
     dispatch(getUsers())
+    dispatch(getUser())
+    dispatch(getConfig())
 
-    setTimeout(()=>{
-      users.isLoading ? setLoading(true) : setLoading(false)
-    }, 1000)
+    // setTimeout(()=>{
+    //   users.isLoading && user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+    // }, 1000)
+
+    users.isLoading && user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
   }, [])
 
 
-  const handleDelete=(id)=>{
+  const handleDelete = async(id)=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
     dispatch(deleteUser(id))
   }
-  const handleBlock=(id, isBlock)=>{
+  
+  const handleBlock = async(id, isBlock)=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
     isBlock ?  dispatch(unBlockUser(id)) :  dispatch(blockUser(id))
   }
 
-  const handleAdmin=(id, isAdmin)=>{
+  const handleAdmin = async(id, isAdmin)=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
     isAdmin ?  dispatch(removeAdmin(id)) :  dispatch(makeAdmin(id))
   }
   
 
   return (
     <>
-      <Header>
+      <Header_Table>
         <div className="row">
          <div className="search">
             <input
@@ -102,12 +121,12 @@ export default function Users({userInfo}) {
          </div>
         </div>
         <div className="row">
-          <div>Total members: {users.isLoading ? <Spinner size='.7rem' /> : users.data.length }</div>
-          <div>Total Investors: {users.isLoading ? <Spinner size='.7rem' /> : investor}</div>
-          <div>Overall Balance: {users.isLoading ? <Spinner size='.7rem' /> : balance} {users.data.currency}</div>
-          <div>Admin: {users.isLoading ? <Spinner size='.7rem' /> : admin}</div>
+          <div>Total members: {isLoading ? '---' : users.data.length }</div>
+          <div>Total Investors: {isLoading ? '---' : investor}</div>
+          <div>Overall Balance: {isLoading ? '---' : balance} {config.data.nativeCurrency}</div>
+          <div>Admin: {isLoading ? '---' : admin}</div>
         </div>
-      </Header>
+      </Header_Table>
     {
     //check if user exist
     isLoading ? 
@@ -119,7 +138,7 @@ export default function Users({userInfo}) {
       //check if empty
       users.data.length < 1 ?
       (
-        <div style={{textAlign: 'center'}}>No Users Currently Available</div>
+       ''
       ):
       (
         <AdminWrapper>
@@ -176,7 +195,7 @@ export default function Users({userInfo}) {
                             }())
                           }
                         </td>
-                        <td>{user.amount}</td>
+                        <td>{user.amount && user.amount.toFixed(4)}</td>
                         <td>{user.hasInvested ? 'True' : 'False'}</td>
                         <td>{user.accountNumber}</td>
                         <td>{user.isVerified ? <VerifiedUserIcon style={{fontSize: '1rem', color: "var(--bright-color"}}/> : ''}</td>
@@ -201,87 +220,4 @@ export default function Users({userInfo}) {
   )
 }
 
-const Header = styled.div`
-  margin-bottom: 0px;
-  padding: 5px;
-  display: grid;
-  grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
-
-  .row{
-    padding: 3px;
-    font-size: .8rem;
-    justify-self: center;
-  }
-
-  .search{
-    width: 250px;
-    height: 30px;
-    border: 1px solid var(--major-color-purest);
-    border-radius: 12px;
-    background: #fff;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .icon{
-    width:30px;
-    background: var(--major-color-purest);
-    height: 100%;
-    display: flex;
-    color:#fff;
-    justify-content: center;
-    align-items: center;
-  }
-  input{
-    width: calc(100% - 30px);
-    padding: 0 8px;
-    border: none;
-
-    &:focus{
-      outline: none;
-      // border: 2px solid green;
-    }
-  }
-`
-
-const Table = styled.div`
-  padding: 0 10px;
-  overflow: auto;
-  margin: 0px auto 10px auto;
-
-  ${ScrollBar()}
-
-  table{
-    font-size: .8rem;
-    margin: auto;
-    border-spacing: 0.5rem;
-    height: 100%;
-    border-collapse: collapse;
-    width: 1200px;
-    text-align: left;
-    cursor: default;
-  }
-
-  td, th {
-    border: 1px solid #999;
-    padding: 0.5rem;
-    text-align: left;
-    padding: 0.25rem;
-  }
-
-  th{
-    background: var(--major-color-purest);
-    color: #fff;
-  }
-
-  tr:nth-child(even) {
-    background: #ddd;
-  }
-
-  tbody tr:hover {
-    background: var(--major-color-30A);
-  }
-
-`
 

@@ -9,7 +9,7 @@ export const signup = createAsyncThunk(
     'auth/signup',
     async(data, {rejectWithValue})=>{
         try{
-            const res = await axios.post(`/auth/signup`, data)
+            const res = await axios.post(`/auth/signup?refcode=${data.refcode}`, data.inp)
             return res.data
         }
         catch(err){
@@ -120,22 +120,20 @@ export const verifyAccount= createAsyncThunk(
     }
 )
 
+
+// accesstoken needed here
+
 // get profile
 export const getUser= createAsyncThunk(
     'auth/getUser',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-
-                const res = await axios.get(`/auth/get-profile`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }else{
-                return rejectWithValue({status: false, msg: ''});
-            }           
+            const res = await axios.get(`/auth/get-profile`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;           
         }
         catch(err){
             if(err.response.data){
@@ -153,15 +151,13 @@ export const getUsers= createAsyncThunk(
     'auth/getUsers',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-
-                const res = await axios.get(`/auth/get-all-users`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.get(`/auth/get-all-users`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;
+                        
         }
         catch(err){
             if(err.response.data){
@@ -179,14 +175,13 @@ export const deleteUser = createAsyncThunk(
     'auth/del',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.delete(`/auth/delete-account/${id}`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.delete(`/auth/delete-account/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;
+                  
         }
         catch(err){
 
@@ -206,14 +201,13 @@ export const blockUser= createAsyncThunk(
     'auth/block',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/auth/block-user/${id}`, {}, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.put(`/auth/block-user/${id}`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;
+                     
         }
         catch(err){
             if(err.response.data){
@@ -232,14 +226,12 @@ export const unBlockUser= createAsyncThunk(
     'auth/unblock',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/auth/unblock-user/${id}`, {},{
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }              
+            const res = await axios.put(`/auth/unblock-user/${id}`, {},{
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;            
         }
         catch(err){
             if(err.response.data){
@@ -257,14 +249,12 @@ export const makeAdmin= createAsyncThunk(
     'auth/make-admin',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/auth/make-admin/${id}`, {}, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }             
+            const res = await axios.put(`/auth/make-admin/${id}`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
         }
         catch(err){
             if(err.response.data){
@@ -282,14 +272,12 @@ export const removeAdmin= createAsyncThunk(
     'auth/remove-admin',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/auth/remove-admin/${id}`, {}, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }              
+            const res = await axios.put(`/auth/remove-admin/${id}`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;            
         }
         catch(err){
             if(err.response.data){
@@ -307,14 +295,12 @@ export const sendVerificationLink= createAsyncThunk(
     'auth/verifyLink',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.get(`/auth/resend-verification-link`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.get(`/auth/resend-verification-link`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;            
         }
         catch(err){
             if(err.response.data){

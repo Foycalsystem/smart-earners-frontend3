@@ -34,9 +34,8 @@ const device = {
 // Hero section
 
 const Wrapper = styled.div`
-    width: 90%;
+    width: 100%;
     margin: 10px auto;
-    padding: 10px;
 
     .meso-layer{
         margin: 5px auto;

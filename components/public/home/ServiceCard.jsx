@@ -17,22 +17,26 @@ const ServiceCard = ({datum}) => {
 }
 
 const StyledCard =styled.section`
-        width:150px;
-        background: #fff;
-        padding: 10px;
-        display: flex;
-        flex-flow: column nowrap;
-        justify-content: flex-start;
-        align-items: center;
-        font-size: 1rem;
-        text-align: center;  
-        border-radius: 5px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        
-        span p{
-            font-weight: bold;
-            margin: 5px;
-        }
+    width: 140px;
+    border-radius: 5px;
+    margin: 5px 2px;
+    padding: 10px;
+    font-size: .8rem;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;  
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+    @media (max-width: 366px){
+        width: 320px;
+    }
+    
+    span p{
+        font-weight: bold;
+        margin: 5px;
+    }
 
     @media ${device.tablet}{
         width: 250px;

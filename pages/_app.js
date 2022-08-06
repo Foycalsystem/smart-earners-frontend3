@@ -7,20 +7,15 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import { store } from '../redux/store';
-import {resolveApi} from '../utils/resolveApi'
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css'
 import Preloader from '../loaders/Preloader';
 import useToggle from '../hooks/toggles/toggles';
 import Cookies from 'js-cookie';
 axios.defaults.withCredentials = true;
+import { resolveApi } from '../utils/resolveApi';
 
 function MyApp({ Component, pageProps }) {
-    
-  resolveApi.generateAccesstoken()
-  resolveApi.authorize()
-  resolveApi.resolveInvestment()
-  resolveApi.removeUnverifiedusers()
   
   const router = useRouter()
   const { toggle, toggleState } = useToggle(); 
@@ -29,6 +24,7 @@ function MyApp({ Component, pageProps }) {
   const [userInfo, setUserInfo] = useState({
     refreshtoken: '',
     accesstoken: '',
+    status: '',
     type: ''
   });
 
@@ -42,8 +38,14 @@ function MyApp({ Component, pageProps }) {
           NProgress.done();
       }, 1000)
   }
-    
+  
+  resolveApi.refreshTokenClinetSide();
+  resolveApi.resolveInvestmentClientSide();
+  resolveApi.removeUnverifiedusersClientSide();
+
+
   useEffect(()=>{
+      
       setLoading(true)
       setTimeout(()=> {
         setLoading(false)
@@ -66,7 +68,8 @@ function MyApp({ Component, pageProps }) {
     setUserInfo({
       refreshtoken: Cookies.get('refreshtoken'),
       accesstoken: Cookies.get('accesstoken'),
-      type: Cookies.get('type')
+      status: Cookies.get('status'),
+      type: Cookies.get('type'),
     })
    
 
@@ -88,7 +91,7 @@ function MyApp({ Component, pageProps }) {
       
 
       <Layouts userInfo={userInfo} toggleState={toggleState}>
-          <Component {...pageProps} userInfo={userInfo}/>
+          <Component {...pageProps} userInfo={userInfo} toggleState={toggleState}/>
       </Layouts>
 
 

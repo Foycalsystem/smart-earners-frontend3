@@ -1,16 +1,22 @@
 import React from 'react'
-import Transfer from '../../../components/admin/transfer/Transfer'
+import Transfer from '../../../components/admin/transfer/Transfer';
+import { resolveApi } from "../../../utils/resolveApi";
 
-export default function transfer() {
-  return <Transfer />
+export default function transfer({accesstoken}) {
+  return <Transfer accesstoken={accesstoken}/>
 }
 
 
 // handle redirect if user sign in
-export function getServerSideProps(context){
+export async function getServerSideProps(context){
   const cookies = context.req.cookies;
   const refreshtoken = cookies.refreshtoken;
+  const accesstoken = cookies.accesstoken;
   const type = cookies.type;
+
+  await resolveApi.refreshToken(context, refreshtoken)
+  await resolveApi.resolveInvestment()
+  await resolveApi.removeUnverifiedusers()
 
   if(!refreshtoken){
     return {
@@ -18,7 +24,7 @@ export function getServerSideProps(context){
         destination: '/signin',
         permanent: false,
       },
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
   else if(refreshtoken && type !=='admin'){
@@ -27,12 +33,12 @@ export function getServerSideProps(context){
         destination: '/dashboard',
         permanent: false,
       },
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
   else{
     return {
-      props: {}
+      props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }
 }

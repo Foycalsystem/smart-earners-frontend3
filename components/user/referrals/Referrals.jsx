@@ -1,54 +1,46 @@
-// import { getUser } from "../../../redux/auth/auth";
+import { getUser } from "../../../redux/auth/auth";
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
-import { UserWrapper } from "./styles";
 import Loader_ from "../loader/Loader";
-
+import { getBounus } from "../../../redux/referrals/referrals";
+import styled from "styled-components";
 
 
 export default function Referrals({userInfo}) {
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
+  const {user} = state.auth;
+  const {bonus} = state.referrals;
   const [isLoading, setLoading] = useState(true)
-//   const {user} = state.auth;
 
   useEffect(()=>{
     setLoading(true)
-    // dispatch(getUser())
+    dispatch(getUser())
+    dispatch(getBounus())
 
-    setTimeout(()=>{
-    //   user.isLoading ? setLoading(true) : setLoading(false)
-        setLoading(false)
-    }, 1000)
+    // setTimeout(()=>{
+    //   user.isLoading && bonus.isLoading ? setLoading(true) : setLoading(false)
+    //     setLoading(false)
+    // }, 1000)
+
+    user.isLoading && bonus.isLoading ? setLoading(true) : setLoading(false)
   }, [])
 
-// console.log(user)
-    const user = {
-        data: ''
-    }
-
+  // console.log(bonus)
 
   return (
     
-    //check if user exist
-
-    isLoading ? 
+    isLoading ? <Loader_ /> :
     (
-      // set loading div
-      <Loader_ />
-    ) :
-    (
-      //check if empty
-
-      !user.data ? 
-      (
-          <div style={{textAlign: 'center'}}>{user.msg || 'No Data Currently Available'}</div>
-      ):
-      (
-        <UserWrapper>
-          display data here
-        </UserWrapper>
-      )
-    )    
+      <Wrapper>
+        display data here
+      </Wrapper>
+    )   
   )
 }
+
+
+const Wrapper = styled.div`
+  width: 100%;
+
+`

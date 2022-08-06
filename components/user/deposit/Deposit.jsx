@@ -8,6 +8,8 @@ import Feedback from "../../Feedback";
 import { getConfig } from "../../../redux/admin/web_config";
 import conversionRate from "../../../utils/conversionRate";
 import { makeDeposit } from "../../../redux/admin/deposit";
+import Cookies from 'js-cookie';
+import { resolveApi } from "../../../utils/resolveApi"
 
 
 import { 
@@ -19,7 +21,7 @@ import {
 
 
 
-export default function Deposit({userInfo}){
+export default function Deposit({userInfo, accesstoken}){
     const dispatch = useDispatch();
     const state = useSelector(state=>state);
     const {snap} = useSnap()
@@ -45,8 +47,12 @@ export default function Deposit({userInfo}){
       setInp({...inp, [name]:value});
     }
 
-    const submit =(e)=>{
+    const submit = async(e)=>{
       e.preventDefault()
+
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
       dispatch(makeDeposit(inp))
     }
 
@@ -62,38 +68,44 @@ export default function Deposit({userInfo}){
     }, [deposit])
 
     useEffect(()=>{
+      
       dispatch(getUser())
       dispatch(getConfig())
   
-      setTimeout(()=>{
-        user.isLoading ? setLoading(true) : setLoading(false)
-      }, 2000)
+      // setTimeout(()=>{
+      //   user.isLoading ? setLoading(true) : setLoading(false)
+      // }, 1000)
+
+      user.isLoading ? setLoading(true) : setLoading(false)
 
       setFeedback({
         msg: '',
         status: false
       });
 
-      }, [])
+    }, [])
+    
 
     useEffect(()=>{
       if(deposit.status){
         setInp(initialState)
+        setFeedback({
+          msg: '',
+          status: false
+        });
         // redirect to coinbase commerce using the returned url (hostedUrl)
         window.open(deposit.data.hostedUrl)
+
+        return
       }
     }, [deposit])
    
     return (
     
-        isLoading ? 
-        (
-          // set loading div
-          <Loader_ />
-        ) :
+        isLoading ?  <Loader_ /> :
         (
           <Wrapper>
-              <div className="account-balance" style={{color: 'var(--major-color-purest)'}}>Total Balance: {user.data.amount} {config.data.nativeCurrency}</div>
+              <div className="account-balance" style={{color: 'var(--major-color-purest)'}}>Account Balance: {user.data.amount} {config.data.nativeCurrency}</div>
               <Form onSubmit={submit}>
                 <h3 className="title">
                   Deposit
@@ -142,5 +154,4 @@ export default function Deposit({userInfo}){
         )    
     )
 }
-
 

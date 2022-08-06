@@ -13,6 +13,8 @@ import Profile from "./Profile";
 import Mature from "./Mature";
 import Loader_ from "../loader/Loader";
 import PopUpModal from "../../modals/popUpModal/PopUpModal";
+import Cookies from 'js-cookie'
+import { resolveApi } from "../../../utils/resolveApi"
 
 
 
@@ -47,35 +49,53 @@ const Plans = ({userInfo}) => {
 
     const {invest, txn} = state.investment
     const [feedback, setFeedback] = useState({
-      msg: invest.msg,
+      msg: "",
       status: false
     })
 
-    useEffect(()=>{
-      setTimeout(()=>{
-        user.isLoading ? setLoading(true) : setLoading(false)
-      }, 2000)
-    }, [])
+    // useEffect(()=>{
+    //   setTimeout(()=>{
+    //     user.isLoading ? setLoading(true) : setLoading(false)
+    //   }, 1000)
+      
+    // }, [])
 
     useEffect(()=>{
       dispatch(getPlans())
       dispatch(getTxn())
       dispatch(getUser())
+
+      user.isLoading ? setLoading(true) : setLoading(false)
     }, [])
 
-    const investBtn=(data)=>{
+    const investBtn = async(data)=>{
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
+      
       if(data.type.toLowerCase() === 'master'){
         setMasterPlanData(data)
         setShowModal(true)
+
+        setFeedback({
+          msg: "",
+          status: false
+        })
 
       }else{
         const data_ = {
           id: data._id,
           amount: data.amount,
         }
-        dispatch(investPlan(data_))
+        dispatch(investPlan(data_));
+
+        setFeedback({
+          msg: "",
+          status: false
+        })
       }
     }
+
     useEffect(()=>{  
       setFeedback({
         msg: invest.msg,
@@ -94,7 +114,7 @@ const Plans = ({userInfo}) => {
       isLoading ? <Loader_ />  :
       (
         <Plan>
-        `<Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
+        <Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
         <div style={{padding: '10px 20px 2px 20px', fontWeight: 'bold'}}>Plans</div>
         <div className="center"> {
           invest.isLoading ? <Spinner size="24px"/> : ''
@@ -291,7 +311,7 @@ function MasterPlan({data, showModal, setShowModal}){
           onChange={getInp}
         />
 
-        <div style={{textAlign: 'center', fontSize: '.8rem', color: inp.amount < data.amount ? '#c20' : 'var(--major-color-purest'}}>Amount must not be less than {data.amount} {data.currency}</div>
+        <div style={{textAlign: 'center', fontSize: '.8rem', color: inp.amount < data.amount ? '#c20' : 'var(--major-color-purest'}}>Mininum Amount: {data.amount} {data.currency}</div>
 
         <div style={{marginTop: '20px'}} className="center">{invest.isLoading ? <Spinner size='20px'/> : ""}</div>
         <div style={{

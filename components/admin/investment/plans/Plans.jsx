@@ -10,8 +10,12 @@ import { handleAdd, getPlans, handleUpdate, handleDelete } from "../../../../red
 import styled from 'styled-components'
 import Spinner from '../../../../loaders/Spinner';
 import Feedback from "../../../Feedback";
-import { SwipeWrapper } from "../../../public/home/styles";
 import resolveInvestmentLifespan from "../../../../utils/resolveInvestmentLifeSpan";
+import { resolveApi } from "../../../../utils/resolveApi";
+import Cookies from "js-cookie";
+import { getUser } from "../../../../redux/auth/auth";
+
+
 
 import {Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, {
@@ -39,12 +43,16 @@ import {
 } from "../../styles";
 
 
+
+
 export default function Plans() {
   const router = useRouter()
   const dispatch = useDispatch();
   const state = useSelector(state=>state);
   const {plans} = state.plans;
+  const {user} = state.auth;
   const [update, setUpdate] = useState(false);
+  const [isLoading, setLoading] = useState(true)
 
   const initialState = {
     type: '',
@@ -56,7 +64,15 @@ export default function Plans() {
 
   useEffect(()=>{
     dispatch(getPlans())
+    dispatch(getUser())
+
+    // setTimeout(()=>{
+    //   plans.isLoading ? setLoading(true) : setLoading(false)
+    // }, 1000)
+
+    user.isLoading && plans.isLoading ? setLoading(true) : setLoading(false)
   }, [])
+
   
 
 
@@ -135,9 +151,12 @@ function SetPlan({update, initial, setUpdate, setInitial}){
     setInp(initial)
   }, [update])
 
-  const submit=(e)=>{
+  const submit= async(e)=>{
     e.preventDefault()
-    
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
+
     const updatingData = {
       id: inp.id, 
       data: {
@@ -151,7 +170,10 @@ function SetPlan({update, initial, setUpdate, setInitial}){
 
   }
 
-  const handleReset=()=>{
+  const handleReset = async()=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
     setInitial(initialState)
     setUpdate(false)
   }
@@ -311,7 +333,11 @@ const SinglePlan = ({setUpdate, data, setInitial}) => {
   const dispatch = useDispatch()
 
 
-  const handleEdit =(data)=>{
+  const handleEdit = async(data)=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
+
     setUpdate(true);
     setInitial({
       id: data._id,
@@ -325,6 +351,13 @@ const SinglePlan = ({setUpdate, data, setInitial}) => {
       left:0,
       behavior: 'smooth'
     })
+  }
+
+  const handleDelete_ = async(id)=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
+    dispatch(handleDelete(id))
   }
 
   return (
@@ -348,7 +381,7 @@ const SinglePlan = ({setUpdate, data, setInitial}) => {
               <div className="actionBtn" onClick={()=>handleEdit(data)}>
                 <EditIcon  style={{color: 'var(--bright-color', fontSize: '2rem'}}/>
               </div>
-              <div className="actionBtn" onClick={()=>dispatch(handleDelete(data._id))}>
+              <div className="actionBtn" onClick={()=>handleDelete_(data._id)}>
                 <DeleteForeverIcon style={{color: '#c20', fontSize: '2rem'}} />
               </div>
             </div>

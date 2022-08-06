@@ -13,11 +13,9 @@ export default function Mature({data, txn}) {
     // }, [])
 
     useEffect(()=>{
-      if(!txn.isLoading){
-        setTimeout(()=>{
-          setLoading(false)
-        }, 1600)
-      }
+      setTimeout(()=>{
+        txn.isLoading ? setLoading(true) : setLoading(false)
+      }, 1000)
     }, [txn])
 
     const month = ['Jan', 'Feb','Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -25,7 +23,7 @@ export default function Mature({data, txn}) {
       <>
         <div style={{fontWeight: 'bold', margin: '0 0 10px 40px'}}>Matured</div>
         {
-            isLoading ? <div className="center"><Spinner size="20px"/></div> :
+            txn.isLoading ? <div className="center"><Spinner size="20px"/></div> :
             data.length < 1 ? <Msg /> :
             <Wrapper>
             {

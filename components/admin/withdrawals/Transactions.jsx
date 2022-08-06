@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
-import EditIcon from '@mui/icons-material/Edit';
-import {useSnap} from '@mozeyinedu/hooks-lab';
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import { getWithdrawals, } from "../../../redux/admin/withdrawals";
@@ -97,20 +95,19 @@ export default function Transactions() {
           {
             isLoading ? <div style={{display: 'flex', justifyContent: 'center'}}><Loader_ /></div> : 
             (
-              withdrawals.data.length < 1 ? <div style={{textAlign: 'center'}}>No data currently available</div> : 
-              (
-                (function(){
-                  if(type==='request'){
-                    return <Request data={pending}/>
-                  }
-                  else if(type==='confirmed'){
-                    return <Confirmed data={confirmed}/>
-                  }
-                  else if(type==='rejected'){
-                    return <Rejected data={rejected}/>
-                  }
-                }())
-              )
+              (function(){
+                if(type==='request'){
+                  return <Request data={pending}/>
+                }
+                else if(type==='confirmed'){
+                  return <Confirmed data={confirmed}/>
+                }
+                else if(type==='rejected'){
+                  return <Rejected data={rejected}/>
+                }else{
+                  return ''
+                }
+              }())
             )
           }
       </AdminWrapper>
@@ -147,17 +144,20 @@ const Head = styled.div`
     }
 
     .request{
-      background: var(--bright-color);
-      border: ${({type})=>type==='request' ? '2px solid green': ''}
+       background: transparent;
+        color: var(--major-color-purest);
+      border: ${({type})=>type==='request' ? '2px solid green': '1px solid #ccc'}
     };
 
     .confirmed{
-      background: var(--major-color-purest);
-      border: ${({type})=>type==='confirmed' ? '2px solid green': ''}
+       background: transparent;
+        color: var(--major-color-purest);
+      border: ${({type})=>type==='confirmed' ? '2px solid green': '1px solid #ccc'}
     }
 
     .rejected{
-      background: #c20;
-      border: ${({type})=>type==='rejected' ? '2px solid green': ''}
+       background: transparent;
+        color: var(--major-color-purest);
+      border: ${({type})=>type==='rejected' ? '2px solid green': '1px solid #ccc'}
   }
 `

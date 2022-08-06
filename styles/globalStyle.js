@@ -27,7 +27,8 @@ const GlobalStyle = createGlobalStyle`
 
   :root{
     --major-color-purest : #00415D;
-    --dark-theme: #101010;
+    // --dark-theme: #101010;
+    --dark-theme: #121316;
     --light-theme: #fff;
     --major-color-30A: #00415D30;
     --major-color-deep: #03212e;

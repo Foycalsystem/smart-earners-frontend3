@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { RiCloseLine} from 'react-icons/ri'
+import { useEffect } from 'react';
 
 function Feedback({msg, status, feedback, setFeedback}){
 

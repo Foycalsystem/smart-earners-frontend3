@@ -7,6 +7,8 @@ import transferReducer from './admin/transfer';
 import withdrawalsReducer from './admin/withdrawals';
 import investmentReducer from './invest/invest';
 import depositeReducer from './admin/deposit';
+import transactionsReducer from './transactions/transactions';
+import referralReducer from './referrals/referrals';
 
 
 
@@ -20,7 +22,9 @@ export const store = configureStore({
         transfer: transferReducer,
         withdrawal: withdrawalsReducer,
         investment: investmentReducer,
-        deposit: depositeReducer
+        deposit: depositeReducer,
+        transactions: transactionsReducer,
+        referrals: referralReducer
     }
 });
 

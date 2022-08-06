@@ -8,7 +8,14 @@ import Spinner from "../../../loaders/Spinner";
 import Feedback from '../../Feedback';
 import PopUpModal from '../../modals/popUpModal/PopUpModal';
 import { ScrollBar } from "../../../styles/globalStyle";
+import { resolveApi } from '../../../utils/resolveApi';
+import Cookies from 'js-cookie';
 
+
+import {
+  Header_Table,
+  Table
+} from '../styles';
 
 export default function Request({data}) {
     const dispatch = useDispatch()
@@ -32,7 +39,7 @@ export default function Request({data}) {
     useEffect(()=>{
         const newData = filter({
         data: data,
-        keys: [ "username", "email", 'convertedAmount', "amount", "coin", 'walletAddress'],
+        keys: [ "username", "email", 'convertedAmount', "amount", "coin", 'walletAddress', "_id"],
         input: inp
         })
 
@@ -40,20 +47,28 @@ export default function Request({data}) {
 
     }, [inp, data])
 
-    const rseolve=(data)=>{
+    const resolve= async(data)=>{
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
       setShowModal(true)
       setSelectedItem(data)
     }
 
-    const handleReject =()=>{
+    const handleReject = async()=>{
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
       dispatch(handleRejected(selectedItem._id))
     }
 
-    const handleConfirm =()=>{
+    const handleConfirm = async()=>{
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
       dispatch(handleConfirmed(selectedItem._id))
     }
 
-    console.log(data)
     useEffect(()=>{
       setFeedback({
         msg: confirm.msg || reject.msg,
@@ -63,7 +78,7 @@ export default function Request({data}) {
 
     return (
       <Wrap>
-        <Header>
+        <Header_Table>
           {
             data.length < 1 ? '' :
             (
@@ -71,7 +86,7 @@ export default function Request({data}) {
                 <div className="search">
                     <input
                     type="text"
-                    placeholder="Search by username, email, amount"
+                    placeholder="Search by username, email, amount or id"
                     value={inp || ''}
                     onChange={(e)=>setInp(e.target.value)}
                     />
@@ -80,7 +95,7 @@ export default function Request({data}) {
               </div>
             )
           }
-        </Header>
+        </Header_Table>
         {
           data.length < 1 ?
           (
@@ -95,17 +110,18 @@ export default function Request({data}) {
                         <th>Date</th>
                         <th>Email</th>
                         <th>Username</th>
-                        <th>Amount {`(${data && data[0].currency.toUpperCase()})`}</th>
-                        <th>{data && data[0].tradeCurrency.toUpperCase()}</th>
+                        <th>Amount {`(${data && data[0] && data[0].currency.toUpperCase()})`}</th>
+                        <th>Amount {`(${data && data[0] && data[0].tradeCurrency.toUpperCase()})`}</th>
                         <th>Coin</th>
                         <th>Wallet</th>
                         <th>Status</th>
+                        <th>Id</th>
                     </tr>
                 </thead>
                 <tbody>
                 {filteredData.map((data, i)=>{
                     return (
-                      <tr onDoubleClick={()=>rseolve(data)} key={data._id}>
+                      <tr onDoubleClick={()=>resolve(data)} key={data._id}>
                         <td>{i+1}</td>
                         <td>
                           {month[new Date(data.createdAt).getMonth()]} {new Date(data.createdAt).getDate()}, {new Date(data.createdAt).getFullYear()}
@@ -120,7 +136,7 @@ export default function Request({data}) {
                         <td>{data.coin}</td>
                         <td>{data.walletAddress}</td>
                         <td style={{color: 'var(--bright-color'}}>{data.status}</td>
-                        
+                        <td>{data._id}</td>  
                       </tr>
                     )
                   })}
@@ -158,6 +174,8 @@ export default function Request({data}) {
                     </span>
 
                 </>
+
+
               }</div>
 
               <div className='center'>
@@ -213,92 +231,6 @@ const Wrap = styled.div`
     justify-content: center;
   }
 `
-
-const Header = styled.div`
-  margin-bottom: 0px;
-  padding: 5px;
-  display: grid;
-  grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
-
-  .row{
-    padding: 3px;
-    font-size: .8rem;
-    justify-self: center;
-  }
-
-  .search{
-    width: 250px;
-    height: 30px;
-    border: 1px solid var(--major-color-purest);
-    border-radius: 12px;
-    background: #fff;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .icon{
-    width:30px;
-    background: var(--major-color-purest);
-    height: 100%;
-    display: flex;
-    color:#fff;
-    justify-content: center;
-    align-items: center;
-  }
-  input{
-    width: calc(100% - 30px);
-    padding: 0 8px;
-    border: none;
-
-    &:focus{
-      outline: none;
-      // border: 2px solid green;
-    }
-  }
-`
-
-const Table = styled.div`
-  padding: 0 10px;
-  overflow: auto;
-  margin: 0px auto 10px auto;
-
-
-  ${ScrollBar()}
-
-  table{
-    font-size: .8rem;
-    margin: auto;
-    border-spacing: 0.5rem;
-    height: 100%;
-    border-collapse: collapse;
-    width: 800px;
-    text-align: left;
-    cursor: default;
-  }
-
-  td, th {
-    border: 1px solid #999;
-    padding: 0.5rem;
-    text-align: left;
-    padding: 0.25rem;
-  }
-
-  th{
-    background: var(--major-color-purest);
-    color: #fff;
-  }
-
-  tr:nth-child(even) {
-    background: #ddd;
-  }
-
-  tbody tr:hover {
-    background: var(--major-color-30A);
-  }
-
-`
-
 
 
 const Msg = ()=>{

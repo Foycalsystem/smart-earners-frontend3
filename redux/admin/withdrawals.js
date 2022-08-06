@@ -9,14 +9,12 @@ export const withdawalRequest= createAsyncThunk(
     'withdraw/withdawalRequest',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.post(`/withdrawal/request`, data, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.post(`/withdrawal/request`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;           
         }
         catch(err){
             if(err.response.data){
@@ -34,14 +32,12 @@ export const getWithdrawals= createAsyncThunk(
     'withdraw/getWithdrawals',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.get(`/withdrawal/get-all-transactions`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.get(`/withdrawal/get-all-transactions`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
         }
         catch(err){
             if(err.response.data){
@@ -59,15 +55,12 @@ export const getWithdrawal= createAsyncThunk(
     'withdraw/getWithdrawal',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.get(`/withdrawal/get-transaction/${id}`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-               
-                return res.data;
-            }            
+            const res = await axios.get(`/withdrawal/get-transaction/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;           
         }
         catch(err){
             if(err.response.data){
@@ -85,14 +78,12 @@ export const handleRejected= createAsyncThunk(
     'withdraw/handleRejected',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.get(`/withdrawal/rejected/${id}`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.get(`/withdrawal/rejected/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;         
         }
         catch(err){
             if(err.response.data){
@@ -110,14 +101,12 @@ export const handleConfirmed= createAsyncThunk(
     'withdraw/confirmRejected',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/withdrawal/confirm/${id}`, {}, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }            
+            const res = await axios.put(`/withdrawal/confirm/${id}`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;        
         }
         catch(err){
             if(err.response.data){
