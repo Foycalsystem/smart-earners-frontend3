@@ -85,7 +85,7 @@ export default function Transactions({toggleState}) {
               <button onClick={()=>setType('transfer')} className="transfer">Transfer</button>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
-                  txns.isLoading ? <Spinner size='10px' /> :
+                  trfTxns.isLoading ? <Spinner size='10px' /> :
                   (
                     transfer.length < 1 ? '---' : transfer.length
                   )
