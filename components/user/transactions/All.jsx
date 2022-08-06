@@ -126,7 +126,7 @@ export default function All({data, toggleState, txns, id}) {
                                   <div style={{cursor: 'pointer', fontSize: '.6rem'}}>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
                                       <div className='item'>
-                                      <span>You have Successfully Deposited the sum of <span style={{fontWeight: 'bold'}}>{data.nativeAmountReceived && data.nativeAmountReceived.toFixed(2)} {data.currency}</span> to your account</span>
+                                      <span>Yor deposit of the Sum of <span style={{fontWeight: 'bold'}}>{data.nativeAmountExpected && data.nativeAmountExpected.toFixed(2)} {data.currency}</span> is Pending</span>
                                       </div>
 
                                       {
@@ -146,7 +146,7 @@ export default function All({data, toggleState, txns, id}) {
                                   <div style={{cursor: 'pointer'}}>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
                                       <div className='item'>
-                                      <span>You Initiated a Deposit request of <span style={{fontWeight: 'bold'}}>{data.nativeAmountReceived && data.nativeAmountExpected.toFixed(2)} {data.currency}</span></span>
+                                      <span>You Initiated a Deposit Request of the Sum of <span style={{fontWeight: 'bold'}}>{data.nativeAmountExpected && data.nativeAmountExpected.toFixed(2)} {data.currency}</span></span>
                                       </div>
 
                                       {
