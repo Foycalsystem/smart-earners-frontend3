@@ -72,7 +72,7 @@ const ProfileComp =({data})=>{
                                 <span>Username: </span> <span className='data'>{data.username}</span>
                             </label>
                             <label>
-                                <span>Email: </span> <span className='data'>{data.username}</span>
+                                <span>Email: </span> <span className='data'>{data.email}</span>
                             </label>
                         </div>
                     </section>

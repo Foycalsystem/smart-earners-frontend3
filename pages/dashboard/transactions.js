@@ -3,7 +3,6 @@ import Transactions from '../../components/user/transactions/Transactions'
 import { resolveApi } from '../../utils/resolveApi';
 
 export default function transactions({accesstoken, toggleState}) {
-  console.log(toggleState)
   return <Transactions accesstoken={accesstoken} toggleState={toggleState}/>
 }
 

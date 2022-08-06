@@ -44,14 +44,12 @@ export const getAllTestimonials= createAsyncThunk(
     'testimonial/getAllTestimonials',
     async(data, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.get(`/testimonials/get-all`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }
+            const res = await axios.get(`/testimonials/get-all`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;
         }
         catch(err){
             if(err.response.data){
@@ -68,14 +66,12 @@ export const handleRemove= createAsyncThunk(
     'testimonial/remove',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.put(`/testimonials/remove/${id}`,{}, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }
+            const res = await axios.put(`/testimonials/remove/${id}`,{}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;
         }
         catch(err){
             if(err.response.data){
@@ -92,14 +88,12 @@ export const handleDelete= createAsyncThunk(
     'testimonial/del',
     async(id, {rejectWithValue})=>{
         try{
-            if(Cookies.get('accesstoken')){
-                const res = await axios.delete(`/testimonials/delete/${id}`, {
-                    headers: {
-                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
-                    }
-                });
-                return res.data;
-            }
+            const res = await axios.delete(`/testimonials/delete/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;
         }
         catch(err){
             

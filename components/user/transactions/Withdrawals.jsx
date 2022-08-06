@@ -18,7 +18,6 @@ export default function Withdrawals({data, toggleState}) {
     const [filteredData, setFilter] = useState(data);
     const [clicked, setClicked] = useState(false)
 
-
     useEffect(()=>{
         const newData = filter({
         data: data,
@@ -62,7 +61,7 @@ export default function Withdrawals({data, toggleState}) {
             (
               <Wrapper>
                 {
-                  filteredData.map((data, index)=>{
+                  filteredData && filteredData.map((data, index)=>{
                    return (
                     <Card toggleState={toggleState} key={data._id}>
                       <div style={

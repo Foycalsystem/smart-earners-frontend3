@@ -13,8 +13,6 @@ export async function getServerSideProps(context){
   const refreshtoken = cookies.refreshtoken;
   const accesstoken = cookies.accesstoken;
 
-  console.log(accesstoken)
-
   await resolveApi.refreshToken(context, refreshtoken)
   await resolveApi.resolveInvestment()
   await resolveApi.removeUnverifiedusers()
