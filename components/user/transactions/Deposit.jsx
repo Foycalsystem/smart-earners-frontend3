@@ -33,8 +33,7 @@ export default function Deposit({data, toggleState}) {
       }
       setClicked(index)
     }
-        
-    console.log(data)
+      
     return (
         <div>
           <Header_Table>
