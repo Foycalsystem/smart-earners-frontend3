@@ -12,11 +12,9 @@ export const getBounus= createAsyncThunk(
                     "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                 }
             });
-            console.log(res.data)
             return res.data;  
         }
         catch(err){
-            console.log(err)
             if(err.response.data){
                 return rejectWithValue({status: false, msg: err.response.data.msg});
             }
@@ -28,13 +26,20 @@ export const getBounus= createAsyncThunk(
 )
 
 
+
 const initialState = {
     bonus: { isLoading: false, status: false, msg: '', data: []},
+    addCode: { isLoading: false, status: false, msg: ''},
 }
 
 export const referralReducer = createSlice({
     name: 'referral',
     initialState,
+    reducers: {
+        resetBonusMsg(state){
+            state.bonus.isLoading = false; state.bonus.status = false;state.bonus.msg = '';
+        }
+    },
     extraReducers: {  
         
         // get referral hx
@@ -57,10 +62,9 @@ export const referralReducer = createSlice({
                 state.bonus.status = false;
                 state.bonus.msg = 'Error occured';
             }
-        },
-        
+        },        
     }
     
 })
-
+export const {resetBonusMsg} = referralReducer.actions
 export default referralReducer.reducer

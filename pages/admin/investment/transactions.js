@@ -38,6 +38,10 @@ export async function getServerSideProps(context){
   }
   else{
     return {
+      redirect: {
+        destination: '/admin/investment/plans',
+        permanent: false,
+      },
       props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }

@@ -85,6 +85,13 @@ const initialState = {
 export const depositeReducer = createSlice({
     name: 'deposit',
     initialState,
+    reducers:{
+        handleResetDeposit(state){
+            state.deposit.isLoading = false; state.deposit.status = false; state.deposit.msg = ''
+            state.txns.isLoading = false; state.txns.status = false; state.txns.msg = ''
+            state.resolveDeposit.isLoading = false; state.resolveDeposit.status = false; state.resolveDeposit.msg = ''
+        }
+    },
     extraReducers: {
 
         // make deposit request
@@ -168,4 +175,5 @@ export const depositeReducer = createSlice({
     }
 })
 
+export const {handleResetDeposit} = depositeReducer.actions
 export default depositeReducer.reducer

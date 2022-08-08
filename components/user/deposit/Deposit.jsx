@@ -7,8 +7,9 @@ import {useSnap} from '@mozeyinedu/hooks-lab'
 import Feedback from "../../Feedback";
 import { getConfig } from "../../../redux/admin/web_config";
 import conversionRate from "../../../utils/conversionRate";
-import { makeDeposit } from "../../../redux/admin/deposit";
+import { makeDeposit, handleResetDeposit } from "../../../redux/admin/deposit";
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 import { resolveApi } from "../../../utils/resolveApi"
 
 
@@ -26,15 +27,17 @@ export default function Deposit({userInfo, accesstoken}){
     const state = useSelector(state=>state);
     const {snap} = useSnap()
     const [isLoading, setLoading] = useState(true)
+    const [pending, setPending] = useState(false)
 
     const {user} = state.auth;
     const {config} = state.config;
     const {deposit} = state.deposit;
 
-    const [feedback, setFeedback] = useState({
-      msg: deposit.msg,
-      status: false
-    });
+     // clear any hanging msg from redux
+    useEffect(()=>{
+      dispatch(handleResetDeposit())
+    }, [deposit])
+
 
     const initialState = {
       amount: '',
@@ -50,25 +53,14 @@ export default function Deposit({userInfo, accesstoken}){
     const submit = async(e)=>{
       e.preventDefault()
 
+      setPending(true)
       if(!Cookies.get('accesstoken')){
         await resolveApi.refreshTokenClinetSide()
       }
       dispatch(makeDeposit(inp))
     }
 
-    useEffect(()=>{
-      // if(deposit.status){
-      //   setInp(initialState)
-      // }
-
-      setFeedback({
-        msg: deposit.msg,
-        status: true
-      });
-    }, [deposit])
-
-    useEffect(()=>{
-      
+    useEffect(()=>{      
       dispatch(getUser())
       dispatch(getConfig())
   
@@ -78,25 +70,21 @@ export default function Deposit({userInfo, accesstoken}){
 
       user.isLoading ? setLoading(true) : setLoading(false)
 
-      setFeedback({
-        msg: '',
-        status: false
-      });
-
     }, [])
     
 
     useEffect(()=>{
-      if(deposit.status){
-        setInp(initialState)
-        setFeedback({
-          msg: '',
-          status: false
-        });
+      if(deposit.msg){
+        setPending(false)
+        toast(deposit.msg, {
+          type: deposit.status ? 'success' : 'error'
+        })         
+      }
+
+      if(deposit.status){        
         // redirect to coinbase commerce using the returned url (hostedUrl)
         window.open(deposit.data.hostedUrl)
-
-        return
+        setInp(initialState)
       }
     }, [deposit])
    
@@ -111,15 +99,6 @@ export default function Deposit({userInfo, accesstoken}){
                   Deposit
                   <span>{inp.amount && ": "}{" "} {inp.amount && conversionRate.USD_TO_SEC(inp.amount, config.data.conversionRate)} {inp.amount && config.data.nativeCurrency}</span>
                 </h3>
-                
-                <div className="center"> 
-                  <Feedback
-                    msg={deposit.msg}
-                    status={deposit.status}
-                    feedback={feedback}
-                    setFeedback={setFeedback}
-                  />
-                </div>
 
                 <InputWrapper>
                   <Input
@@ -132,7 +111,7 @@ export default function Deposit({userInfo, accesstoken}){
                   />
                 </InputWrapper>
 
-                <div className="center">{deposit.isLoading ? <Spinner size="20px"/> : ""}</div>
+                <div className="center">{pending ? <Spinner size="20px"/> : ""}</div>
                  
                 <InputWrapper>
                   <Input

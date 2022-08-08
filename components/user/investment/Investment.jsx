@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { getUser } from "../../../redux/auth/auth";
 import {useSelector, useDispatch} from 'react-redux';
-import { investPlan, getTxn } from "../../../redux/invest/invest";
-import Feedback from "../../Feedback";
+import { investPlan, getTxn, handleResetInvestment } from "../../../redux/invest/invest";
 import { getPlans } from '../../../redux/investmentPlans/investmentPlans.js';
 import {useSnap} from '@mozeyinedu/hooks-lab'
 import Spinner from '../../../loaders/Spinner';
@@ -15,6 +14,7 @@ import Loader_ from "../loader/Loader";
 import PopUpModal from "../../modals/popUpModal/PopUpModal";
 import Cookies from 'js-cookie'
 import { resolveApi } from "../../../utils/resolveApi"
+import { toast } from 'react-toastify';
 
 
 
@@ -46,19 +46,20 @@ const Plans = ({userInfo}) => {
     const [activeTxn, setActiveTxn] = useState([])
     const [maturedTxn, setMaturedTxn] = useState([])
     const [isLoading, setLoading] = useState(true)
+    const [pending, setPending] = useState(false)
 
     const {invest, txn} = state.investment
-    const [feedback, setFeedback] = useState({
-      msg: "",
-      status: false
-    })
-
     // useEffect(()=>{
     //   setTimeout(()=>{
     //     user.isLoading ? setLoading(true) : setLoading(false)
     //   }, 1000)
       
     // }, [])
+
+    // clear any hanging msg from redux
+    useEffect(()=>{
+      dispatch(handleResetInvestment())
+    }, [invest, txn])
 
     useEffect(()=>{
       dispatch(getPlans())
@@ -76,38 +77,29 @@ const Plans = ({userInfo}) => {
       if(data.type.toLowerCase() === 'master'){
         setMasterPlanData(data)
         setShowModal(true)
-
-        setFeedback({
-          msg: "",
-          status: false
-        })
-
-      }else{
+      }
+      else{
+        setPending(true)
         const data_ = {
           id: data._id,
           amount: data.amount,
         }
         dispatch(investPlan(data_));
-
-        setFeedback({
-          msg: "",
-          status: false
-        })
       }
     }
-
-    useEffect(()=>{  
-      setFeedback({
-        msg: invest.msg,
-        status: true
-      })
-
+    useEffect(()=>{
+      if(invest.msg){
+        setPending(false)
+        toast(invest.msg, {
+          type: invest.status ? 'success' : 'error'
+        })         
+      }
     }, [invest])
 
     
     useEffect(()=>{
-      txn && setActiveTxn(txn.data.filter(data=> data.isActive));
-      txn && setMaturedTxn(txn.data.filter(data=> !data.status));
+      setActiveTxn(txn.data.filter(data=> data.isActive));
+      setMaturedTxn(txn.data.filter(data=> !data.isActive));
     }, [txn])
 
   return (
@@ -116,23 +108,13 @@ const Plans = ({userInfo}) => {
         <Plan>
         <Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
         <div style={{padding: '10px 20px 2px 20px', fontWeight: 'bold'}}>Plans</div>
-        <div className="center"> {
-          invest.isLoading ? <Spinner size="24px"/> : ''
-        } </div>
-        <div className="center">
-          <Feedback
-            msg={invest.msg}
-            status={invest.status}
-            feedback={feedback}
-            setFeedback={setFeedback}
-          />
-        </div>
+        <div className="center"> { pending ? <Spinner size="24px"/> : '' } </div>
         <AllPlan>
           {
             plans.isLoading ?
               <div className="center"><Spinner size="30px" /></div>:
             (
-              plans.data.length < 1 ? <div className="center">No Plan available at this moment</div> : 
+              plans.data.length < 1 ? <div className="center">---</div> : 
               (
                 <div>
                 <SwipeWrapper_>
@@ -141,7 +123,7 @@ const Plans = ({userInfo}) => {
                       <Spinner size="30px" />
                       </div>:
                       (
-                        plans.data.length < 1 ? <div className="center">No Plan available at this moment</div> : 
+                        plans.data.length < 1 ? <div className="center">---</div> : 
                         (
                     <Swiper
                       className='swiper'
@@ -179,7 +161,7 @@ const Plans = ({userInfo}) => {
                         {plans.data.map((each, idx) => 
                             (
                               <SwiperSlide className="swipe" key={idx}>
-                                  <SinglePlan data={each} setFeedback={setFeedback} feedback={feedback} invest={invest} investBtn={investBtn}/>
+                                  <SinglePlan data={each} invest={invest} investBtn={investBtn}/>
                               </SwiperSlide>
                             )
                         ) }
@@ -198,7 +180,7 @@ const Plans = ({userInfo}) => {
 
         <MasterPlan data={masterPlanData} showModal={showModal} setShowModal={setShowModal}/>
 
-        <h3 style={{padding: '20px 5px 5px 20px'}}>INVESTMENT SUMMARY</h3>
+        <h3 style={{padding: '20px 5px 5px 20px', fontSize: '1rem'}}>INVESTMENT SUMMARY</h3>
 
         {
           shwowActive ? <Active data={activeTxn} txn={txn}/> : <Mature data={maturedTxn} txn={txn}/>
@@ -214,7 +196,6 @@ export default Plans
 
 const SinglePlan = ({data, investBtn}) => {
   const {snap} = useSnap(.5)
-
 
   return (
     <StyledSinglePlan>
@@ -246,10 +227,7 @@ function MasterPlan({data, showModal, setShowModal}){
   const dispatch = useDispatch();
   const state = useSelector(state=>state);
   const {invest} = state.investment
-  const [feedback, setFeedback] = useState({
-    msg: invest.msg,
-    status: false
-  });
+  const [pending, setPending] = useState(false)
 
   const initialState = {
     amount: ''
@@ -260,11 +238,19 @@ function MasterPlan({data, showModal, setShowModal}){
     setInp({...inp, [name]:value})
   }
 
-  const closePop =()=>{
+  const closePop =async()=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
+
     setShowModal(false)
   }
 
-  const proceed =()=>{
+  const proceed = async()=>{
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+    }
+    setPending(true)
     const data_ = {
       id: data._id,
       amount: inp.amount,
@@ -273,32 +259,19 @@ function MasterPlan({data, showModal, setShowModal}){
   }
 
   useEffect(()=>{
-    setFeedback({
-      msg: '',
-      status: false
-    });
+    if(invest.msg){
+      setPending(false)
+      toast(invest.msg, {
+        type: invest.status ? 'success' : 'error'
+      })         
+    }
   }, [])
 
-  useEffect(()=>{
-    setFeedback({
-      msg: invest.msg,
-      status: true
-    });
 
-    setInp(initialState)
-  }, [invest])
 
   return (
-    <PopUpModal title={`${data.type && data.type.toUpperCase()} PLAN`} showModal={showModal} setFeedback={setFeedback} setShowModal={setShowModal}>
+    <PopUpModal title={`${data.type && data.type.toUpperCase()} PLAN`} showModal={showModal} setShowModal={setShowModal}>
       <div style={{width: '300px', padding: '20px'}}>
-        <div className="center"> 
-            <Feedback
-              msg={invest.msg}
-              status={invest.status}
-              feedback={feedback}
-              setFeedback={setFeedback}
-            />
-        </div>
 
         <div style={{fontSize: '.9rem'}}>Enter Amount to proceed</div>
 
@@ -313,7 +286,7 @@ function MasterPlan({data, showModal, setShowModal}){
 
         <div style={{textAlign: 'center', fontSize: '.8rem', color: inp.amount < data.amount ? '#c20' : 'var(--major-color-purest'}}>Mininum Amount: {data.amount} {data.currency}</div>
 
-        <div style={{marginTop: '20px'}} className="center">{invest.isLoading ? <Spinner size='20px'/> : ""}</div>
+        <div style={{marginTop: '20px'}} className="center">{pending ? <Spinner size='20px'/> : ""}</div>
         <div style={{
             width: '100%',
             padding: '10px',

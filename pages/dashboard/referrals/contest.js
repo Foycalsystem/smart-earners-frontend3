@@ -1,9 +1,9 @@
 import React from 'react'
-import Referrals from '../../components/user/referrals/Referrals'
-import { resolveApi } from '../../utils/resolveApi';
+import Contest from '../../../components/user/referrals/Contest'
+import { resolveApi } from '../../../utils/resolveApi';
 
-export default function referrals({accesstoken}) {
-  return <Referrals accesstoken={accesstoken}/>
+export default function contset({accesstoken}) {
+  return <Contest accesstoken={accesstoken}/>
 }
 
 
@@ -28,6 +28,10 @@ export async function getServerSideProps(context){
     }
   }else{
     return {
+        redirect: {
+            destination: '/dashboard/referrals',
+            permanent: false,
+          },
       props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }

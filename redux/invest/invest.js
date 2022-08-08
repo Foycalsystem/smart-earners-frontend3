@@ -57,6 +57,12 @@ const initialState = {
 export const investmentReducer = createSlice({
     name: 'plans',
     initialState,
+    reducers: {
+        handleResetInvestment(state){
+            state.txn.isLoading = false; state.txn.status = false; state.txn.msg = '';
+            state.invest.isLoading = false; state.invest.status = false; state.invest.msg = ''
+        }
+    },
     extraReducers: {  
         
         // get transactions
@@ -87,9 +93,13 @@ export const investmentReducer = createSlice({
         },
         [investPlan.fulfilled]: (state, {payload})=>{
             state.invest.isLoading = false;
-            // state.invest.status = payload.status;
-            // state.invest.msg = payload.msg;
-            // state.txn.data.push(payload.data)
+            state.invest.status = payload.status;
+            state.invest.msg = payload.msg;
+
+            // get the returned data and replace the existing one
+            const currentState = JSON.parse(JSON.stringify(state.txn.data));
+            currentState.push(payload.data)
+            state.txn.data = currentState;
         },
         [investPlan.rejected]: (state, {payload})=>{
             state.invest.isLoading = false;
@@ -108,4 +118,5 @@ export const investmentReducer = createSlice({
     
 })
 
+export const {handleResetInvestment} = investmentReducer.actions
 export default investmentReducer.reducer

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import PopUpModal from '../../components/modals/popUpModal/PopUpModal';
-import Feedback from '../../components/Feedback';
 import Spinner from '../../loaders/Spinner';
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {useSnap} from '@mozeyinedu/hooks-lab'
 import { useDispatch, useSelector } from 'react-redux';
-import { postTestimonial } from '../../redux/testimonials/testimonials';
+import { postTestimonial, handleResetTestim } from '../../redux/testimonials/testimonials';
+import { toast } from 'react-toastify';
 
 
 
@@ -14,12 +14,7 @@ export default function PostFeedback(){
     const state = useSelector(state=>state);
     const {post} = state.testimonial
     const {snap} = useSnap()
-    const inputRef = useRef()
-    const [showModal, setShowModal] = useState(false)
-    const [feedback, setFeedback] = useState({
-      msg: post.msg,
-      status: false
-    });
+    const [showModal, setShowModal] = useState(false);
 
     const initialState = {
       name: '',
@@ -31,33 +26,33 @@ export default function PostFeedback(){
       setInp({...inp, [name]:value})
     }
 
+    // clear any hanging msg from redux
+    useEffect(()=>{
+      dispatch(handleResetTestim())
+    }, [post])
+
+    
     const submit =(e)=>{
       e.preventDefault();
       dispatch(postTestimonial(inp));
     }
 
     useEffect(()=>{
-      setFeedback({
-        msg: post.msg,
-        status: true
-      });
+      if(post.msg){
+        toast(post.msg, {
+          type: post.status ? 'success' : 'error'
+        })         
+      }
 
       if(post.status){
         setInp(initialState)
       }
     }, [post])
 
-    useEffect(()=>{
-      setFeedback({
-        msg: '',
-        status: false
-      });
-    }, [])
-
     return (
       <>
         <Btn onClick={()=>setShowModal(true)}>Give us a Feedback?</Btn>
-        <PopUpModal title="Feedback" showModal={showModal} setFeedback={setFeedback} setShowModal={setShowModal}>
+        <PopUpModal title="Feedback" showModal={showModal} setShowModal={setShowModal}>
           <div
             style={{
               width: '80vw',
@@ -69,18 +64,11 @@ export default function PostFeedback(){
             <div style={{textAlign: 'center', marginBottom: '10px', fontSize: '.9rem'}}>Your feedback help us to evaluate our services to serve you better</div>
 
             <form onSubmit={submit}>
-                <div style={{display: 'flex', justifyContent: 'center'}}> 
-                  <Feedback
-                    msg={post.msg}
-                    status={post.status}
-                    feedback={feedback}
-                    setFeedback={setFeedback}
-                  />
-                </div>
                 <InputWrapper>
                     <label>Message</label>
                     <textarea
                       name="body"
+                      autoFocus
                       value={inp.body || ''}
                       onChange={getInp}
                       placeholder="Message of at most 200 characters"
@@ -114,22 +102,22 @@ export default function PostFeedback(){
   }
   
 const Btn = styled.button`
-position: fixed;
-padding: 5px;
-top: 200px;
-left: -50px;
-transform: rotate(-90deg);
-background:var(--major-color-purest);
-z-index: 1000000;
-border: none;
-cursor: pointer;
-color: #ffff;
-opacity: .7;
+  position: fixed;
+  padding: 5px;
+  top: 200px;
+  left: -50px;
+  transform: rotate(-90deg);
+  background:var(--major-color-purest);
+  z-index: 1000000;
+  border: none;
+  cursor: pointer;
+  color: #ffff;
+  opacity: .7;
 
-&:hover{
-    background:  var(--bright-color);
-    color:  #fff;
-}
+  &:hover{
+      background:  var(--bright-color);
+      color:  #fff;
+  }
 
 
 `

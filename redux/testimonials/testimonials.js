@@ -120,6 +120,19 @@ const initialState = {
 export const testimonialReducer = createSlice({
     name: 'plans',
     initialState,
+    reducers: {
+        handleResetTestim(state){
+            state.allTestimonials.isLoading = false;state.allTestimonials.status = false;state.allTestimonials.msg = '';
+
+            state.selectedTestimonials.isLoading = false;state.selectedTestimonials.status = false;state.selectedTestimonials.msg = '';
+
+            state.oneTestimonials.isLoading = false;state.oneTestimonials.status = false;state.oneTestimonials.msg = '';
+
+            state.post.isLoading = false;state.post.status = false;state.post.msg = '';
+            state.remove.isLoading = false;state.remove.status = false;state.remove.msg = '';
+            state.del.isLoading = false;state.del.status = false;state.del.msg = '';
+        }
+    },
     extraReducers: {
         // get all testimonials
         [getAllTestimonials.pending]: (state)=>{
@@ -252,4 +265,5 @@ export const testimonialReducer = createSlice({
     
 })
 
+export const {handleResetTestim} = testimonialReducer.actions
 export default testimonialReducer.reducer
