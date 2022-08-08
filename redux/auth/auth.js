@@ -313,6 +313,29 @@ export const sendVerificationLink= createAsyncThunk(
     }
 )
 
+// add to referral list
+export const addRefcode= createAsyncThunk(
+    'referral/addRefcode',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.put(`/referral-bonus/add-referral-code`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            console.log(res.data)
+            return res.data;  
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
 
 
 const initialState = {
@@ -329,11 +352,31 @@ const initialState = {
     del: { isLoading: false, status: false, msg: '' },
     makeadmin: { isLoading: false, status: false, msg: '' },
     removeadmin: { isLoading: false, status: false, msg: '' },
+    addCode:  { isLoading: false, status: false, msg: '' },
 }
 
 export const authReducer = createSlice({
     name: 'auth',
     initialState,
+    reducers: {
+        resetAuth(state){
+            state.signup.isLoading = false;state.signup.status = false;state.signup.msg = '';
+            state.signin.isLoading = false;state.signin.status = false;state.signin.msg = '';
+            state.resetPassReq.isLoading = false;state.resetPassReq.status = false;state.resetPassReq.msg = '';
+            state.resetPass.isLoading = false;state.resetPass.status = false;state.resetPass.msg = '';
+            state.verify.isLoading = false;state.verify.status = false;state.verify.msg = '';
+            state.sendVerifyLink.isLoading = false;state.sendVerifyLink.status = false;state.sendVerifyLink.msg = '';
+            state.user.isLoading = false;state.user.status = false;state.user.msg = '';
+            state.users.isLoading = false;state.users.status = false;state.users.msg = '';
+            state.block.isLoading = false;state.block.status = false;state.block.msg = '';
+            state.unblock.isLoading = false;state.unblock.status = false;state.unblock.msg = '';
+            state.del.isLoading = false;state.del.status = false;state.del.msg = '';
+            state.makeadmin.isLoading = false;state.makeadmin.status = false;state.makeadmin.msg = '';
+            state.removeadmin.removeadmin = false;state.removeadmin.status = false;state.removeadmin.msg = '';
+            state.del.isLoading = false;state.del.status = false;state.del.msg = '';
+            state.addCode.isLoading = false;state.addCode.status = false;state.addCode.msg = '';
+        }
+    },
     extraReducers: {
 
         // handleSign up
@@ -666,9 +709,32 @@ export const authReducer = createSlice({
                 state.del.status = false;
                 state.del.msg = 'Error occured';
             }
-        }, 
+        },
+
+        // add referral code
+        [addRefcode.pending]: (state)=>{
+            state.addCode.isLoading = true;
+        },
+        [addRefcode.fulfilled]: (state, {payload})=>{
+            state.addCode.isLoading = false;
+            state.addCode.status = payload.status;
+            state.addCode.msg = payload.msg;
+            state.user.data = payload.data;
+        },
+        [addRefcode.rejected]: (state, {payload})=>{
+            state.addCode.isLoading = false;
+            if(payload){
+                state.addCode.status = payload.status;
+                state.addCode.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.addCode.status = false;
+                state.addCode.msg = 'Error occured';
+            }
+        },
     }
     
 })
 
+export const {resetAuth} = authReducer.actions
 export default authReducer.reducer

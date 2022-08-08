@@ -1,22 +1,19 @@
-import PersonIcon from '@mui/icons-material/Person'
-import SavingsIcon from '@mui/icons-material/Savings';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import StarIcon from '@mui/icons-material/Star'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
-import {useEffect, useState} from 'react'
+import {useEffect,} from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import {useSnap} from '@mozeyinedu/hooks-lab';
-
 import Spinner from '../../../loaders/Spinner';
-import { getSelectedTestimonials, handleRemove, handleDelete } from '../../../redux/testimonials/testimonials';
+import { getSelectedTestimonials, handleRemove, handleDelete, handleResetTestim } from '../../../redux/testimonials/testimonials';
 import { SectionTitle } from '../../../styles/globalStyle'
 import {Swiper, SwiperSlide } from 'swiper/react'
 import Avatar from 'react-avatar';
 import styled from 'styled-components';
 import moment from 'moment';
-import { device } from './styles'
 import { HeroSectionSubTitle } from './styles';
+import { toast } from 'react-toastify';
+import Cookies from "js-cookie";
+import { resolveApi } from '../../../utils/resolveApi';
 
 import {
     Navigation,
@@ -33,12 +30,18 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { EffectFade } from 'swiper';
 
+
 export default function Testimony({userInfo}) {
 
     const dispatch = useDispatch()
     const state = useSelector(state=>state)
     const {selectedTestimonials} = state.testimonial
 
+
+     // clear any hanging msg from redux
+     useEffect(()=>{
+        dispatch(handleResetTestim())
+    }, [])
 
     useEffect(()=>{
         dispatch(getSelectedTestimonials())
@@ -97,13 +100,40 @@ function Card_1({data, userInfo}){
     const state = useSelector(state=>state);
     const {del, remove} = state.testimonial
 
-    const deleteT =(id)=>{
+     // clear any hanging msg from redux
+     useEffect(()=>{
+        dispatch(handleResetTestim())
+      }, [])
+
+    const deleteT =async(id)=>{
+        if(!Cookies.get('accesstoken')){
+            await resolveApi.refreshTokenClinetSide()
+        }
         dispatch(handleDelete(id))
     }
 
-    const removeT =(id)=>{
+    const removeT =async(id)=>{
+        if(!Cookies.get('accesstoken')){
+            await resolveApi.refreshTokenClinetSide()
+        }
         dispatch(handleRemove(id))
     }
+
+    useEffect(()=>{
+        if(remove.msg){
+            toast(remove.msg, {
+                type: remove.status ? 'success' : 'error'
+            })         
+        }
+    }, [])
+
+    useEffect(()=>{
+        if(del.msg){
+            toast(del.msg, {
+                type: del.status ? 'success' : 'error'
+            })         
+        }
+    }, [del, remove])
 
     return (
         <>        

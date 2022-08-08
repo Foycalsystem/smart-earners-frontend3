@@ -6,7 +6,7 @@ import {useSnap} from '@mozeyinedu/hooks-lab';
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { handleAdd, getPlans, handleUpdate, handleDelete } from "../../../../redux/investmentPlans/investmentPlans";
+import { handleAdd, getPlans, handleUpdate, handleDelete, handleResetPlan } from "../../../../redux/investmentPlans/investmentPlans";
 import styled from 'styled-components'
 import Spinner from '../../../../loaders/Spinner';
 import Feedback from "../../../Feedback";
@@ -14,6 +14,7 @@ import resolveInvestmentLifespan from "../../../../utils/resolveInvestmentLifeSp
 import { resolveApi } from "../../../../utils/resolveApi";
 import Cookies from "js-cookie";
 import { getUser } from "../../../../redux/auth/auth";
+import { toast } from 'react-toastify';
 
 
 
@@ -33,13 +34,8 @@ import 'swiper/css/scrollbar';
 
 import {
   AdminWrapper,
-  Form,
   InputWrapper,
-  Container,
-  Input,
   Header,
-  Title,
-  Label
 } from "../../styles";
 
 
@@ -63,8 +59,10 @@ export default function Plans() {
   const [initial, setInitial] = useState(initialState)
 
   useEffect(()=>{
+    dispatch(handleResetPlan())
     dispatch(getPlans())
     dispatch(getUser())
+
 
     // setTimeout(()=>{
     //   plans.isLoading ? setLoading(true) : setLoading(false)
@@ -101,7 +99,7 @@ export default function Plans() {
         (
           plans.data.length < 1 ?
           (
-            <div style={{textAlign: 'center'}}>{'No data currently available'}</div>
+            <div style={{textAlign: 'center'}}>---</div>
           ):
           (
             <AdminWrapper>
@@ -118,21 +116,13 @@ function SetPlan({update, initial, setUpdate, setInitial}){
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const {add} = state.plans;
-
-  //feedback
-  const [feedback, setFeedback] = useState({
-    msg: add.msg,
-    status: false
-  });
+  const [pending, setPending] = useState(false)
 
   useEffect(()=>{
-
-    // show feedback
-    setFeedback({
-      msg: add.msg,
-      status: true
-    });
+    // to clear any hanging msg from redux
+    dispatch(handleResetPlan())
   }, [add])
+
 
   const initialState = {
     type: '',
@@ -157,6 +147,7 @@ function SetPlan({update, initial, setUpdate, setInitial}){
       await resolveApi.refreshTokenClinetSide()
     }
 
+    setPending(true)
     const updatingData = {
       id: inp.id, 
       data: {
@@ -167,8 +158,23 @@ function SetPlan({update, initial, setUpdate, setInitial}){
       }
     }
     !update ? dispatch(handleAdd(inp)) : dispatch(handleUpdate(updatingData))
-
   }
+
+  useEffect(()=>{
+    if(add.msg){
+      setPending(false)
+      toast(add.msg, {
+        type: add.status ? 'success' : 'error'
+      })  
+      
+      if(add.status){
+        setInp(initialState)
+        setInitial(initialState)
+        setUpdate(false)
+      }
+      
+    }
+  }, [add])
 
   const handleReset = async()=>{
     if(!Cookies.get('accesstoken')){
@@ -178,30 +184,10 @@ function SetPlan({update, initial, setUpdate, setInitial}){
     setUpdate(false)
   }
 
-  //clear form input
-  useEffect(()=>{
-
-    if(add.status){
-      setInitial(initialState)
-      setUpdate(false)
-    }
-
-  }, [add])
-
-
   return (
     <Plan>
       <form onSubmit={submit}>
         <div className="title">{update ? "Update a Plan" : "Add a Plan"}</div>
-
-        <div className="center"> 
-          <Feedback
-            msg={add.msg}
-            status={add.status}
-            feedback={feedback}
-            setFeedback={setFeedback}
-          />
-        </div>
 
         <InputWrapper>
           <label htmlFor="">Type:</label>
@@ -251,13 +237,13 @@ function SetPlan({update, initial, setUpdate, setInitial}){
           />
         </InputWrapper>
 
-        <div className="center">{add.isLoading ? <Spinner size='20px'/> : ""}</div>
+        <div className="center">{pending? <Spinner size='20px'/> : ""}</div>
 
         <InputWrapper>
           <input
             disabled={add.isLoading}
             type="submit"
-            value={add.isLoading ? 'Loading...' : (update ? 'Update Plan' : 'Add Pann')}
+            value={pending ? 'Loading...' : (update ? 'Update Plan' : 'Add Pann')}
           />
         </InputWrapper>
         {
@@ -265,7 +251,7 @@ function SetPlan({update, initial, setUpdate, setInitial}){
           <InputWrapper>
             <input
               onClick={handleReset}
-              disabled={add.isLoading}
+              disabled={pending}
               type="reset"
               value='Cancel'
             />
@@ -331,6 +317,13 @@ function GetPlans({setUpdate, update, data, setInitial, initial}){
 
 const SinglePlan = ({setUpdate, data, setInitial}) => {
   const dispatch = useDispatch()
+  const state = useSelector(state=>state)
+  const {deletePlan, add} = state.plans
+
+  useEffect(()=>{
+    // to clear any hanging msg from redux
+    dispatch(handleResetPlan())
+  }, [])
 
 
   const handleEdit = async(data)=>{
@@ -358,7 +351,21 @@ const SinglePlan = ({setUpdate, data, setInitial}) => {
       await resolveApi.refreshTokenClinetSide()
     }
     dispatch(handleDelete(id))
+
+    if(deletePlan.msg){
+      toast(deletePlan.msg, {
+        type: deletePlan.status ? 'success' : 'error'
+      })         
+    }
   }
+
+  useEffect(()=>{
+    if(deletePlan.msg){
+      toast(deletePlan.msg, {
+        type: deletePlan.status ? 'success' : 'error'
+      })         
+    }
+  }, [])
 
   return (
     <StyledSinglePlan>

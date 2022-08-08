@@ -49,6 +49,7 @@ export const Error = styled.small`
     padding: 10px;
     text-align: center;
     font-style: italic;
+    fony-size: .9rem;
     position: relative;
     width: 100%;
     margin-bottom: 5px;
@@ -63,6 +64,7 @@ export const Success = styled.small`
     text-align: center;
     font-style: italic;
     position: relative;
+    font-size: .8rem;
     width: 100%;
     margin-bottom: 5px;
     border-radius: 8px;

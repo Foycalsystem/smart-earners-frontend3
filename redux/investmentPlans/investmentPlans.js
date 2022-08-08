@@ -104,6 +104,14 @@ const initialState = {
 export const plansReducer = createSlice({
     name: 'plans',
     initialState,
+    reducers: {
+        handleResetPlan(state){
+            state.plans.isLoading = false; state.plans.status = false; state.plans.msg = '';
+            state.add.isLoading = false; state.add.status = false; state.add.msg = '';
+            state.update.isLoading = false; state.update.status = false; state.update.msg = '';
+            state.deletePlan.isLoading = false; state.deletePlan.status = false; state.deletePlan.msg = '';
+        }
+    },
     extraReducers: {
         // get plans
         [getPlans.pending]: (state)=>{
@@ -212,4 +220,5 @@ export const plansReducer = createSlice({
     
 })
 
+export const {handleResetPlan} = plansReducer.actions
 export default plansReducer.reducer

@@ -3,23 +3,15 @@ import styled from 'styled-components';
 import { MdClose, MdMenu} from 'react-icons/md'
 
 
-export default function PopUpModal({showModal, setFeedback, setShowModal, userInfo, children, title}) {
+export default function PopUpModal({showModal, setShowModal, userInfo, children, title}) {
     const closeMenu =(e)=>{
         if(e.target === e.currentTarget){
             setShowModal(false)
-            setFeedback({
-                msg: '',
-                status: false
-            })
         }
      }
 
      const closeMenu2=()=>{
         setShowModal(false);
-        setFeedback({
-            msg: '',
-            status: false
-        })
      }
      
      useEffect(() => {

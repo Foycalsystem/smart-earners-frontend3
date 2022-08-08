@@ -10,10 +10,14 @@ import { store } from '../redux/store';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css'
 import Preloader from '../loaders/Preloader';
+import ScrollToTop from "react-scroll-to-top";
 import useToggle from '../hooks/toggles/toggles';
 import Cookies from 'js-cookie';
 axios.defaults.withCredentials = true;
 import { resolveApi } from '../utils/resolveApi';
+import 'react-toastify/dist/ReactToastify.css';
+import ToastContainer_ from '../components/ToastContainer';
+
 
 function MyApp({ Component, pageProps }) {
   
@@ -39,6 +43,7 @@ function MyApp({ Component, pageProps }) {
       }, 1000)
   }
   
+  // call apis that need to be called anytime the browser renders or refreshes
   resolveApi.refreshTokenClinetSide();
   resolveApi.resolveInvestmentClientSide();
   resolveApi.removeUnverifiedusersClientSide();
@@ -77,6 +82,7 @@ function MyApp({ Component, pageProps }) {
   
   return (
     <Provider store={store}>
+       <ScrollToTop smooth color="var(--major-color-purest)" style={{background: 'rgba(0,0,0,.2)'}}/>
       <Head>
         <meta
           name="viewport"
@@ -91,6 +97,7 @@ function MyApp({ Component, pageProps }) {
       
 
       <Layouts userInfo={userInfo} toggleState={toggleState}>
+          <ToastContainer_ />
           <Component {...pageProps} userInfo={userInfo} toggleState={toggleState}/>
       </Layouts>
 
