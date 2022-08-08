@@ -5,9 +5,12 @@ import Loader_ from "../loader/Loader";
 import styled from 'styled-components';
 import Spinner from "../../../loaders/Spinner";
 import { sendVerificationLink } from "../../../redux/auth/auth";
-import Feedback from "../../Feedback";
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { resolveApi } from "../../../utils/resolveApi"
+import { toast } from 'react-toastify';
+import { addRefcode, resetAuth } from "../../../redux/auth/auth";
 
 
 
@@ -17,7 +20,7 @@ const Profile = ({userInfo}) => {
     const [isLoading, setLoading] = useState(true)
     const {user} = state.auth;
     const router = useRouter()
-  
+
     useEffect(()=>{
       dispatch(getUser())
 
@@ -37,7 +40,7 @@ export default Profile
 
 
 const ProfileComp =({data})=>{
-
+    
     const accountStatus =()=>{
         if(data.isBlocked){
             return 'Blocked'
@@ -54,9 +57,9 @@ const ProfileComp =({data})=>{
                 
                 <section className="top-section">
                         <span className="profile-name">
-                            <h1>{data.username.charAt(0).toUpperCase()}</h1> 
+                            <h1>{data.username && data.username.charAt(0).toUpperCase()}</h1> 
                             {
-                                data.isVerified && !data.isBlocked ? <span><GppGoodIcon /></span> : ''
+                                data.isVerified && !data.isBlocked ? <span style={{position: 'absolute', top: '8px', right: '8px'}}><GppGoodIcon /></span> : ''
                             }
                         </span>
                     
@@ -141,36 +144,41 @@ function SendVerifyLink({}){
     const state = useSelector(state=>state);
     const {sendVerifyLink} = state.auth;
 
-    const [feedback, setFeedback] = useState({
-        msg: sendVerifyLink.msg,
-        status: false
-    });
+    const [pending, setPending] = useState(false)
     
-    const send=()=>{
+     // clear any hanging msg from redux
+    useEffect(()=>{
+        dispatch(resetAuth())
+    }, [user])
+    
+    const send = async()=>{
+        if(!Cookies.get('accesstoken')){
+            await resolveApi.refreshTokenClinetSide()
+        }
+        setPending(true)
         dispatch(sendVerificationLink())
-
-        setFeedback({
-            msg: sendVerifyLink.msg,
-            status: true
-        });
     }
+
+    useEffect(()=>{
+        if(sendVerifyLink.msg){
+          setPending(false)
+          toast(sendVerifyLink.msg, {
+            type: sendVerifyLink.status ? 'success' : 'error'
+          })         
+        }
+    }, [sendVerifyLink])
 
     return (
         <section className="bio extraInfo">
-            
-            <Feedback
-                feedback={feedback}
-                setFeedback={setFeedback}
-                status={sendVerifyLink.status}
-                msg={sendVerifyLink.msg}
-            />
             <button
                 disabled={sendVerifyLink.isLoading ? true : false}
                 onClick={send}>
                 {sendVerifyLink.isLoading ? 'Sending Link...' : 'Verify Your Account'}
             </button>
-            {sendVerifyLink.isLoading ? <Spinner /> : ""}
-
+            <div className="center">
+                {pending? <Spinner /> : ""}
+            </div>
+            
         </section>
     )
 }
@@ -205,6 +213,11 @@ const ProfileCointainer_ = styled.div`
         display: grid;
         grid-template-columns: repeat( auto-fit, minmax(350px, 1fr) );
     }
+    .center{
+        display: flex;
+        justify-content: center
+    }
+
     .bio{
         margin: 8px auto;
         width: 80%;

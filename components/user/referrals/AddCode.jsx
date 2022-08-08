@@ -17,6 +17,7 @@ export default function AddCode({userInfo}) {
   const { addCode, user} = state.auth;
   const [inp, setInp] = useState({refcode: ''})
   const [isLoading, setLoading] = useState(true)
+  const [pending, setPending] = useState(false)
 
   // clear any hanging msg from redux
   useEffect(()=>{
@@ -26,6 +27,7 @@ export default function AddCode({userInfo}) {
   const submit= async(e)=>{
     e.preventDefault();
 
+    setPending(true)
     if(!Cookies.get('accesstoken')){
       await resolveApi.refreshTokenClinetSide()
     }
@@ -35,6 +37,7 @@ export default function AddCode({userInfo}) {
 
   useEffect(()=>{
     if(addCode.msg){
+      setPending(false)
       toast(addCode.msg, {
         type: addCode.status ? 'success' : 'error'
       })         
@@ -63,7 +66,7 @@ export default function AddCode({userInfo}) {
         
           <Form onSubmit={submit} className="form">
             <div className="title">Enter Referral Code</div>
-            <div className="center">{ addCode.isLoading ? (
+            <div className="center">{ pending ? (
               <>
                 <Spinner size="20px" />
               </>
@@ -77,7 +80,11 @@ export default function AddCode({userInfo}) {
                     onChange={(e)=>setInp({...inp, refcode: e.target.value})}
                     placeholder="Referral Code"
                 />
-                <input type="submit"/>
+                <input
+                  type="submit"
+                  disabled={pending}
+                  value={pending ? 'Loading...' : 'Submit'}
+                />
             </div>
           </Form>
         )
@@ -94,6 +101,11 @@ const Wrapper = styled.div`
   right: 0;
   position: absolute;
   top: 0;
+
+  .center{
+    display: flex;
+    justify-content: center;
+  }
 
   .referrer{
     margin: 10px 5px;

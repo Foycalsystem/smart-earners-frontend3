@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import { blockUser, getUsers, getUser, deleteUser, unBlockUser, makeAdmin, removeAdmin } from "../../../redux/auth/auth";
-import styled from 'styled-components'
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import Spinner from "../../../loaders/Spinner";
 import filter from "@mozeyinedu/filter";
@@ -16,7 +15,6 @@ import {
   Header_Table,
   Table
 } from "../styles";
-import { ScrollBar } from "../../../styles/globalStyle";
 
 export default function Users({userInfo}) {
   const dispatch = useDispatch()
