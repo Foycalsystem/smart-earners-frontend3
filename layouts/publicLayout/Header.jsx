@@ -53,6 +53,11 @@ export default function Header_({userInfo}) {
             link: 'Privacy Policy',
             url: '/policy',
             icon: <BalanceIcon />
+        },
+        {
+            link: 'How it Works',
+            url: '/how-it-works',
+            icon: <BalanceIcon />
         }
     ]
 
