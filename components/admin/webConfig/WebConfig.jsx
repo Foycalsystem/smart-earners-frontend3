@@ -32,6 +32,7 @@ export default function WebConfig({userInfo}) {
     totalMembers: config.data.totalMembers,
     totalInvestors: config.data.totalInvestors,
     totalSecPaid: config.data.totalSecPaid,
+    movingText: config.data.movingText,
 }
 
 
@@ -44,6 +45,7 @@ export default function WebConfig({userInfo}) {
     }, 1000)
 
   }, [])
+
 
   return (
     
@@ -214,6 +216,17 @@ function SetForm({config, initialState}) {
                       type="text"
                       value={inp.totalSecPaid || ''}
                       name='totalSecPaid'
+                      onChange={getInput}
+                  />
+              </InputWrapper>
+
+              <InputWrapper title={config.data.movingText}>
+                  <Label htmlFor="">Moving Text: <div className="item" style={{whiteSpace: 'nowrap', overflow:'hidden', textOverflow: 'ellipsis', border:'1px solid greee', width: '200px'}}>{config.data.movingText} {config.data.movingText}</div></Label>
+                  <Input
+                      disabled={!edit}
+                      type="text"
+                      value={inp.movingText || ''}
+                      name='movingText'
                       onChange={getInput}
                   />
               </InputWrapper>

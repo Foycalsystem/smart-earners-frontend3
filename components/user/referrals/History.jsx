@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Hx from './Hx';
+import Bonuses from './Bonuses';
 
 
 export default function History() {
@@ -25,11 +26,11 @@ export default function History() {
   const [isLoading, setLoading] = useState(true)
   const {config} = state.config;
   const [totalEarnings, setTotalEarnings] = useState(0)
-  const [totalActive, setTotalActive] = useState(0)
-  const [chances, setChances] = useState(0)
+  const [totalActive, setTotalActive] = useState([])
   const [referree, setReferree] = useState([])
-  const [pending, setPending] = useState(false)
-  const [toggle, setToggle] = useState(false)
+  const [bonus_, setTotalBonus] = useState([])
+  const [hx, setHx] = useState([])
+  const [toggle, setToggle] = useState(true)
 
   useEffect(()=>{    
     dispatch(getUser())
@@ -37,12 +38,11 @@ export default function History() {
     dispatch(getTotalBounus('gell'))
     dispatch(getConfig())
 
-    // setTimeout(()=>{
-    //   user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
-    //     setLoading(false)
-    // }, 1000)
+    setTimeout(()=>{
+      user.isLoading && bonus.isLoading && totalBonus.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+    }, 500)
 
-    user.isLoading && bonus.isLoading && totalBonus.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+    
   }, [])
 
    // clear any hanging msg from redux
@@ -52,9 +52,18 @@ export default function History() {
 
 
   useEffect(()=>{
-    setReferree(totalBonus.data || [])        
-  }, [totalBonus])
+    setReferree(user.data.referree || [])        
+    setTotalBonus(totalBonus.data || [])        
+    setHx(bonus.data || [])
 
+    const active = referree.filter(data=>{
+      return data.active===1 || data.active===2
+    })
+
+    setTotalActive(active)
+    
+  }, [user, bonus, totalBonus])
+ 
   useEffect(()=>{
   
     let sum = 0;
@@ -63,8 +72,10 @@ export default function History() {
     }
     setTotalEarnings(sum);
 
-  }, [bonus])
 
+   
+
+  }, [bonus])
 
   const claimBonus= async()=>{
     setPending(true)
@@ -74,15 +85,15 @@ export default function History() {
     
   }
 
+
   return (
   <>
     <GoBackBtn />
     {
       isLoading ? <Loader_ /> :
-      <Wrapper>           
-        <>
-            {
-             referree.length < 1 ?
+      <Wrapper>  
+          {
+            referree.length < 1 ?
               <Header>
                 <div style={{fontWeight: '600', marginBottom: '4px'}}>You have not referred anyone</div>
               </Header>
@@ -103,100 +114,32 @@ export default function History() {
                         user.isLoading && totalBonus.isLoading ? <div className='center'><Spinner size="20px"/></div> : 
                         <button
                           style={{
-                            background: totalActive/referree.length * 100 >= 80 ? 'green' : '',
-                            color: totalActive/referree.length * 100 >= 80 ? '#fff' : ''
+                            background: totalActive.length/referree.length * 100 >= 80 ? 'green' : '',
+                            color: totalActive.length/referree.length * 100 >= 80 ? '#fff' : ''
                           }}
                           className='totalUnit'
-                          disabled={totalActive/referree.length * 100 <= 80}
+                          disabled={totalActive.length/referree.length * 100 <= 80}
                           onClick={claimBonus}
                         >
-                          {totalActive}/{referree.length} = {totalActive/referree.length * 100}%
+                          {totalActive.length}/{referree.length} = {(totalActive.length/referree.length * 100).toFixed(1)}%
                         </button>
                       }
                   </div>
                 </Header>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start'}}>
-                  <div style={{cursor: 'pointer', marginTop: '-10px'}} onClick={()=>setToggle(!toggle)}>
+                  <div style={{cursor: 'pointer', marginTop: '-10px', borderRadius: '50%', border: '1px solid var(--major-color-30A'}} onClick={()=>setToggle(!toggle)}>
                     {
-                      toggle ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
+                      toggle ? <ArrowDropDownIcon style={{color: 'green'}}/> : <ArrowDropUpIcon />
                     }
                   </div>
                 </div>
-              </>
-            }
-        </>
 
-        {
-          !toggle ?
-          (
-            <Main>
-            {
-              referree.map((data, i)=>{
-                return (
-                  <div key={i} className="user">
-                    <div>
-                      <span style={{fontSize: '.9rem', fontWeight: 'bold'}}>{data.referreeId.username}</span>{" "}
-                      <span>
-                        {
-                          (function(){
-                            
-                            if(data.referreeId.hasInvested && data.referreeId.masterInvestmentCount===config.data.referralBonusMaxCountForMasterPlan){
-                              const chances = 0;
-
-                              return (
-                                <span>
-                                  <LensIcon style={{fontSize: '.3rem', color: data.referreeId.active==1 || data.referreeId.active==2 ? 'green' : 'var(--major-color-purest'}} />
-                                  <span style={{marginLeft: '50px', color: '#c20'}}>{"Chances: " + chances}</span>
-                                </span>
-                              )
-                            }
-
-                            else if(data.referreeId.hasInvested && data.referreeId.masterInvestmentCount < config.data.referralBonusMaxCountForMasterPlan){
-                              const chances = config.data.referralBonusMaxCountForMasterPlan - data.referreeId.masterInvestmentCount;
-
-                              return (
-                                <span>
-                                  <LensIcon style={{fontSize: '.3rem', color: data.active==1 || data.active==2 ? 'green' : 'var(--major-color-purest'}} />
-                                  <span style={{marginLeft: '50px'}}>{"Chances: " + chances}</span>
-                                </span>
-                              )
-                            }
-
-                            else if(!data.referreeId.hasInvested && data.referreeId.masterInvestmentCount < config.data.referralBonusMaxCountForMasterPlan){
-                              const chances =  config.data.referralBonusMaxCountForMasterPlan - data.referreeId.masterInvestmentCount;
-
-                              for(let i=0; i<chances; i++){
-                                return (
-                                  <span>
-                                    <LensIcon style={{fontSize: '.3rem', color: data.active==1 || data.active==2 ? 'green' : 'var(--major-color-purest'}} />
-                                    <span style={{marginLeft: '50px'}}>{"Chances " + chances}</span>
-                                  </span>
-                                )
-                              }
-                            }
-                          }())
-                        }
-                      </span>
-                    </div>
-                    
-                    {
-                      (
-                        function(){
-                          return <span className="amount">{data.amount} {data.currency}</span>
-                          
-                        }()
-                      )
-                    }
-                  </div>
-                )
-              })
-            }
-        </Main>
-          ):
-          (
-            <Hx data={bonus}/>
-          )
-        }
+              {
+                toggle ? <Bonuses data={bonus_}/> : <Hx data={hx}/>
+              }
+            </>
+          }         
+       
       </Wrapper>
     }
   </>

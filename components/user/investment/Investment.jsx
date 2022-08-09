@@ -230,7 +230,7 @@ function MasterPlan({data, showModal, setShowModal}){
   const [pending, setPending] = useState(false)
 
   const initialState = {
-    amount: ''
+    amount: 200000
   }
   const [inp, setInp] = useState(initialState)
   const getInp =(e)=>{
@@ -243,6 +243,7 @@ function MasterPlan({data, showModal, setShowModal}){
       await resolveApi.refreshTokenClinetSide()
     }
 
+    setInp(initialState)
     setShowModal(false)
   }
 
@@ -265,7 +266,7 @@ function MasterPlan({data, showModal, setShowModal}){
         type: invest.status ? 'success' : 'error'
       })         
     }
-  }, [])
+  }, [invest])
 
 
 
