@@ -149,7 +149,7 @@ function SendVerifyLink({}){
      // clear any hanging msg from redux
     useEffect(()=>{
         dispatch(resetAuth())
-    }, [user])
+    }, [sendVerifyLink])
     
     const send = async()=>{
         if(!Cookies.get('accesstoken')){
