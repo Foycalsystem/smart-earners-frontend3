@@ -1,4 +1,4 @@
-// import Hero from "./Hero"
+import Hero from "./Hero"
 import OurServices from "./OurServices"
 import StatAndTestimony from "./StatAndTestimony"
 import AboutUs from "./AboutUs"
@@ -10,7 +10,7 @@ export default function Index({userInfo}) {
 
     return (
         <div>
-            {/* <Hero userInfo={userInfo}/> */}
+            <Hero userInfo={userInfo}/>
             <OurServices  userInfo={userInfo}/>
             <Plans userInfo={userInfo}/>
             <StatAndTestimony  userInfo={userInfo}/>

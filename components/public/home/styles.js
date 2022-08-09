@@ -1,10 +1,7 @@
 import styled from 'styled-components'
 import {
-    SectionWrapper,
     Button,
-    Section,
     SectionTitle,
-    SectionSubTitle,
     SectionText
 } from '../../../styles/globalStyle'
 
@@ -31,8 +28,6 @@ const device = {
     desktopL: `(min-width: ${size.desktop})`
   };
 
-// Hero section
-
 const Wrapper = styled.div`
     width: 100%;
     margin: 10px auto;
@@ -47,103 +42,65 @@ const Wrapper = styled.div`
     }
 
 `
-const HeroSectionWrapper = styled.div`
+const HeroSectionWrapper = styled(Wrapper)`
     width: 100%;
-    height: fit-content;
-    border: 1px solid red;
-    background: whitesmoke;
-    border: 2px solid transparent;
+    background: var(--major-color-30A);
+    margin:3px auto;
 
-    .meso-layer{
-        width: 90%;
-        height: 100%;
-        margin: 0px auto;
+    p{ 
+        font-size: 1rem;
+        width: 100%;
+        margin: 10px 0 20px;
+        text-align: center;
+    }
+    button{
+        width: 200px;
+        height: 35px;
+        outline: none;
+        border: none;
+        border-radius: 20px;
+        background: var(--bright-color);
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.09rem;
+        margin: 10px auto;
+        display: grid;
+        place-items: center;
+        box-shadow: rgba(100,100, 100,0.5) 0px 2px 8px 0px;
+
+        @media (max-width: 500px){
+            margin: 10px auto;
+        }
+    }
+
+    aside{
+        width: 100%;
+        max-width: 400px;
+    }
+    .right-side{
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: center;
-        .left-side{
-            width: 80%;
-            caption h1{
-                    font-size: 3rem;
-                    margin: 15px 0;
-                }
-            p{ 
-                    font-size: 1.1rem;
-                    width: 100%;
-                    margin: 10px 0 20px;
-                    text-align: center;
-            }
-            button{
-                width: 200px;
-                height: 35px;
-                outline: none;
-                border: none;
-                border-radius: 20px;
-                background: var(--bright-color);
-                color: #fff;
-                font-weight: 600;
-                font-size: 1.09rem;
-                margin: 30px auto;
-                display: grid;
-                place-items: center;
-                box-shadow: rgba(100,100, 100,0.5) 0px 2px 8px 0px;
-            }
-        }
-        } 
-    
-    @media ${device.tablet}{
-    width: 100%;
-    height: 50vh;
-    background: whitesmoke;
-    border: 2px solid transparent;
+        height: 33vh;
+        width: 60%;
+    }
 
-    .meso-layer{
-        // width: 90%;
-        // height: 100%;
-        // margin: 0px auto;
-        // display: flex;
-        // flex-wrap: wrap;
-        // justify-content: space-around;
-        // align-items: center;
+    @media (min-width: 600px){
+        .right-side{
+            height: 40vh;
+        }
+    }
+
+    @media (min-width: 800px){
+        aside{
+            margin auto 20px;
+        }
 
         .left-side{
-            width: 50%;
-            height: 100%;
-            display: flex;
-            flex-flow: column nowrap;
-            justify-content: center;
-            align-items: flex-start;
-                caption h1{
-                    font-size: 3rem;
-                    margin-bottom: 15px;
-                }
-            p{ 
-                    font-size: 1.1rem;
-                    width: 80%;
-                    margin: 10px 0 20px;
-                    text-align: justify;
-            }
-
-            button{
-                width: 200px;
-                height: 35px;
-                outline: none;
-                border: none;
-                border-radius: 20px;
-                background: var(--bright-color);
-                color: #fff;
-                font-weight: 600;
-                font-size: 1.09rem;
-                margin: 30px 0 0 0;
-                display: grid;
-                place-items: center;
-                box-shadow: rgba(100,100, 100,0.5) 0px 2px 8px 0px;
-            }
+            padding: 20px;
         }
-        }
-    } 
+    }
 `
+
+const HeroSectionTitle = styled(SectionTitle)``
 
 const HeroSectionSubTitle = styled.div`
     color: var(--major-color-purest);
@@ -220,37 +177,12 @@ const PartnersWrapper = styled(Wrapper)`
         align-items: center;
     }
 `
-const SwipeWrapper = styled.div`
-    // margin: 20px auto;
-    // width: 97%;
-    // min-width: 200px;
-    // display: flex;
-    // justify-content: center;
-
-    // .swiper{
-    //     // width: 100%;
-    //     display: flex;
-    //     justify-content: center;
-
-    //     @media (max-width: 920px){
-    //         width: 100%;
-    //     };
-    //     @media (max-width: 820px){
-    //         width: 450px;
-    //     };
-    //     @media (max-width: 500px){
-    //         width: 450px;
-    //     }
-    //     @media (max-width: 490px){
-    //         width: 350px;
-    //     }
-    // }
-`
 
 
 export {
     HeroSectionWrapper,
     HeroSectionSubTitle,
+    HeroSectionTitle,
     HeroSectionText,
     HeroButton,
     CardWrapper,
@@ -259,7 +191,6 @@ export {
     PlanSectionWrapper,
     StatAndTestimonyWrapper,
     AboutUsContainer,
-    SwipeWrapper,
     PartnersWrapper,
     ImageCard,
     device

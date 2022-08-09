@@ -6,7 +6,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import StarIcon from '@mui/icons-material/Star';
 import { SectionTitle } from '../../../styles/globalStyle'
 import { getConfig } from '../../../redux/admin/web_config';
-import {useEffect, useState} from 'react'
+import {useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import Spinner from '../../../loaders/Spinner';
 
@@ -93,9 +93,6 @@ const StatsWidget = () => {
               </div>
           </div>
         </div>
-        {/* <p>{configD.emblem}</p>
-        <p>{configD.text}</p>
-        <p>{configD.stat}</p> */}
     </StyledStatsWidget>
   )
 }
