@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { resolveApi } from "../../../utils/resolveApi"
 import { toast } from 'react-toastify';
-import { addRefcode, resetAuth } from "../../../redux/auth/auth";
+import { resetAuth } from "../../../redux/auth/auth";
 
 
 
@@ -19,7 +19,6 @@ const Profile = ({userInfo}) => {
     const state = useSelector(state=>state);
     const [isLoading, setLoading] = useState(true)
     const {user} = state.auth;
-    const router = useRouter()
 
     useEffect(()=>{
       dispatch(getUser())
@@ -143,7 +142,6 @@ function SendVerifyLink({}){
     const dispatch = useDispatch()
     const state = useSelector(state=>state);
     const {sendVerifyLink} = state.auth;
-
     const [pending, setPending] = useState(false)
     
      // clear any hanging msg from redux

@@ -1,91 +1,49 @@
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'; 
-import { getNotif } from '../../../redux/admin/notifications';
 import { useState, useEffect } from "react";
-import {useSelector, useDispatch} from 'react-redux';
-import Loader_ from "../loader/Loader";
 import Spinner from "../../../loaders/Spinner";
 import moment from 'moment';
 import styled from 'styled-components'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import Cookies from "js-cookie";
-import { resolveApi } from "../../../utils/resolveApi"
-import { toast } from 'react-toastify';
-import { resetAuth , getUser, handleRead} from "../../../redux/auth/auth";
 
-export default function Notifications() {
-  const dispatch = useDispatch()
-  const state = useSelector(state=>state);
+export default function View({data}) {
   const [isLoading, setLoading] = useState(true)
-  const {user} = state.auth;
-  const {read} = state.auth;
-  const {notif} = state.notifications
   const [clicked, setClicked] = useState(false);
-  const [notificationId, setNotificationId] = useState([])
-  const [generalNotifications, setGeneralNotifications] = useState([])
-  const [pending, setPending] = useState(false)
   const [isActive, setActive] = useState(false)
+  const [generalNotifications, setGeneralNotifications] = useState([])
 
-
+console.log(data)
 
   useEffect(()=>{      
-    dispatch(getNotif())
-    dispatch(getUser())
-
     setTimeout(()=>{
-      notif.isLoading ? setLoading(true) : setLoading(false)
+      data.isLoading ? setLoading(true) : setLoading(false)
     }, 500)
 
-  }, [])
-
-  useEffect(()=>{
-    setNotificationId(user.data.notifications || [])
-  }, [user])
-
-  useEffect(()=>{
-    setGeneralNotifications(notif.data)
-  }, [notif])
+  }, [data])
  
+  useEffect(()=>{    
+    setGeneralNotifications(data.data || [])
+  }, [data])
 
-  const toggle = async(index, id)=>{
-    if(!Cookies.get('accesstoken')){
-      await resolveApi.refreshTokenClinetSide()
-    }
-    
-    if(notificationId.includes(id)){
-      dispatch(handleRead(id))
-      setPending(true)
+  const toggle = async(index, id)=>{ 
 
-    }else{
-    }
     setActive(!isActive)
-    setPending(false)
     if(clicked === index){
       return setClicked(null)
     }
     setClicked(index)
   }
 
-  useEffect(()=>{
-    if(read.msg){
-      setPending(false)
-    }
-  }, [read])
 
   return (  
-    isLoading ? <Loader_ /> : 
    <Wrapper>
-    {pending ?<div className="center"> <Spinner size="20px" /> </div>: ''}
-    {
+    {  
+      isLoading ? <div className="center"> <Spinner size="20px" /> </div> : 
       generalNotifications && generalNotifications.length < 1 ? '' :
       generalNotifications && generalNotifications.map((data, index)=>{
         return (
           <Accordion key={data._id}>
             <Title onClick={()=>toggle(index, data._id)}>
               {data.title && data.title.toUpperCase()}
-              {
-                notificationId.includes(data._id) ? <div className='newMessage'>New</div> : ''
-              }
               
               <div style={{color: 'var(--bright-color', fontSize: '.55rem'}}>{data.createdAt && moment(data.createdAt).calendar()}</div>
 

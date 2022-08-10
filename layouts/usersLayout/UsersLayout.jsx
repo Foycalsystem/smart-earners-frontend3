@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { mobileAndTabletCheck } from '../../utils/mobileAndTabletCheck';
 import Head from 'next/head';
 import { getConfig } from '../../redux/admin/web_config';
+import { getUser } from '../../redux/auth/auth';
 
 
 
@@ -15,62 +16,19 @@ export default function DashboardLayout({children, userInfo}) {
   const state = useSelector(state=>state)
   const dispatch = useDispatch()
   const [isMobile, setIsMobile] = useState(false);
-  const {config} = state.config
+  const {config} = state.config;
+  const {user} = state.auth;
+  const [notificationId, setNotificationId] = useState([])
 
   useEffect(()=>{
       setIsMobile(mobileAndTabletCheck(window))
       dispatch(getConfig())
-      // setIsMobile(true)
-
+      dispatch(getUser())
   }, [])
 
-  const notificationData = [
-    {
-        title: 'Greatings',
-        body: 'Hello everyone! Welcome to SmartEarners',
-        date: new Date()
-    },
-    {
-        title: 'CONVERSION RATE',
-        body: 'Conversion Rate is 500 SE  / 1 USD',
-        date: new Date()
-    },
-    {
-        title: 'SMARTEARNERS',
-        body: 'SmartEarners is live now. We are here to server you',
-        date: new Date()
-    },
-    {
-        title: 'Greatings',
-        body: 'Hello everyone',
-        date: new Date()
-    },
-    {
-        title: 'Greatings',
-        body: 'Hello everyone',
-        date: new Date()
-    },
-    {
-        title: 'Greatings',
-        body: 'Hello everyone',
-        date: new Date()
-    },
-    {
-        title: 'Greatings',
-        body: 'Hello everyone',
-        date: new Date()
-    },
-    {
-      title: 'Greatings',
-      body: 'Hello everyone',
-      date: new Date()
-    },
-    {
-        title: 'Greatings',
-        body: 'Hello everyone',
-        date: new Date()
-    },
-  ]
+  useEffect(()=>{
+    setNotificationId(user.data.notifications || [])
+  }, [user])
 
   const movingInfo = config
 
@@ -83,13 +41,13 @@ export default function DashboardLayout({children, userInfo}) {
         {
           isMobile ?
           <MobileHeader
+              notificationId={notificationId}
               movingInfo={movingInfo}
-              userInfo={userInfo}
-              notificationData={notificationData} /> :
+              userInfo={userInfo} /> :
           <DesktopHeader
+              notificationId={notificationId}
               movingInfo={movingInfo}
-              userInfo={userInfo}
-              notificationData={notificationData} />
+              userInfo={userInfo} />
         }
       </Header>
 

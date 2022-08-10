@@ -80,8 +80,6 @@ function SetForm({config, initialState}) {
     const {snap} = useSnap(.5);
     const [edit, setEdit] = useState(false);
     const dispatch = useDispatch()
-  
-    
     const [inp, setInp] = useState(initialState)
   
   
@@ -100,6 +98,7 @@ function SetForm({config, initialState}) {
     useEffect(()=>{
       setInp(initialState);
     }, [config])
+
   
     return (
       <Form>

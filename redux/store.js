@@ -9,6 +9,7 @@ import investmentReducer from './invest/invest';
 import depositeReducer from './admin/deposit';
 import transactionsReducer from './transactions/transactions';
 import referralReducer from './referrals/referrals';
+import notificationReducer from './admin/notifications';
 
 
 
@@ -24,7 +25,8 @@ export const store = configureStore({
         investment: investmentReducer,
         deposit: depositeReducer,
         transactions: transactionsReducer,
-        referrals: referralReducer
+        referrals: referralReducer,
+        notifications: notificationReducer
     }
 });
 

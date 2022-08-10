@@ -20,13 +20,10 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import MovingInfo from './MovingInfo';
 
 
-export default function DesktopHeader({userInfo, notificationData, movingInfo}) {
+export default function DesktopHeader({userInfo, notificationId, movingInfo}) {
     const [stick, setStick] = useState(false)
     const router = useRouter()
     const [showMenu, setShowMenu] = useState(false)
-    const [isMobile, setIsMobile] = useState(false);
-    const [showNotif, setShowNotif] = useState(false);
-    const [showDropDown, setDropDown] = useState(false)
 
     useEffect(()=>{
         window.onscroll=(e)=>{
@@ -128,7 +125,7 @@ export default function DesktopHeader({userInfo, notificationData, movingInfo}) 
                 }
 
                 {/* notifaction btn */}
-                <Notifications showNotif={showNotif} setShowNotif={setShowNotif} setDropDown={setDropDown} notificationData={notificationData}/>
+                <Notifications notificationId={notificationId}/>
 
             </div>
 

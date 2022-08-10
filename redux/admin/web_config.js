@@ -35,6 +35,7 @@ export const updateConfig= createAsyncThunk(
             return res.data;          
         }
         catch(err){      
+            console.log(err)
             if(err.response.data){
                 return rejectWithValue({status: false, msg: err.response.data.msg});
             }

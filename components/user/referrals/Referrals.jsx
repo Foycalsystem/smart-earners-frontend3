@@ -82,7 +82,7 @@ export default function Referrals({userInfo}) {
                 
                 <RWebShare
                   data={{
-                    text: "Invite your Friends now to claim Commissions from their first Investment . Use this link to register.",
+                    text: "Hey 👋 friend! \n I'm inviting you to join smartearners, the best forex trading management platform, use this link to register, and start earning weekly profit",
                     url: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://teamsmartearners.com'}/signup?refcode=${user.data.referralCode}`,
                     title: "SmartEarners",
                   }}>

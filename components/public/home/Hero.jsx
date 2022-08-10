@@ -19,7 +19,7 @@ const Hero = () => {
                     <aside className="left-side">
                         <h1 style={{fontSize: '2.3rem'}}>SmartEarners</h1>
                         <p>A Forex trading solution built for anyone with Small Capital to invest in forex and make a nice income</p>
-                        <button {...snap()} onClick={()=>router.push(`/dashboard/investment/`)}>Get Started</button>
+                        <button {...snap()} onClick={()=>router.push(`/dashboard/`)}>Get Started</button>
                     </aside>
 
                     <aside className="right-side">

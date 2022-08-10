@@ -323,7 +323,29 @@ export const addRefcode= createAsyncThunk(
                     "Authorization": `Bearer ${Cookies.get('accesstoken')}`
                 }
             });
-            console.log(res.data)
+            return res.data;  
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
+// remove notification from user list after been read
+export const handleRead= createAsyncThunk(
+    'notif/handleRead',
+    async(id, {rejectWithValue})=>{
+        try{
+            const res = await axios.put(`/notification/handle-read/${id}`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
             return res.data;  
         }
         catch(err){
@@ -353,6 +375,7 @@ const initialState = {
     makeadmin: { isLoading: false, status: false, msg: '' },
     removeadmin: { isLoading: false, status: false, msg: '' },
     addCode:  { isLoading: false, status: false, msg: '' },
+    read:  { isLoading: false, status: false, msg: '', data: ''},
 }
 
 export const authReducer = createSlice({
@@ -375,6 +398,7 @@ export const authReducer = createSlice({
             state.removeadmin.removeadmin = false;state.removeadmin.status = false;state.removeadmin.msg = '';
             state.del.isLoading = false;state.del.status = false;state.del.msg = '';
             state.addCode.isLoading = false;state.addCode.status = false;state.addCode.msg = '';
+            state.read.isLoading = false;state.read.status = false;state.read.msg = '';
         }
     },
     extraReducers: {
@@ -511,6 +535,29 @@ export const authReducer = createSlice({
                 // to get rid of next js server error
                 state.user.status = false;
                 state.user.msg = 'Error occured';
+            }
+        },
+
+        // remove read notifications from user list of unread notification
+        [handleRead.pending]: (state)=>{
+            state.read.isLoading = true;
+        },
+        [handleRead.fulfilled]: (state, {payload})=>{
+            state.read.isLoading = false;
+            state.read.status = payload.status;
+            state.read.msg = payload.msg;
+            state.user.data = payload.data;
+        },
+        [handleRead.rejected]: (state, {payload})=>{
+            state.read.isLoading = false;
+            if(payload){
+                state.read.status = payload.status;
+                state.read.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.read.status = false;
+                state.read.msg = 'Error occured';
             }
         },
 
