@@ -25,9 +25,9 @@ export default function DashboardLayout({children, userInfo}) {
 
   }, [])
 
-  // useEffect(()=>{
-  //   setNotificationId(user.data.notifications || [])
-  // }, [user])
+  useEffect(()=>{
+    setNotificationId(user.data.notifications || [])
+  }, [user])
 
   const movingInfo = config
 
@@ -36,9 +36,9 @@ export default function DashboardLayout({children, userInfo}) {
       <Head>
         <title>{process.env.dashboardTitle}</title>
       </Head>
-      {/* <Header headerHeight="90px">
+      <Header headerHeight="90px">
         {
-          isMobile ?
+          isMobile ? 
           <MobileHeader
               notificationId={notificationId}
               movingInfo={movingInfo}
@@ -48,7 +48,7 @@ export default function DashboardLayout({children, userInfo}) {
               movingInfo={movingInfo}
               userInfo={userInfo} />
         }
-      </Header> */}
+      </Header>
 
       <Main userInfo={userInfo} height={{headerHeight: '90px', footerHeight: '50px'}}>
           {children}
