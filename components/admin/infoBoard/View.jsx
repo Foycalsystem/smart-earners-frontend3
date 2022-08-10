@@ -86,7 +86,7 @@ const Title = styled.div`
   width: 100%;
   padding: 10px 30px 10px 30px;
   cursor: pointer;
-  font-size: .7rem;
+  font-size: .9rem;
   font-weight: bold;
   position: relative;
 
@@ -97,7 +97,7 @@ const Title = styled.div`
     background: #ff401a;
     padding: 2px;
     color: #fff;
-    font-size: .6rem;
+    font-size: .85rem;
     border-radius: 8px;
     width: 35px;
     display: flex;

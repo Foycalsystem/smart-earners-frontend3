@@ -128,7 +128,7 @@ const Title = styled.div`
   width: 100%;
   padding: 10px 30px 10px 30px;
   cursor: pointer;
-  font-size: .7rem;
+  font-size: .9rem;
   font-weight: bold;
   position: relative;
 
@@ -149,7 +149,7 @@ const Title = styled.div`
 `
 
 const Content = styled.div`
-font-size: .7rem;
+font-size: .85rem;
 height: ${({isActive,  clicked, index})=>isActive && clicked === index ? "auto" : '0'};
 padding: ${({isActive, clicked, index})=>isActive && clicked === index ? "0 30px 30px 30px" : '0'};
 verflow: hidden;
