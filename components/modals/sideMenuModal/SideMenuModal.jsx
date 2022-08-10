@@ -9,6 +9,8 @@ import {useRouter} from 'next/router'
 const logo = '/onboadinglogo.png';
 import NavAuthBtn from '../../navAuthBtn/NavAuthBtn';
 import { CopyRight } from '../../../styles/globalStyle';
+import SocialLinks from '../../SocialLinks';
+
 
 export default function SideMenuModal({showMenu, setShowMenu, navLinks, userInfo}) {
     
@@ -65,7 +67,7 @@ function SideMenu({navLinks, userInfo, showMenu, setShowMenu}) {
             </div>
         </SideMenuRow1>
 
-        <SideMenuRow2>
+        <SideMenuRow2 style={{position: 'relative'}}>
             <div className="navLink">
             {
                 navLinks.map((link, i)=>{
@@ -83,6 +85,9 @@ function SideMenu({navLinks, userInfo, showMenu, setShowMenu}) {
                     )
                 })
             }
+            </div>
+            <div style={{display: 'flex', left: '50%', transform: 'translateX(-50%)', justifyContent: 'center', position: 'absolute', bottom: '50px'}}>
+                <SocialLinks />
             </div>
         </SideMenuRow2>
 

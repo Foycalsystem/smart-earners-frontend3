@@ -55,6 +55,11 @@ const router = useRouter()
         icon: <PeopleAltIcon />
     },
     {
+      link: 'Info Board',
+      url: '/admin/information-board',
+      icon: <PeopleAltIcon />
+    },
+    {
       link: 'Home',
       url: '/',
       icon: <HomeIcon />

@@ -17,13 +17,9 @@ import MobileBottom from './MobileBottom';
 import MovingInfo from './MovingInfo';
 
 
-export default function MobileHeader({userInfo, notificationData, movingInfo}) {
+export default function MobileHeader({userInfo, notificationId, movingInfo}) {
     const [stick, setStick] = useState(false)
     const router = useRouter()
-    const [showMenu, setShowMenu] = useState(false)
-    const [isMobile, setIsMobile] = useState(false);
-    const [showNotif, setShowNotif] = useState(false);
-    const [showDropDown, setDropDown] = useState(false)
 
     useEffect(()=>{
         window.onscroll=(e)=>{
@@ -70,7 +66,7 @@ export default function MobileHeader({userInfo, notificationData, movingInfo}) {
                 }
 
                 {/* notifaction btn */}
-                <Notifications showNotif={showNotif} setShowNotif={setShowNotif} setDropDown={setDropDown} notificationData={notificationData}/>
+                <Notifications notificationId={notificationId}/>
             </div>
 
             {/* signup, signup, logout and dashboard btns*/}

@@ -4,7 +4,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import Spinner from "../../../loaders/Spinner";
 import {useSnap} from '@mozeyinedu/hooks-lab'
-import Feedback from "../../Feedback";
 import { getConfig } from "../../../redux/admin/web_config";
 import conversionRate from "../../../utils/conversionRate";
 import { makeDeposit, handleResetDeposit } from "../../../redux/admin/deposit";
@@ -22,7 +21,7 @@ import {
 
 
 
-export default function Deposit({userInfo, accesstoken}){
+export default function Deposit(){
     const dispatch = useDispatch();
     const state = useSelector(state=>state);
     const {snap} = useSnap()
@@ -64,12 +63,9 @@ export default function Deposit({userInfo, accesstoken}){
       dispatch(getUser())
       dispatch(getConfig())
   
-      // setTimeout(()=>{
-      //   user.isLoading ? setLoading(true) : setLoading(false)
-      // }, 1000)
-
-      user.isLoading ? setLoading(true) : setLoading(false)
-
+      setTimeout(()=>{
+        user.isLoading ? setLoading(true) : setLoading(false)
+      }, 500)
     }, [])
     
 

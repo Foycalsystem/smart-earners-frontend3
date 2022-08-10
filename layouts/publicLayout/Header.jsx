@@ -41,8 +41,8 @@ export default function Header_({userInfo}) {
         },
         {
             link: 'How it Works',
-            url: '/user-manual',
-            icon: <MenuBookIcon />
+            url: '/how-it-works',
+            icon: <BalanceIcon />
         },
         {
             link: 'Terms',
@@ -52,11 +52,6 @@ export default function Header_({userInfo}) {
         {
             link: 'Privacy Policy',
             url: '/policy',
-            icon: <BalanceIcon />
-        },
-        {
-            link: 'How it Works',
-            url: '/how-it-works',
             icon: <BalanceIcon />
         }
     ]
