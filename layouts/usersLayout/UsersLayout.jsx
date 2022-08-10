@@ -6,8 +6,12 @@ import { CopyRight } from '../../styles/globalStyle';
 import { useSelector, useDispatch } from 'react-redux';
 import { mobileAndTabletCheck } from '../../utils/mobileAndTabletCheck';
 import Head from 'next/head';
+import { getConfig } from '../../redux/admin/web_config';
+
+
 export default function DashboardLayout({children, userInfo}) {
   const state = useSelector(state=>state)
+  const dispatch = useDispatch()
   const [isMobile, setIsMobile] = useState(false);
   const {config} = state.config;
   const {user} = state.auth;
@@ -15,7 +19,7 @@ export default function DashboardLayout({children, userInfo}) {
 
   useEffect(()=>{
       setIsMobile(mobileAndTabletCheck(window))
-
+      dispatch(getConfig())
       setIsMobile(false)
 
   }, [])
