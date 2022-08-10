@@ -8,9 +8,6 @@ import { mobileAndTabletCheck } from '../../utils/mobileAndTabletCheck';
 import Head from 'next/head';
 import { getConfig } from '../../redux/admin/web_config';
 import { getUser } from '../../redux/auth/auth';
-
-
-
 export default function DashboardLayout({children, userInfo}) {
   const state = useSelector(state=>state)
   const dispatch = useDispatch()
@@ -21,8 +18,10 @@ export default function DashboardLayout({children, userInfo}) {
 
   useEffect(()=>{
       setIsMobile(mobileAndTabletCheck(window))
-      dispatch(getConfig())
-      dispatch(getUser())
+      // dispatch(getConfig())
+      // dispatch(getUser())
+
+      setIsMobile(true)
 
   }, [])
 
@@ -37,7 +36,7 @@ export default function DashboardLayout({children, userInfo}) {
       <Head>
         <title>{process.env.dashboardTitle}</title>
       </Head>
-      <Header headerHeight="90px">
+      {/* <Header headerHeight="90px">
         {
           isMobile ?
           <MobileHeader
@@ -49,7 +48,7 @@ export default function DashboardLayout({children, userInfo}) {
               movingInfo={movingInfo}
               userInfo={userInfo} />
         }
-      </Header>
+      </Header> */}
 
       <Main userInfo={userInfo} height={{headerHeight: '90px', footerHeight: '50px'}}>
           {children}
