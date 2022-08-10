@@ -11,7 +11,6 @@ import { getUser } from '../../redux/auth/auth';
 
 
 
-
 export default function DashboardLayout({children, userInfo}) {
   const state = useSelector(state=>state)
   const dispatch = useDispatch()
@@ -24,11 +23,12 @@ export default function DashboardLayout({children, userInfo}) {
       setIsMobile(mobileAndTabletCheck(window))
       dispatch(getConfig())
       dispatch(getUser())
+
   }, [])
 
-  useEffect(()=>{
-    setNotificationId(user.data.notifications || [])
-  }, [user])
+  // useEffect(()=>{
+  //   setNotificationId(user.data.notifications || [])
+  // }, [user])
 
   const movingInfo = config
 
