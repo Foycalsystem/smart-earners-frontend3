@@ -38,11 +38,11 @@ export default function DashboardLayout({children, userInfo}) {
       </Head>
       <Header headerHeight="90px">
         {
-          !isMobile ? '' :
-          // <MobileHeader
-          //     notificationId={notificationId}
-          //     movingInfo={movingInfo}
-          //     userInfo={userInfo} /> :
+          isMobile ? 
+          <MobileHeader
+              notificationId={notificationId}
+              movingInfo={movingInfo}
+              userInfo={userInfo} /> :
           <DesktopHeader
               notificationId={notificationId}
               movingInfo={movingInfo}
