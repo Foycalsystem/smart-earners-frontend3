@@ -63,6 +63,7 @@ const GlobalStyle = createGlobalStyle`
     background: ${({toggleState})=>toggleState ? 'var(--light-theme)' : 'var(--dark-theme)'};
     position: relative;
     min-height: 100vh;
+    min-height: auto;
     overflow-x: hidden;
     color: var(--major-color-purest);
    
@@ -70,7 +71,7 @@ const GlobalStyle = createGlobalStyle`
     ${ScrollBar()}
 
     .swiper-button-next, .swiper-button-prev {
-      color: var(--major-color-purest);
+      color: var(--major-cclicked={clicked} index={index} isActive={isActive}olor-purest);
     };
 
   a {
@@ -138,7 +139,7 @@ const Main = styled.div`
 `
 const Footer = styled.div`
   width: 100%;
-  min-height: ${({footerHeight})=>footerHeight};
+  min-height: ${({footerHeight})=>footerHeight};;
 `
 
 const ToggleMenu = styled.div`

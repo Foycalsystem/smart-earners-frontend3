@@ -75,7 +75,7 @@ export default function Notifications() {
   return (  
     isLoading ? <Loader_ /> : 
    <Wrapper>
-    {pending ?<div className="center"> <Spinner size="20px" /> </div>: ''}
+    {/* {pending ?<div className="center"> <Spinner size="20px" /> </div>: ''} */}
     {
       generalNotifications && generalNotifications.length < 1 ? '' :
       generalNotifications && generalNotifications.map((data, index)=>{
@@ -108,7 +108,6 @@ const Wrapper = styled.div`
   width: 100%;
   max-width: 800px;
   margin: auto;
-  min-height: 120vh;
   padding: 10px;
 
   .center{
@@ -128,7 +127,9 @@ const Title = styled.div`
   width: 100%;
   padding: 10px 30px 10px 30px;
   cursor: pointer;
-  font-size: .9rem;
+  font-size: .75rem;
+  user-select: none;
+  -webkit-user-select: none;
   font-weight: bold;
   position: relative;
 
@@ -149,11 +150,13 @@ const Title = styled.div`
 `
 
 const Content = styled.div`
-font-size: .85rem;
+font-size: .9rem;
+line-height: 1.5rem;
 height: ${({isActive,  clicked, index})=>isActive && clicked === index ? "auto" : '0'};
 padding: ${({isActive, clicked, index})=>isActive && clicked === index ? "0 30px 30px 30px" : '0'};
 verflow: hidden;
 opacity: ${({isActive,  clicked, index})=>isActive && clicked === index ? "1" : '0'};
 transition: .3s;
+display:  ${({isActive, clicked, index})=>isActive && clicked === index ? "block" : 'none'};
 
 `

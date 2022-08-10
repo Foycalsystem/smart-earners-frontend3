@@ -71,7 +71,7 @@ export default function MobileHeader({userInfo, notificationId, movingInfo}) {
 
             {/* signup, signup, logout and dashboard btns*/}
             <div style={{position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '100px', height: '100%'}}>
-                <NavAuthBtn setShowMenu={setShowMenu} userInfo={userInfo} />
+                <NavAuthBtn userInfo={userInfo} />
             </div>
             
         </Top>
