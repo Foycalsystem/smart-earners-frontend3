@@ -25,9 +25,9 @@ export default function DashboardLayout({children, userInfo}) {
 
   }, [])
 
-  // useEffect(()=>{
-  //   setNotificationId(user.data.notifications || [])
-  // }, [user])
+  useEffect(()=>{
+    setNotificationId(user.data.notifications || [])
+  }, [user])
 
   const movingInfo = config
 
