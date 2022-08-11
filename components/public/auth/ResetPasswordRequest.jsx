@@ -75,6 +75,7 @@ export const ResetPasswordRequest=()=>{
         resetPassReq.status ? setInpt(intitialState) : setInpt({...inp, email: ''})
 
         // get the returned data, check if token is defined (this means that verifyEmail option is turned off and the user can reset his/her password without email verification)
+        console.log(resetPassReq.token)
 
         if(resetPassReq.token){
             router.push(`/reset-password/?token=${resetPassReq.token}`)
