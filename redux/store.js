@@ -5,7 +5,6 @@ import plansReducer from './investmentPlans/investmentPlans';
 import testimonialReducer from './testimonials/testimonials';
 import transferReducer from './admin/transfer';
 import withdrawalsReducer from './admin/withdrawals';
-import investmentReducer from './invest/invest';
 import depositeReducer from './admin/deposit';
 import transactionsReducer from './transactions/transactions';
 import referralReducer from './referrals/referrals';
@@ -22,7 +21,6 @@ export const store = configureStore({
         testimonial: testimonialReducer,
         transfer: transferReducer,
         withdrawal: withdrawalsReducer,
-        investment: investmentReducer,
         deposit: depositeReducer,
         transactions: transactionsReducer,
         referrals: referralReducer,

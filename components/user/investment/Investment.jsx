@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { getUser } from "../../../redux/auth/auth";
+import { getUser, investPlan, getTxn, resetAuth } from "../../../redux/auth/auth";
 import {useSelector, useDispatch} from 'react-redux';
-import { investPlan, getTxn, handleResetInvestment } from "../../../redux/invest/invest";
 import { getPlans } from '../../../redux/investmentPlans/investmentPlans.js';
 import {useSnap} from '@mozeyinedu/hooks-lab'
 import Spinner from '../../../loaders/Spinner';
@@ -15,7 +14,6 @@ import PopUpModal from "../../modals/popUpModal/PopUpModal";
 import Cookies from 'js-cookie'
 import { resolveApi } from "../../../utils/resolveApi"
 import { toast } from 'react-toastify';
-
 
 
 
@@ -40,7 +38,7 @@ const Plans = ({userInfo}) => {
     const state = useSelector(state=>state);
     const [shwowActive, setShowActive] = useState(true)
     const {plans} = state.plans;
-    const {user} = state.auth;
+    const {user, txn, invest} = state.auth;
     const [showModal, setShowModal] = useState(false)
     const [masterPlanData, setMasterPlanData] = useState('')
     const [activeTxn, setActiveTxn] = useState([])
@@ -48,7 +46,7 @@ const Plans = ({userInfo}) => {
     const [isLoading, setLoading] = useState(true)
     const [pending, setPending] = useState(false)
 
-    const {invest, txn} = state.investment
+  
     // useEffect(()=>{
     //   setTimeout(()=>{
     //     user.isLoading ? setLoading(true) : setLoading(false)
@@ -58,8 +56,8 @@ const Plans = ({userInfo}) => {
 
     // clear any hanging msg from redux
     useEffect(()=>{
-      dispatch(handleResetInvestment())
-    }, [invest, txn])
+      dispatch(resetAuth())
+    }, [invest, txn, user])
 
     useEffect(()=>{
       dispatch(getPlans())
@@ -87,11 +85,13 @@ const Plans = ({userInfo}) => {
         dispatch(investPlan(data_));
       }
     }
+    const customId = "custom-id-yes"
     useEffect(()=>{
       if(invest.msg){
         setPending(false)
         toast(invest.msg, {
-          type: invest.status ? 'success' : 'error'
+          type: invest.status ? 'success' : 'error',
+          toastId: customId
         })         
       }
     }, [invest])
@@ -226,8 +226,12 @@ const SinglePlan = ({data, investBtn}) => {
 function MasterPlan({data, showModal, setShowModal}){
   const dispatch = useDispatch();
   const state = useSelector(state=>state);
-  const {invest} = state.investment
+  const {invest} = state.auth
   const [pending, setPending] = useState(false)
+
+  useEffect(()=>{
+    dispatch(resetAuth())
+  }, [])
 
   const initialState = {
     amount: 200000
@@ -242,6 +246,8 @@ function MasterPlan({data, showModal, setShowModal}){
     if(!Cookies.get('accesstoken')){
       await resolveApi.refreshTokenClinetSide()
     }
+
+    dispatch(resetAuth())
 
     setInp(initialState)
     setShowModal(false)
@@ -259,13 +265,21 @@ function MasterPlan({data, showModal, setShowModal}){
     dispatch(investPlan(data_))
   }
 
+  const customId = "custom-id-yes"
+   
   useEffect(()=>{
     if(invest.msg){
-      setPending(false)
       toast(invest.msg, {
-        type: invest.status ? 'success' : 'error'
-      })         
+        type: invest.status ? 'success' : 'error',
+        toastId: customId
+      })  
+           
     }
+  }, [])
+
+  useEffect(()=>{
+    setPending(false)
+    setInp('')
   }, [invest])
 
 

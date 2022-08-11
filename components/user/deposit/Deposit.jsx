@@ -69,18 +69,22 @@ export default function Deposit(){
     }, [])
     
 
+    const customId = "custom-id-yes"
     useEffect(()=>{
       if(deposit.msg){
-        setPending(false)
         toast(deposit.msg, {
-          type: deposit.status ? 'success' : 'error'
+          type: deposit.status ? 'success' : 'error',
+          toastId: customId
         })         
       }
+    }, [])
 
+    useEffect(()=>{
       if(deposit.status){        
         // redirect to coinbase commerce using the returned url (hostedUrl)
         window.open(deposit.data.hostedUrl)
         setInp(initialState)
+        setPending(false)
       }
     }, [deposit])
    

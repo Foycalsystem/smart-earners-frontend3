@@ -7,7 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { mobileAndTabletCheck } from '../../utils/mobileAndTabletCheck';
 import Head from 'next/head';
 import { getConfig } from '../../redux/admin/web_config';
-import { getUser } from '../../redux/auth/auth';
+
+
 export default function DashboardLayout({children, userInfo}) {
   const state = useSelector(state=>state)
   const dispatch = useDispatch()
@@ -18,10 +19,8 @@ export default function DashboardLayout({children, userInfo}) {
 
   useEffect(()=>{
       setIsMobile(mobileAndTabletCheck(window))
-      // dispatch(getConfig())
-      // dispatch(getUser())
-
-      setIsMobile(true)
+      dispatch(getConfig())
+      // setIsMobile(false)
 
   }, [])
 

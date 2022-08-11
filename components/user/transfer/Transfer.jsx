@@ -1,15 +1,15 @@
-import { getUser } from "../../../redux/auth/auth";
+import { getUser, payUser, resetAuth } from "../../../redux/auth/auth";
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import Spinner from "../../../loaders/Spinner";
 import {useSnap} from '@mozeyinedu/hooks-lab'
-import Feedback from "../../Feedback";
 import PopUpModal from "../../modals/popUpModal/PopUpModal";
-import { checkUser, payUser } from "../../../redux/admin/transfer";
+import { checkUser, resetTransfer } from "../../../redux/admin/transfer";
 import { getConfig } from "../../../redux/admin/web_config";
 import { resolveApi } from "../../../utils/resolveApi";
 import Cookies from 'js-cookie'
+import { toast } from 'react-toastify';
 
 import { 
   Wrapper,
@@ -33,16 +33,23 @@ export default function Transfer({userInfo}){
     const {user} = state.auth;
     const {config} = state.config;
     const {check} = state.transfer;
-
-    const [feedback, setFeedback] = useState({
-      msg: check.msg,
-      status: false
-    });
+    const [pending, setPending] = useState(false)
 
     const initialState = {
       accountNumber: '',
       amount: ''
     }
+
+    // clear any hanging msg from redux
+    useEffect(()=>{
+        dispatch(resetTransfer())
+        dispatch(resetAuth())
+    }, [])
+
+    useEffect(()=>{
+        dispatch(resetTransfer())
+        dispatch(resetAuth())
+    }, [check])
 
     const [inp, setInp] = useState(initialState)
 
@@ -57,27 +64,32 @@ export default function Transfer({userInfo}){
         await resolveApi.refreshTokenClinetSide()
       }
 
+      setPending(true)
       dispatch(checkUser(inp))
     }
-    
+
+    const customId = "custom-id-yes"
+    useEffect(()=>{
+      if(check.msg && !check.status){
+        setPending(false)
+        toast(check.msg, {
+            type: check.status ? 'success' : 'error',
+            toastId: customId
+        })         
+      }
+
+      if(check.msg){
+        setPending(false)         
+      }
+
+    }, [check])
 
     useEffect(()=>{
-
-      // show feedback
-      setFeedback({
-        msg: check.msg,
-        status: true
-      });
 
       if(check.status){
         setShowModal(true);
         setInp(initialState);
-
-        // hide any feedback before poping up
-        setFeedback({
-          msg: '',
-          status: false
-        });
+        setPending(false)
       }
     }, [check])
 
@@ -116,15 +128,6 @@ export default function Transfer({userInfo}){
               <Form onSubmit={submit}>
                 <h3 className="title">Transfer</h3>
 
-                <div className="center"> 
-                  <Feedback
-                    msg={check.msg}
-                    status={check.status}
-                    feedback={feedback}
-                    setFeedback={setFeedback}
-                  />
-                </div>
-
                 <InputWrapper>
                   <Input
                     min={0}
@@ -148,14 +151,14 @@ export default function Transfer({userInfo}){
                   />
                 </InputWrapper>
 
-                <div className="center">{check.isLoading ? <Spinner size='20px'/> : ""}</div>
+                <div className="center">{pending ? <Spinner size='20px'/> : ""}</div>
                  
                 <InputWrapper>
                   <Input
                     {...snap()}
-                    disabled={balanceExceed || belowTransferLimit || belowTransferLimit || aboveTransferLimit || outBoundTransferAmount || check.isLoading}
+                    disabled={balanceExceed || belowTransferLimit || belowTransferLimit || aboveTransferLimit || outBoundTransferAmount || check.isLoading || pending}
                     type="submit"
-                    value={check.isLoading ? 'Loading...' : 'Transfer'}
+                    value={check.isLoading || pending? 'Loading...' : 'Transfer'}
                   />
                 </InputWrapper>
 
@@ -184,11 +187,19 @@ export default function Transfer({userInfo}){
 function PayUser({data, showModal, setShowModal, config}){
   const dispatch = useDispatch();
   const state = useSelector(state=>state);
-  const {pay} = state.transfer;
-  const [feedback, setFeedback] = useState({
-    msg: pay.msg,
-    status: false
-  });
+  const {pay} = state.auth;
+  const [pending, setPending] = useState(false)
+  
+  // clear any hanging msg from redux
+  useEffect(()=>{
+      dispatch(resetTransfer())
+      dispatch(resetAuth())
+  }, [])
+
+  useEffect(()=>{
+      dispatch(resetTransfer())
+      dispatch(resetAuth())
+  }, [pay])
 
   const closePop =()=>{
     setShowModal(false)
@@ -203,40 +214,38 @@ function PayUser({data, showModal, setShowModal, config}){
       accountNumber: data.accountNumber
     }
 
+    setPending(true)
     dispatch(payUser(userData));
   }
 
+  const customId = "custom-id-yes"
   useEffect(()=>{
-    setFeedback({
-      msg: '',
-      status: false
-    });
-  }, [])
+    if(pay.msg){
+      setPending(false)
+      toast(pay.msg, {
+          type: pay.status ? 'success' : 'error',
+          toastId: customId
+      })         
+    }
+  }, [pay])
 
   useEffect(()=>{
-    setFeedback({
-      msg: pay.msg,
-      status: true
-    });
+
+    if(pay.status){
+      setPending(false)
+      setShowModal(false);
+    }
   }, [pay])
 
   return (
-    <PopUpModal title="Transfer" showModal={showModal} setFeedback={setFeedback} setShowModal={setShowModal}>
+    <PopUpModal title="Transfer" showModal={showModal} setShowModal={setShowModal}>
       <div style={{width: '300px', padding: '20px'}}>
-        <div className="center"> 
-            <Feedback
-              msg={pay.msg}
-              status={pay.status}
-              feedback={feedback}
-              setFeedback={setFeedback}
-            />
-        </div>
 
         <div style={{textAlign: 'center', justifyContent: "space-between"}}>
             You are About to Transfer the sum of <span style={{fontWeight: 'bold'}}>{data.amount} {config.data.nativeCurrency}</span> to <span  style={{fontWeight: 'bold'}}>{data.username}</span>
         </div>
 
-        <div style={{marginTop: '20px'}} className="center">{pay.isLoading ? <Spinner size='20px'/> : ""}</div>
+        <div style={{marginTop: '20px'}} className="center">{pending ? <Spinner size='20px'/> : ""}</div>
 
         <div style={{
             width: '100%',
@@ -259,7 +268,7 @@ function PayUser({data, showModal, setShowModal, config}){
 
           <button
             onClick={proceed}
-            disabled={pay.isLoading}
+            disabled={pending}
             style={{
               cursor: 'pointer',
               borderRadius: '3px',
@@ -268,7 +277,7 @@ function PayUser({data, showModal, setShowModal, config}){
               color: '#fff',
               fontWeight: 600,
               border: 'none'
-            }}>{pay.isLoading ? 'Loading...' : 'Proceed'}</button>
+            }}>{pending ? 'Loading...' : 'Proceed'}</button>
             
         </div>
       </div>

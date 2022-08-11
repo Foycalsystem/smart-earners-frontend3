@@ -14,7 +14,7 @@ export default function Set() {
   const state = useSelector(state=>state)
   const {add} = state.notifications;
   const [pending, setPending] = useState(false)
-
+  
   useEffect(()=>{
     // to clear any hanging msg from redux
     dispatch(resetNotif())
@@ -43,17 +43,13 @@ export default function Set() {
     setPending(true)
 
   }
-
-
   useEffect(()=>{
-    if(add.status){
-      setInp(initialState)
-      if(add.msg){
-        setPending(false)
-        toast(add.msg, {
-          type: add.status ? 'success' : 'error'
-        })         
-      }
+    setInp(initialState)
+    if(add.msg){
+      setPending(false)
+      toast(add.msg, {
+        type: add.status ? 'success' : 'error'
+      })  
     }
   }, [add])
   

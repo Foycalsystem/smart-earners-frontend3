@@ -38,7 +38,7 @@ export default function ContactUs() {
           <input disabled  type="submit" value="Send"/>
         </form>
 
-       <div style={{display: 'flex', justifyContent: 'center'}}> <SocialLinks /> </div>
+       <div style={{display: 'flex', justifyContent: 'center'}}> <SocialLinks text={"Reach Us"}/> </div>
 
        <div style={{textAlign: 'center', marginTop: '30px', fontStyle: 'italic', fontSize: '.8rem'}}>
         <div>333 Fremount St, San Francisco, CA</div>

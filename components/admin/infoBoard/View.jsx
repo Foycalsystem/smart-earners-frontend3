@@ -11,8 +11,6 @@ export default function View({data}) {
   const [isActive, setActive] = useState(false)
   const [generalNotifications, setGeneralNotifications] = useState([])
 
-console.log(data)
-
   useEffect(()=>{      
     setTimeout(()=>{
       data.isLoading ? setLoading(true) : setLoading(false)
@@ -26,11 +24,12 @@ console.log(data)
 
   const toggle = async(index, id)=>{ 
 
-    setActive(!isActive)
     if(clicked === index){
-      return setClicked(null)
+      return setClicked(null);
+      
     }
     setClicked(index)
+    setActive(true)
   }
 
 
@@ -66,7 +65,6 @@ const Wrapper = styled.div`
   width: 100%;
   max-width: 800px;
   margin: auto;
-  min-height: 120vh;
   padding: 10px;
 
   .center{
@@ -86,7 +84,9 @@ const Title = styled.div`
   width: 100%;
   padding: 10px 30px 10px 30px;
   cursor: pointer;
-  font-size: .9rem;
+  font-size: .75rem;
+  user-select: none;
+  -webkit-user-select: none;
   font-weight: bold;
   position: relative;
 
@@ -97,7 +97,7 @@ const Title = styled.div`
     background: #ff401a;
     padding: 2px;
     color: #fff;
-    font-size: .85rem;
+    font-size: .6rem;
     border-radius: 8px;
     width: 35px;
     display: flex;
@@ -107,11 +107,13 @@ const Title = styled.div`
 `
 
 const Content = styled.div`
-font-size: .7rem;
+font-size: .9rem;
+line-height: 1.5rem;
 height: ${({isActive,  clicked, index})=>isActive && clicked === index ? "auto" : '0'};
 padding: ${({isActive, clicked, index})=>isActive && clicked === index ? "0 30px 30px 30px" : '0'};
 verflow: hidden;
 opacity: ${({isActive,  clicked, index})=>isActive && clicked === index ? "1" : '0'};
 transition: .3s;
+display:  ${({isActive, clicked, index})=>isActive && clicked === index ? "block" : 'none'};
 
 `

@@ -7,14 +7,14 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import Telegram from '@mui/icons-material/Telegram'
 
-const SocialLinks=()=>{
+const SocialLinks=({text})=>{
     const Ln=({url, children})=>{
       return <a style={{margin: '5px'}} target="_blank" href={url}>{children}</a>
     }
     return (
       <div style={{width: '120px'}}>
          <div style={{fontSize: '.9rem', textAlign: 'center', fontWeight: 'bold'}}>
-            Reach Us
+           {text}
          </div>
          
           <span style={{fontSize: '.9rem', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>
