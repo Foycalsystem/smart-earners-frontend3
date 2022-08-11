@@ -3,7 +3,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import { getUser } from "../../../redux/auth/auth";
 import styled from 'styled-components'
 import {useSnap} from '@mozeyinedu/hooks-lab'
-import { getTxn } from "../../../redux/invest/invest";
 import { resolveApi } from "../../../utils/resolveApi";
 import Cookies from "js-cookie";
 

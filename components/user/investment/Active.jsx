@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Spinner from '../../../loaders/Spinner';
-// import { getTxn } from "../../../redux/invest/invest";
-// import { useDispatch} from 'react-redux';
 
 export default function Active({data, txn}) {
     // const dispatch = useDispatch()

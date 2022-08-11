@@ -17,7 +17,6 @@ import { toast } from 'react-toastify';
 
 
 
-
 import {Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, {
   Navigation,
