@@ -93,7 +93,7 @@ export default function Deposit(){
         isLoading ?  <Loader_ /> :
         (
           <Wrapper>
-              <div className="account-balance" style={{color: 'var(--major-color-purest)'}}>Account Balance: {user.data.amount} {config.data.nativeCurrency}</div>
+              <div className="account-balance" style={{color: 'var(--major-color-purest)'}}>Account Balance: {user.data.amount && user.data.amount.toFixed(4)} {config.data.nativeCurrency}</div>
               <Form onSubmit={submit}>
                 <h3 className="title">
                   Deposit

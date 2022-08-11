@@ -86,7 +86,7 @@ const ProfileComp =({data})=>{
                                 <span>Account Number: </span> <span className='data'>{data.accountNumber}</span>
                             </label>
                             <label>
-                                <span>Account Balance: </span> <span className='data'>{data.amount} {data.currency}</span>
+                                <span>Account Balance: </span> <span className='data'>{data.amount && data.amount.toFixed(4)} {data.currency}</span>
                             </label>
                             <label>
                                 <span>Referral: </span> <span className='data'>{data.referralCode}</span>
