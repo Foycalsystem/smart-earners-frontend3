@@ -6,21 +6,22 @@ import Spinner from "../../../loaders/Spinner";
 import LensIcon from '@mui/icons-material/Lens';
 import { getConfig } from "../../../redux/admin/web_config";
 
-export default function Bonuses({data}) {
+export default function Bonuses({data, totalBonus}) {
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const [isLoading, setLoading] = useState(true)
   const {config} = state.config;
 
-  useEffect(()=>{   
-
+  useEffect(()=>{
     dispatch(getConfig())
+  }, [])
+  
+  useEffect(()=>{   
     setTimeout(()=>{
-        setLoading(false)
+      totalBonus.isLoading ? setLoading(true) : setLoading(false)
     }, 500)
 
-  }, [])
-
+  }, [totalBonus])
 
   return ( 
    <Wrap>
@@ -35,7 +36,8 @@ export default function Bonuses({data}) {
                 {
                   data.map((data, i)=>{
                     return (
-                      <div key={i} className="user">
+                      data.referreeId && (
+                        <div key={i} className="user">
                         <div>
                           <span style={{fontSize: '.9rem', fontWeight: 'bold'}}>{data.referreeId.username}</span>{" "}
                           <span>
@@ -90,6 +92,7 @@ export default function Bonuses({data}) {
                           )
                         }
                       </div>
+                      )
                     )
                   })
                 }

@@ -130,7 +130,7 @@ export default function Withdrawals({userInfo}){
         isLoading ?  <Loader_ /> :
         (
           <Wrapper>
-              <div className="account-balance" style={{color: balanceExceed ? '#c20' : 'var(--major-color-purest)'}}>Account Balance: {user.data.amount} {config.data.nativeCurrency}</div>
+              <div className="account-balance" style={{color: balanceExceed ? '#c20' : 'var(--major-color-purest)'}}>Account Balance: {user.data.amount && user.data.amount.toFixed(4)} {config.data.nativeCurrency}</div>
               <Form onSubmit={submit}>
                 <h3 className="title">Withdrawals</h3>
                 
@@ -164,7 +164,7 @@ export default function Withdrawals({userInfo}){
                       {
                         config.data && config.data.withdrawalCoins.map((coin, i)=>{
                           return(
-                            <option key={i} value={inp.coin}>{inp.coin}</option>
+                            <option key={i} value={coin}>{coin}</option>
                           )
                         })
                       }

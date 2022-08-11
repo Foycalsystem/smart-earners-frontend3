@@ -135,7 +135,7 @@ export default function History() {
                 </div>
 
               {
-                toggle ? <Bonuses data={bonus_}/> : <Hx data={hx}/>
+                toggle ? <Bonuses data={bonus_} totalBonus={totalBonus}/> : <Hx data={hx}/>
               }
             </>
           }         

@@ -52,7 +52,7 @@ const Plans = ({userInfo}) => {
             (
                 <>
                     <h4 style={{textAlign: 'center', fontWeight: '500'}}>Find the Package Plan that is most convenient for you</h4>
-                    <AllPlan>
+                    <SwiperWrapper>
                         {
                           <Swiper
                             breakpoints={{
@@ -95,7 +95,7 @@ const Plans = ({userInfo}) => {
                             }
                           </Swiper>
                           }
-                    </AllPlan>
+                    </SwiperWrapper>
                 </>
             )
         )
@@ -217,7 +217,7 @@ const StyledSinglePlan = styled.div`
 
 `
 
-const AllPlan = styled.div`
+const SwiperWrapper = styled.div`
   width: 90%;
   max-width: 1000px;
   margin: auto;

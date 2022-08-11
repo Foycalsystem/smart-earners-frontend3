@@ -16,21 +16,16 @@ import { resolveApi } from "../../../utils/resolveApi"
 import { toast } from 'react-toastify';
 
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation } from 'swiper';
 
-import {Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, {
-  Navigation,
-  Pagination,
-  Scrollbar, 
-  A11y,
-  Autoplay,
-} from "swiper/core";
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
+SwiperCore.use([Navigation]);
 
 
 const Plans = ({userInfo}) => {
@@ -109,7 +104,6 @@ const Plans = ({userInfo}) => {
         <Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
         <div style={{padding: '10px 20px 2px 20px', fontWeight: 'bold'}}>Plans</div>
         <div className="center"> { pending ? <Spinner size="24px"/> : '' } </div>
-        <AllPlan>
           {
             plans.isLoading ?
               <div className="center"><Spinner size="30px" /></div>:
@@ -117,7 +111,6 @@ const Plans = ({userInfo}) => {
               plans.data.length < 1 ? <div className="center">---</div> : 
               (
                 <div>
-                <SwipeWrapper_>
                     {
                       plans.isLoading ? <div className="center">
                       <Spinner size="30px" />
@@ -125,58 +118,57 @@ const Plans = ({userInfo}) => {
                       (
                         plans.data.length < 1 ? <div className="center">---</div> : 
                         (
-                    <Swiper
-                      className='swiper'
-                      modules={[Navigation, Pagination, Scrollbar, Autoplay, A11y]}
-                      spaceBetween={10}
-                      autoplay = { {delay: 5000}}
-                      scrollbar={{draggable: true}}
-                      // loop
-                      pagination = {{ clickable: true}}
-                      slidesPerView={3}
-                      breakpoints={
+                          <SwiperWrapper>
                           {
-                              0:{
-                                  width: 0,
+                            <Swiper
+                              breakpoints={{
+                                // when window width is >= 640px
+                                640: {
+                                  width: 500,
+                                  slidesPerView: 2,
+                                },
+                                300: {
+                                  width: 250,
                                   slidesPerView: 1,
-                                  spaceBetween: 10
-                              },
-                              500:{
-                                  width: 700,
+                                },
+                                400: {
+                                  width: 300,
+                                  slidesPerView: 1,
+                                },
+                                // when window width is >= 768px
+                                768: {
+                                  width: 768,
                                   slidesPerView: 2,
-                                  spaceBetween: 10
-                              },
-                              680:{
-                                  width: 680,
-                                  slidesPerView: 2,
-                                  spaceBetween: 10
-                              },
-                              920:{
-                                  width: 920,
-                                  slidesPerView: 3,
-                                  spaceBetween: 10
-                              },
-                          }
-                        }>
-                        {plans.data.map((each, idx) => 
-                            (
-                              <SwiperSlide className="swipe" key={idx}>
-                                  <SinglePlan data={each} invest={invest} investBtn={investBtn}/>
-                              </SwiperSlide>
-                            )
-                        ) }
-                    </Swiper>
+                                },
+                              }}
+                              id="main"
+                              width="260"
+                              height="200"
+                              autoplay
+                              spaceBetween={5}
+                              slidesPerView={1}
+                            >
+                              {
+                                  plans.data.map((data, i)=>{
+                                      return (
+                                        <SwiperSlide key={i} tag="li" style={{ listStyle: 'none' }}>
+                                            <div style={{width: '100%', height: '100%'}}>
+                                              <SinglePlan data={data} invest={invest} investBtn={investBtn}/>
+                                            </div>
+                                        </SwiperSlide>
+                                      )
+                                  })
+                              }
+                            </Swiper>
+                            }
+                      </SwiperWrapper>
                         )
                       )
                     }
-                </SwipeWrapper_>   
-        
-
                 </div>
               )
             )
           }  
-        </AllPlan>
 
         <MasterPlan data={masterPlanData} showModal={showModal} setShowModal={setShowModal}/>
 
@@ -353,7 +345,7 @@ const Input = styled.input`
 `
 
 const StyledSinglePlan = styled.div`
-  width: 330px;
+  width: 280px;
   height: 190px;
   background-image: linear-gradient(to right,var(--major-color-purest),#6babc9);
   color: #fff;
@@ -494,19 +486,74 @@ const Plan = styled.div`
   }
 `
 
-const AllPlan = styled.div`
-  width: 98%;
-  max-width: 1200px;
+const SwiperWrapper = styled.div`
+  width: 90%;
+  max-width: 1000px;
   margin: auto;
   padding: 10px 0;
-`
-const SwipeWrapper_ = styled.div`
-  width: 100%;
-  margin: auto;
 
-  .swipe{
-    @media(max-width: 400px){
-      width: 300px;
-    }
+  #title,#bp-wrapper {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.swiper-container {
+  width: 200px;
+  max-height: 230px;
+  margin-right: 10px;
+}
+
+#bp-640,
+#bp-768 {
+  display: none;
+}
+
+@media screen and (min-width: 640px) {
+  .swiper-container {
+    width: 900px;
   }
+
+  #bp-480,
+  #bp-768 {
+    display: none !important;
+  }
+
+  #bp-640 {
+    display: inline !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .swiper-container {
+    width: 768px;
+  }
+
+  #bp-480,
+  #bp-640 {
+    display: none !important;
+  }
+
+  #bp-768 {
+    display: inline !important;
+  }
+}
+
+.swiper-pagination {
+  bottom: 0;
+  padding-bottom: 10px;
+}
+
+.swiper-wrapper {
+  padding-inline-start: 0;
+}
+
+#thumbs.swiper-container {
+  margin-bottom: 20px;
+}
+
+#thumbs .swiper-slide {
+  cursor: pointer;
+}
+
 `

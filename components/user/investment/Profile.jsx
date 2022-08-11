@@ -42,7 +42,7 @@ export default function Profile({setShowActive, shwowActive}) {
                 <div className="content">
                     <h3 style={{textAlign: 'center'}}>Available Balance</h3>
                     <div style={{textAlign: 'center', padding: '10px'}}>
-                        <span style={{fontWeight: 'bold', }}>{user.data.amount && user.data.amount.toFixed(2)} {user.data.currency}</span>
+                        <span style={{fontWeight: 'bold', }}>{user.data.amount && user.data.amount.toFixed(4)} {user.data.currency}</span>
                     </div>
 
                     <div className="btn">
