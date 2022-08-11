@@ -28,11 +28,11 @@ export default function UserManual() {
 
         <li>From Our Website <Link href="/"><a style={{display: 'inline', color: 'blue'}}>teamsmartearners.com </a></Link> Navigate Through the Left Navigation bar, To Register or Sign in to an account</li>
 
-        <Img url='1.jpg'/>
+        <Img url='1.jpeg'/>
 
         <li>For Registration, Click on the Sign up button, fill in the provided box with your account Information {`(Email, Username, Password)`}</li>
         
-        <Img url='1.jpg'/>
+        <Img url='2.jpeg'/>
 
         <li>After Registration, check your email for account verification link, click on the link to verify your account (always check the spam folder)</li>
 
@@ -40,7 +40,7 @@ export default function UserManual() {
 
         <li>For Sign in, From the Navigation bar, Click the Sign in button, and Log into your account using your registered email or Username, with a password combination.</li>
 
-        <Img url='1.jpg'/>
+        <Img url='3.jpeg'/>
 
         <li>You have successfully logged into your Account</li>
 
@@ -48,11 +48,11 @@ export default function UserManual() {
 
         <li>More investment Plans can be found by scrolling Leftward on the Investment Banners.</li>
 
-        <Img url='1.jpg'/>
+        <Img url='4.jpeg'/>
 
         <li>To Fund your account, Click through the Deposit Button from the lower Navigation Menu, Enter an Amount Dollars, and the SEC equivalent will be displayed, Click the Proceed Button, and choose any of your desired Crypto options to make your payment.</li>
 
-        <Img url='1.jpg'/>
+        <Img url='5.jpeg'/>
 
         <li>Once your Account is Funded, You can choose your Investment Plan and start your journey to make money from the forex Market.</li>
         
@@ -68,7 +68,7 @@ export default function UserManual() {
 
         <li>There’s no minimum and Maximum deposit, underpayment and overpayment will be calculated based on the crypto amount deposited, deposit are reflected instantly after 1-2 Block confirmations on the crypto network. You can request a reciept for your payment on the Coinbase page, after payment</li>
 
-        <Img url='1.jpg'/>
+        <Img url='6.jpeg'/>
 
       </ul>
 
@@ -78,7 +78,7 @@ export default function UserManual() {
 
         <li>Details of your active investment, percentage, expected returns, start and End date.</li>
 
-        <Img url='1.jpg'/>
+        <Img url='7.jpeg'/>
 
       </ul>
 
@@ -88,7 +88,7 @@ export default function UserManual() {
 
         <li>Details of All your Previous investments (Only the Last five are showed )</li>
 
-        <Img url='1.jpg'/>
+        <Img url='8.jpeg'/>
 
       </ul>
 
@@ -98,7 +98,7 @@ export default function UserManual() {
             
           <li>Withdrawal request can be submitted via the withdrawal page, which is accessible through the Withdrawal button on the menu.</li>
 
-          <Img url='1.jpg'/>
+          <Img url='9.jpeg'/>
 
       </ul>
 
@@ -108,7 +108,7 @@ export default function UserManual() {
             
           <li>The Transfer Option makes it easier to send and receive funds from other users, family or friends.</li>
           
-          <Img url='1.jpg'/>
+          <Img url='10.jpeg'/>
 
           <li>This funds can be withdrawn or used also to purchase an investment plan.</li>
 
@@ -128,7 +128,7 @@ export default function UserManual() {
 
           <li>On this Page you can also check the status of a pending payment, or deposit, or even track the status of your Deposit</li>
 
-          <Img url='1.jpg'/>
+          <Img url='11.jpeg'/>
 
       </ul>
 
@@ -141,7 +141,7 @@ export default function UserManual() {
             
           <li>From the Referral page, you can copy your referral link and share with friends, or even a referral code that can be submitted later, if your downlines have registered without a link, so this way, you don't loose your bonus.</li>
 
-          <Img url='1.jpg'/>
+          <Img url='12.jpg'/>
 
       </ul>
 
