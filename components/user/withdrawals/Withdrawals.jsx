@@ -164,7 +164,7 @@ export default function Withdrawals({userInfo}){
                       {
                         config.data && config.data.withdrawalCoins.map((coin, i)=>{
                           return(
-                            <option key={i} value={inp.coin}>{inp.coin}</option>
+                            <option key={i} value={coin}>{coin}</option>
                           )
                         })
                       }
