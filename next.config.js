@@ -13,7 +13,7 @@ const nextConfig = {
     }
   },
   
-  async rewrites(){TT
+  async rewrites(){
     return [
       // {
         {
