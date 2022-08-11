@@ -71,7 +71,7 @@ export default function MovingText({data}) {
           }
 
           <InputWrapper title={data.data.movingText}>
-              <Label htmlFor="">Moving Text: <div className="item">{data.data.movingText} {data.data.movingText}</div></Label>
+              <Label htmlFor="">Moving Text: <div className="item">{data.data.movingText}</div></Label>
               <Input
                   disabled={!edit}
                   type="text"
@@ -122,6 +122,7 @@ const Input = styled.input`
     border: none;
     padding: 10px;
     box-shadow: 1px 3px 3px 0px #ccc;
+    font-weight: 600;
 
     &:focus {
         outline: none;
@@ -134,8 +135,8 @@ const Label = styled.label`
     width: 100%;
     padding: 5px;
     display: block;
-    font-size: .8rem;
-    font-weight: bold;
+    font-size: .7rem;
+    font-weight: 600;
     user-select: none;
     -webkit-user-select: none;
 `

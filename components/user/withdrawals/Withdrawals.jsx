@@ -4,11 +4,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import Spinner from "../../../loaders/Spinner";
 import {useSnap} from '@mozeyinedu/hooks-lab'
-import Feedback from "../../Feedback";
-import { withdawalRequest} from "../../../redux/admin/withdrawals";
+import { withdawalRequest, resetWithdrawal} from "../../../redux/admin/withdrawals";
 import { getConfig } from "../../../redux/admin/web_config";
 import { resolveApi } from "../../../utils/resolveApi"
 import Cookies from 'js-cookie'
+import { toast } from 'react-toastify';
 
 import { 
   Wrapper,
@@ -31,22 +31,29 @@ export default function Withdrawals({userInfo}){
     const [balanceExceed, setBalanceExceed] = useState(false)
     const [belowWithdrawalLimit, setBelowWithdrawalLimit] = useState(false)
     const [aboveWithdrawalLimit, setAboveWithdrawalLimit] = useState(false)
-    const [outBoundWithdrawalAmount, setOutBoundWithdrawalAmount] = useState(false)
+    const [outBoundWithdrawalAmount, setOutBoundWithdrawalAmount] = useState(false);
+    const [pending, setPending] = useState(false)
+
+    // clear any hanging msg from redux
+    useEffect(()=>{
+      dispatch(resetWithdrawal())
+    }, [])
 
     const {user} = state.auth;
     const {config} = state.config;
     const {request} = state.withdrawal;
-
-    const [feedback, setFeedback] = useState({
-      msg: request.msg,
-      status: false
-    });
 
     const initialState = {
       walletAddress: '',
       amount: '',
       coin: ''
     }
+
+    // clear any hanging msg from redux
+    useEffect(()=>{
+      dispatch(resetWithdrawal())
+    }, [request])
+
 
     const [inp, setInp] = useState(initialState)
 
@@ -62,17 +69,28 @@ export default function Withdrawals({userInfo}){
         await resolveApi.refreshTokenClinetSide()
       }
       dispatch(withdawalRequest(inp))
+      setPending(true)
     }
+
+    const customId = "custom-id-yes"
+    useEffect(()=>{
+        if(request.msg){
+            setPending(false)
+            setInp({...inp, walletAddress:"", amount: ""})
+            toast(request.msg, {
+                type: request.status ? 'success' : 'error',
+                toastId: customId
+            })         
+        }
+    }, [request])
 
     useEffect(()=>{
       if(request.status){
         setInp(initialState)
+        // setInp({...inp, walletAddress:"", amount: ""})
+        setPending(false)
       }
 
-      setFeedback({
-        msg: request.msg,
-        status: true
-      });
     }, [request])
 
     useEffect(()=>{
@@ -116,14 +134,7 @@ export default function Withdrawals({userInfo}){
               <Form onSubmit={submit}>
                 <h3 className="title">Withdrawals</h3>
                 
-                <div className="center"> 
-                  <Feedback
-                    msg={request.msg}
-                    status={request.status}
-                    feedback={feedback}
-                    setFeedback={setFeedback}
-                  />
-                </div>
+                {pending ? <div className="center"><Spinner size="20px"/></div> : ''}
 
                 <InputWrapper>
                   <Input
@@ -149,11 +160,11 @@ export default function Withdrawals({userInfo}){
 
                 <InputWrapper>
                   <Select onChange={getInp} name="coin" id="">
-                      <option value="">--Select a Coin--</option>
+                      <option value={inp.coin}>--Select a Coin--</option>
                       {
                         config.data && config.data.withdrawalCoins.map((coin, i)=>{
                           return(
-                            <option key={i} value={coin}>{coin}</option>
+                            <option key={i} value={inp.coin}>{inp.coin}</option>
                           )
                         })
                       }
@@ -165,9 +176,9 @@ export default function Withdrawals({userInfo}){
                 <InputWrapper>
                   <Input
                     {...snap()}
-                    disabled={balanceExceed || request.isLoading|| belowWithdrawalLimit || belowWithdrawalLimit || aboveWithdrawalLimit || outBoundWithdrawalAmount}
+                    disabled={balanceExceed || request.isLoading|| belowWithdrawalLimit || belowWithdrawalLimit || aboveWithdrawalLimit || outBoundWithdrawalAmount || pending}
                     type="submit"
-                    value={request.isLoading ? 'Loading...' : 'Proceed'}
+                    value={pending ? 'Loading...' : 'Proceed'}
                   />
                 </InputWrapper>
 

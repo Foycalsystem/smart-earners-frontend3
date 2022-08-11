@@ -56,14 +56,15 @@ export default function Notifications() {
       dispatch(handleRead(id))
       setPending(true)
 
-    }else{
     }
-    setActive(!isActive)
+    
     setPending(false)
     if(clicked === index){
-      return setClicked(null)
+      return setClicked(null);
+      
     }
     setClicked(index)
+    setActive(true)
   }
 
   useEffect(()=>{

@@ -360,6 +360,77 @@ export const handleRead= createAsyncThunk(
 )
 
 
+// transfer coin to another user
+export const payUser= createAsyncThunk(
+    'transfer/pay-user',
+    async(data, {rejectWithValue})=>{
+        try{
+            if(Cookies.get('accesstoken')){
+                const res = await axios.post(`/transfer/pay-user`, data, {
+                    headers: {
+                        "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                    }
+                });
+                return res.data;
+            }            
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
+// buy an investment plan
+export const investPlan= createAsyncThunk(
+    'investment/invest',
+    async(data, {rejectWithValue})=>{
+    try{
+            const res = await axios.post(`/investment/invest/${data.id}`, {amount: data.amount}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
+
+export const getTxn= createAsyncThunk(
+    'investment/getTxn',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.get(`/investment/get-all-investments`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
 const initialState = {
     signup: { isLoading: false, status: false, msg: ''},
     signin: { isLoading: false, status: false, msg: ''},
@@ -375,7 +446,14 @@ const initialState = {
     makeadmin: { isLoading: false, status: false, msg: '' },
     removeadmin: { isLoading: false, status: false, msg: '' },
     addCode:  { isLoading: false, status: false, msg: '' },
+    // read here means user has read a notification, hence remove it from his list of unread notifications
     read:  { isLoading: false, status: false, msg: '', data: ''},
+    // pay/transfer coin to another user
+    pay: { isLoading: false, status: false, msg: ''},
+    // buy an investment plan
+    invest: { isLoading: false, status: false, msg: ''},
+    // get investment transactions
+    txn: { isLoading: false, status: false, msg: '', data: []},
 }
 
 export const authReducer = createSlice({
@@ -399,6 +477,9 @@ export const authReducer = createSlice({
             state.del.isLoading = false;state.del.status = false;state.del.msg = '';
             state.addCode.isLoading = false;state.addCode.status = false;state.addCode.msg = '';
             state.read.isLoading = false;state.read.status = false;state.read.msg = '';
+            state.pay.isLoading = false; state.pay.status = false; state.pay.msg = '';
+            state.invest.isLoading = false; state.invest.status = false; state.invest.msg = '';
+            state.txn.isLoading = false; state.txn.status = false; state.txn.msg = '';
         }
     },
     extraReducers: {
@@ -779,6 +860,90 @@ export const authReducer = createSlice({
                 state.addCode.msg = 'Error occured';
             }
         },
+
+         // pay user
+         [payUser.pending]: (state)=>{
+            state.pay.isLoading = true;
+        },
+        [payUser.fulfilled]: (state, {payload})=>{
+            state.pay.isLoading = false;
+            state.pay.status = payload.status;
+            state.pay.msg = payload.msg;
+            state.pay.msg = payload.msg;
+
+            // get the returned data (amount transfered) and remove it from the user total balance
+            const currentState = JSON.parse(JSON.stringify(state.user.data));
+            currentState.amount = currentState.amount - payload.data;
+            state.user.data = currentState;
+
+        },
+        [payUser.rejected]: (state, {payload})=>{
+            state.pay.isLoading = false;
+            if(payload){
+                state.pay.status = payload.status;
+                state.pay.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.pay.status = false;
+                state.pay.msg = 'Error occured';
+            }
+        },
+
+        
+        // get investment transactions
+        [getTxn.pending]: (state)=>{
+            state.txn.isLoading = true;
+        },
+        [getTxn.fulfilled]: (state, {payload})=>{
+            state.txn.isLoading = false;
+            state.txn.status = payload.status;
+            state.txn.msg = payload.msg;
+            state.txn.data = payload.data;
+        },
+        [getTxn.rejected]: (state, {payload})=>{
+            state.txn.isLoading = false;
+            if(payload){
+                state.txn.status = payload.status;
+                state.txn.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.txn.status = false;
+                state.txn.msg = 'Error occured';
+            }
+        },
+
+        
+        // buy a plan
+        [investPlan.pending]: (state)=>{
+            state.invest.isLoading = true;
+        },
+        [investPlan.fulfilled]: (state, {payload})=>{
+            state.invest.isLoading = false;
+            state.invest.status = payload.status;
+            state.invest.msg = payload.msg;
+            
+            // get the returned data (amount transfered) and remove it from the user total balance
+            const currentState = JSON.parse(JSON.stringify(state.user.data));
+            currentState.amount = currentState.amount - payload.data.amount;
+            state.user.data = currentState;
+
+            // update the txn list
+            const currentStateTxn = JSON.parse(JSON.stringify(state.txn.data));
+            currentStateTxn.push(payload.data.data)
+            state.txn.data = currentStateTxn;
+        },
+        [investPlan.rejected]: (state, {payload})=>{
+            state.invest.isLoading = false;
+            if(payload){
+                state.invest.status = payload.status;
+                state.invest.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.invest.status = false;
+                state.invest.msg = 'Error occured';
+            }
+        }, 
     }
     
 })

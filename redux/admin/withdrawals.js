@@ -132,6 +132,15 @@ const initialState = {
 export const withdrawalsReducer = createSlice({
     name: 'withdraws',
     initialState,
+    reducers: {
+        resetWithdrawal(state){
+            state.request.isLoading = false;state.request.status = false; state.request.msg = ""
+            state.withdrawals.isLoading = false;state.withdrawals.status = false; state.withdrawals.msg = "";
+            state.withdrawal.isLoading = false;state.withdrawal.status = false; state.withdrawal.msg = "";
+            state.reject.isLoading = false;state.reject.status = false; state.reject.msg = "";
+            state.confirm.isLoading = false;state.confirm.status = false; state.confirm.msg = "";
+        }
+    },
     extraReducers: {
 
         // make withdrawal request
@@ -246,4 +255,5 @@ export const withdrawalsReducer = createSlice({
     
 })
 
+export const {resetWithdrawal} = withdrawalsReducer.actions
 export default withdrawalsReducer.reducer

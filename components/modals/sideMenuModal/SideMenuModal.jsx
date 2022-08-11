@@ -86,7 +86,7 @@ function SideMenu({navLinks, userInfo, showMenu, setShowMenu}) {
                 })
             }
             </div>
-            <div style={{display: 'flex', left: '50%', transform: 'translateX(-50%)', justifyContent: 'center', position: 'absolute', bottom: '50px'}}>
+            <div style={{display: 'flex', left: '50%', transform: 'translateX(-50%)', justifyContent: 'center', position: 'absolute', bottom: '2px'}}>
                 <SocialLinks />
             </div>
         </SideMenuRow2>
