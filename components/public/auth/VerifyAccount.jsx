@@ -1,20 +1,17 @@
 import styled from  'styled-components';
 import {useState, useEffect} from 'react'
-import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyAccount } from '../../../redux/auth/auth';
+import Image from 'next/image'
 import { useRouter } from 'next/router';
-import { RiCloseLine} from 'react-icons/ri'
-import check from "../../../utils";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
+import { resetAuth } from "../../../redux/auth/auth";
+
+
 
 const gif1 = '/gif/1.gif';
 const gif2 = '/gif/3.gif';
-import {
-  Error,
-  Success,
-  Close
-} from "./styles/auth";
 
 
 const VerifyWrapper = styled.div`
@@ -48,64 +45,74 @@ export default function VerifyAccount() {
   const dispatch = useDispatch()
   const state = useSelector(state=>state)
   const {verify} = state.auth;
+  const [pending, setPending] = useState(true)
+
+    
+  // clear any hanging msg from redux
+  useEffect(()=>{
+      dispatch(resetAuth())
+  }, [])
+
+  useEffect(()=>{
+    dispatch(resetAuth())
+}, [])
 
   const {token} = router.query;
 
-  const [feedback, setFeedback] = useState({
-    msg: verify.msg,
-    status: false
-  });
+  setTimeout(()=>{
+    setPending(false)
+   
+  }, 10000)
 
   useEffect(()=>{
+   if(!pending){
     dispatch(verifyAccount(router.query.token))
+   }
+  }, [pending])
 
-  }, [router.query.token])
 
+  console.log(verify)
   useEffect(()=>{
 
-    setFeedback({
-      msg: verify.msg,
-      status: true
-    });
-
-
-    setTimeout(()=>{
-    setLoading(false);
-    }, 4000);
-
-    if(verify.status && !isLoading){
+    if(verify.status){
       setSuccess(true)
     } 
 
-  }, [verify.status])
+  }, [verify])
+
+  const customId = "custom-id-yes"
+    useEffect(()=>{
+      if(verify.msg){
+        toast(verify.msg, {
+          type: verify.status ? 'success' : 'error',
+          toastId: customId
+        })         
+      }
+    }, [verify])
 
 
   useEffect(()=>{
 
     // redirect user after a successful verification (hasLoaded is true) to the required dashboard (either user or admin dashboard)
-    const user_info = {
-      refreshtoken: Cookies.get('refreshtoken'),
-      type: Cookies.get('type')
-    };
 
-    success ? check.redirectToDashboard(router, user_info) : '' ;
-  }, )
+    if(verify.status){
+      if(Cookies.get('refreshtoken') && Cookies.get('type') === 'admin'){
+        router.push('/admin')
+      }
+      else if(Cookies.get('refreshtoken') && Cookies.get('type') !== 'admin'){
+        router.push('/dashboard')
+      }
+    }
 
+  }, [verify])
 
-  // handle close feedback msg
-  const handleClose =()=>{
-      setFeedback({
-          msg: '',
-          status: false
-      })
-  }
 
   return (
     <VerifyWrapper>
       <h1 style={{margin: '10px 0'}} className="title">SmartEarners' <span>Investment</span></h1>
       <h3 className="subTitle">We Trade it, You Learn & Earn it</h3>
   
-      <div className="msg">
+      {/* <div className="msg">
         
         {
           (function(){
@@ -148,7 +155,7 @@ export default function VerifyAccount() {
           }())
         }
 
-      </div>
+      </div> */}
       
 
       <div className="img">
@@ -156,10 +163,11 @@ export default function VerifyAccount() {
         {
           (function(){
 
-            if(isLoading){
+            if(verify.isLoading || pending){
               return (
                 <div className="img">
-                  <Image src={gif2} width='100' height='100'/>
+                  {/* <Image src='/wh/1.jpeg' alt="git" height="100" width="100" /> */}
+                  <img src="/gif/2.gif" width="100" height="100" />
                 </div>
               )
             }

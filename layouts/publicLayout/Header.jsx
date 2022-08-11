@@ -45,7 +45,7 @@ export default function Header_({userInfo}) {
             icon: <BalanceIcon />
         },
         {
-            link: 'Terms',
+            link: 'T&C',
             url: '/tc',
             icon: <LocalPoliceIcon />
         },

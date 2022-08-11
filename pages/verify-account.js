@@ -1,5 +1,5 @@
 import VerifyAccount from "../components/public/auth/VerifyAccount.jsx"
-import { resolveApi } from "../utils/resolveApi"
+import { resolveApi } from "../utils/resolveApi.js";
 
 export default function verifyAccount({userInfo}) {
   return <VerifyAccount userInfo={userInfo}/>

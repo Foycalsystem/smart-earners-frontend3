@@ -18,7 +18,8 @@ const nextConfig = {
       // {
         {
           source: "/:slug*",
-          destination: process.env.NODE_ENV === 'development' ? 'http://localhost:4000/:slug*' : 'https://api.teamsmartearners.com/:slug*'
+          destination: 'http://localhost:4000/:slug*'
+          // destination: process.env.NODE_ENV === 'development' ? 'http://localhost:4000/:slug*' : 'https://api.teamsmartearners.com/:slug*'
         }
       //   // de 1qastination: "https://squid-app-cqsgv.ondigitalocean.app/:slug*"
       // },

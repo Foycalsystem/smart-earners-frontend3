@@ -157,11 +157,13 @@ function SendVerifyLink({}){
         dispatch(sendVerificationLink())
     }
 
+    const customId = "custom-id-yes"
     useEffect(()=>{
         if(sendVerifyLink.msg){
           setPending(false)
           toast(sendVerifyLink.msg, {
-            type: sendVerifyLink.status ? 'success' : 'error'
+            type: sendVerifyLink.status ? 'success' : 'error',
+            toastId: customId
           })         
         }
     }, [sendVerifyLink])
