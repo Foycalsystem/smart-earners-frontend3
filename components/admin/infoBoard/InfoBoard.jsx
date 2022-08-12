@@ -88,7 +88,7 @@ export default function Transactions({toggleState}) {
                     return <Set />
                     }
                     else if(type==='movingText'){
-                    return <MovingText data={config}/>
+                    return <MovingText />
                     }
                     else{
                     return ''
