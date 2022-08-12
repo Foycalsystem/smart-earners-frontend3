@@ -1,17 +1,14 @@
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'; 
 import { getNotif } from '../../../redux/admin/notifications';
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
-import Spinner from "../../../loaders/Spinner";
 import moment from 'moment';
 import styled from 'styled-components'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import Cookies from "js-cookie";
 import { resolveApi } from "../../../utils/resolveApi"
-import { toast } from 'react-toastify';
-import { resetAuth , getUser, handleRead} from "../../../redux/auth/auth";
+import { getUser } from '../../../redux/auth/auth';
 
 export default function Notifications() {
   const dispatch = useDispatch()
@@ -23,8 +20,8 @@ export default function Notifications() {
   const [clicked, setClicked] = useState(false);
   const [notificationId, setNotificationId] = useState([])
   const [generalNotifications, setGeneralNotifications] = useState([])
-  const [pending, setPending] = useState(false)
   const [isActive, setActive] = useState(false)
+  const [pending, setPending] = useState(false)
 
 
 
