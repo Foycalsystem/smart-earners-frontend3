@@ -29,8 +29,42 @@ export default function Investment() {
   const {user} = state.auth;
 
   const initialState = {  
+    //general config 
+    customerSupport: config.data.customerSupport,
+    verifyEmail: config.data.verifyEmail,
+    allowTransfer: config.data.allowTransfer,
+    unverifyUserLifeSpan: config.data.unverifyUserLifeSpan,
+    conversionRate: config.data.conversionRate,
+    nativeCurrency: config.data.nativeCurrency,
+    tradeCurrency: config.data.tradeCurrency,
+    totalMembers: config.data.totalMembers,
+    totalInvestors: config.data.totalInvestors,
+    totalSecPaid: config.data.totalSecPaid,
+
+    // withdrawal connfig
+    maxWithdrawalLimit: config.data.maxWithdrawalLimit,
+    minWithdrawalLimit: config.data.minWithdrawalLimit,
+    withdrawalCoins: config.data.withdrawalCoins,
+    withdrawalCommonDiff: config.data.withdrawalCommonDiff,
+    pendingWithdrawalDuration: config.data.pendingWithdrawalDuration,
+
+    // transfer config
+    maxTransferLimit: config.data.maxTransferLimit,
+    minTransferLimit: config.data.minTransferLimit,
+    allowTransfer: config.data.allowTransfer,
+    transferCommonDiff: config.data.transferCommonDiff,
+
+    // investment config
     masterPlanAmountLimit: config.data.masterPlanAmountLimit,
     investmentLimits: config.data.investmentLimits,
+
+    // referral
+    referralBonusPercentage: config.data.referralBonusPercentage,
+    referralBonusPercentageForMasterPlan: config.data.referralBonusPercentageForMasterPlan,
+    referralBonusMaxCountForMasterPlan: config.data.referralBonusMaxCountForMasterPlan,
+
+    // moving text
+    movingText: config.data.movingText,
 }
 
 
@@ -168,6 +202,191 @@ function SetForm({config, update, initialState}) {
                         onChange={getInput}
                       />
                   </InputWrapper>
+
+                   {/* ============================hidden input for proper update============================ */}
+              <>
+                {/* moving text */}
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.movingText || ''}
+                      name='movingText'
+                      onChange={getInput}
+                  />
+
+                  {/* investment */}
+                  {/* <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.masterPlanAmountLimit || ''}
+                      name='masterPlanAmountLimit'
+                      onChange={getInput}
+                    />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.investmentLimits || ''}
+                      name='investmentLimits'
+                      onChange={getInput}
+                    /> */}
+
+                  {/* referral */}
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralBonusPercentage || ''}
+                      name='referralBonusPercentage'
+                      onChange={getInput}
+                    />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralBonusPercentageForMasterPlan || ''}
+                      name='referralBonusPercentageForMasterPlan'
+                      onChange={getInput}
+                    />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralBonusMaxCountForMasterPlan || ''}
+                      name='referralBonusMaxCountForMasterPlan'
+                      onChange={getInput}
+                  />
+
+                  {/* transfer */}
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.maxTransferLimit || ''}
+                      name='maxTransferLimit'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.minTransferLimit || ''}
+                      name='minTransferLimit'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.transferCommonDiff || ''}
+                      name='transferCommonDiff'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.allowTransfer || ''}
+                      name='allowTransfer'
+                      onChange={getInput}
+                  />
+
+                  {/* withdrawal */}
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.maxWithdrawalLimit || ''}
+                      name='maxWithdrawalLimit'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.minWithdrawalLimit || ''}
+                      name='minWithdrawalLimit'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.withdrawalCommonDiff || ''}
+                      name='withdrawalCommonDiff'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.withdrawalCoins || ''}
+                      name='withdrawalCoins'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.pendingWithdrawalDuration || ''}
+                      name='pendingWithdrawalDuration'
+                      onChange={getInput}
+                  />
+
+
+                  {/* general onfig */}
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.customerSupport || ''}
+                        name='customerSupport'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.verifyEmail || ''}
+                        name='verifyEmail'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.unverifyUserLifeSpan || ''}
+                        name='unverifyUserLifeSpan'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.nativeCurrency || ''}
+                        name='nativeCurrency'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.tradeCurrency || ''}
+                        name='tradeCurrency'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.conversionRate || ''}
+                        name='conversionRate'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.totalMembers || ''}
+                        name='totalMembers'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.totalInvestors || ''}
+                        name='totalInvestors'
+                        onChange={getInput}
+                    />
+                  <Input
+                        disabled={!edit}
+                        type="hidden"
+                        value={inp.totalSecPaid || ''}
+                        name='totalSecPaid'
+                        onChange={getInput}
+                    />
+              </>
+
 
             </Container>
         </Form>
