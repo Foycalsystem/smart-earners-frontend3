@@ -17,7 +17,7 @@ const nextConfig = {
     return [
       {
         source: "/:slug*",
-        destination: process.env.NODE_ENV === 'development' ? 'http://localhost:4000/:slug*' : 'https://smartearnersbackend.herokuapp.com/:slug*'
+        destination: process.env.NODE_ENV === 'development' ? 'http://localhost:4000/:slug*' : 'https://smartearnersbackend-prod.herokuapp.com/:slug*'
       }
     ]
   }

@@ -2,9 +2,6 @@ import styled from 'styled-components';
 import filter from "@mozeyinedu/filter";
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect } from "react";
-import { ScrollBar } from "../../../styles/globalStyle";
-import { resolveApi } from '../../../utils/resolveApi';
-import Cookies from 'js-cookie';
 
 import {
   Header_Table,

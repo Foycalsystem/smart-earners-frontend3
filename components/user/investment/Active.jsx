@@ -168,6 +168,7 @@ const MsgWrapper = styled.div`
   padding: 10px;
   text-align: center;
   margin: 10px auto;
-  box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
+  font-size: .7rem;
+  // box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
 `
 

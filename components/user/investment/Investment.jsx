@@ -40,14 +40,15 @@ const Plans = ({userInfo}) => {
     const [maturedTxn, setMaturedTxn] = useState([])
     const [isLoading, setLoading] = useState(true)
     const [pending, setPending] = useState(false)
+    const [changing, setChanging] = useState(false)
 
   
-    // useEffect(()=>{
-    //   setTimeout(()=>{
-    //     user.isLoading ? setLoading(true) : setLoading(false)
-    //   }, 1000)
+    useEffect(()=>{
+      setTimeout(()=>{
+        user.isLoading ? setLoading(true) : setLoading(false)
+      }, 1000)
       
-    // }, [])
+    }, [])
 
     // clear any hanging msg from redux
     useEffect(()=>{
@@ -59,7 +60,7 @@ const Plans = ({userInfo}) => {
       dispatch(getTxn())
       dispatch(getUser())
 
-      user.isLoading ? setLoading(true) : setLoading(false)
+      // user.isLoading ? setLoading(true) : setLoading(false)
     }, [])
 
     const investBtn = async(data)=>{
@@ -77,7 +78,9 @@ const Plans = ({userInfo}) => {
           id: data._id,
           amount: data.amount,
         }
-        dispatch(investPlan(data_));
+        setTimeout(()=>{
+          dispatch(investPlan(data_));
+        }, 100)
       }
     }
     const customId = "custom-id-yes"
@@ -101,7 +104,7 @@ const Plans = ({userInfo}) => {
       isLoading ? <Loader_ />  :
       (
         <Plan>
-        <Profile shwowActive={shwowActive} setShowActive={setShowActive}/>
+        <Profile setChanging={setChanging} shwowActive={shwowActive} setShowActive={setShowActive}/>
         <div style={{padding: '10px 20px 2px 20px', fontWeight: 'bold'}}>Plans</div>
         <div className="center"> { pending ? <Spinner size="24px"/> : '' } </div>
           {
@@ -170,10 +173,14 @@ const Plans = ({userInfo}) => {
             )
           }  
 
+
         <MasterPlan data={masterPlanData} showModal={showModal} setShowModal={setShowModal}/>
 
         <h3 style={{padding: '20px 5px 5px 20px', fontSize: '1rem'}}>INVESTMENT SUMMARY</h3>
-
+        {
+          changing ? <div className="center"><Spinner size="20px" /></div> : ''
+        }
+        
         {
           shwowActive ? <Active data={activeTxn} txn={txn}/> : <Mature data={maturedTxn} txn={txn}/>
         }
@@ -254,7 +261,9 @@ function MasterPlan({data, showModal, setShowModal}){
       id: data._id,
       amount: inp.amount,
     }
-    dispatch(investPlan(data_))
+    setTimeout(()=>{
+      dispatch(investPlan(data_))
+    }, 100)
   }
 
   const customId = "custom-id-yes"

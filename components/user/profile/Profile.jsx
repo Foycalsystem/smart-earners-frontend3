@@ -23,11 +23,11 @@ const Profile = ({userInfo}) => {
     useEffect(()=>{
       dispatch(getUser())
 
-      user.isLoading ? setLoading(true) : setLoading(false)
+    //   user.isLoading ? setLoading(true) : setLoading(false)
   
-    //   setTimeout(()=>{
-    //     user.isLoading ? setLoading(true) : setLoading(false)
-    //   }, 1000)
+      setTimeout(()=>{
+        user.isLoading ? setLoading(true) : setLoading(false)
+      }, 1000)
     }, [])
     
     return isLoading ? <Loader_ /> : <ProfileComp data={user.data}/> 
@@ -154,7 +154,9 @@ function SendVerifyLink({}){
             await resolveApi.refreshTokenClinetSide()
         }
         setPending(true)
-        dispatch(sendVerificationLink())
+        setTimeout(()=>{
+            dispatch(sendVerificationLink())
+        }, 100)
     }
 
     const customId = "custom-id-yes"
@@ -176,7 +178,7 @@ function SendVerifyLink({}){
                 {sendVerifyLink.isLoading ? 'Sending Link...' : 'Verify Your Account'}
             </button>
             <div className="center">
-                {pending? <Spinner /> : ""}
+                {pending? <Spinner size="20px"/> : ""}
             </div>
             
         </section>
