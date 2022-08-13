@@ -2,41 +2,14 @@ import styled from  'styled-components';
 import {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyAccount } from '../../../redux/auth/auth';
-import Image from 'next/image'
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import { resetAuth } from "../../../redux/auth/auth";
 
-
-
 const gif1 = '/gif/1.gif';
 const gif2 = '/gif/3.gif';
 
-
-const VerifyWrapper = styled.div`
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .img {
-    width: 300px;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  span {
-    color: var(--bright-color)
-  }
-
-  .msg {
-    margin: 20px 0;
-  }
-`
 
 export default function VerifyAccount() {
   const router = useRouter()
@@ -179,3 +152,28 @@ export default function VerifyAccount() {
     </VerifyWrapper>
   )
 }
+
+
+const VerifyWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .img {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  span {
+    color: var(--bright-color)
+  }
+
+  .msg {
+    margin: 20px 0;
+  }
+`
