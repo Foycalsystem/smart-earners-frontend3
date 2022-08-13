@@ -28,12 +28,12 @@ export default function Referrals({userInfo}) {
     dispatch(getBounus())
     dispatch(getConfig())
 
-    // setTimeout(()=>{
-    //   user.isLoading && bonus.isLoading ? setLoading(true) : setLoading(false)
-    //     setLoading(false)
-    // }, 1000)
+    setTimeout(()=>{
+      user.isLoading && bonus.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+        setLoading(false)
+    }, 1000)
 
-    user.isLoading && bonus.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+    // user.isLoading && bonus.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
   }, [])
 
   useEffect(()=>{
@@ -68,7 +68,7 @@ export default function Referrals({userInfo}) {
             <div style={{fontWeight: 'bold', textAlign: 'center'}}>Invite your Friends now to claim Commision from their first Investment</div>
 
             <ul style={{fontSize: '.7rem', textAlign: 'center'}}>
-              <li>Earn {config.data.referralBonusPercentage}% Referral Commission for First Investment from each of your downlines, and {config.data.referralBonusPercentageForMasterPlan}%, {config.data.referralBonusMaxCountForMasterPlan} consecutive time when your downlines starts with the Master Plan </li>
+              <li>Earn {config.data.referralBonusPercentage}% Referral Commission for First Investment from each of your downlines, and {config.data.referralBonusPercentageForMasterPlan}%, {config.data.referralBonusMaxCountForMasterPlan} consecutive time when your downlines start with the Master Plan </li>
             </ul>
 
             <div  style={{textAlign: 'center', margin: '5px'}}>
@@ -82,7 +82,7 @@ export default function Referrals({userInfo}) {
                 
                 <RWebShare
                   data={{
-                    text: "Hey 👋 friend! \n I'm inviting you to join smartearners, the best forex trading management platform, use this link to register, and start earning weekly profit",
+                    text: "Hey 👋 friend! \nI'm inviting you to join smartearners, the best forex trading management platform, use this link to register, and start earning weekly profit",
                     url: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://teamsmartearners.com'}/signup?refcode=${user.data.referralCode}`,
                     title: "SmartEarners",
                   }}>

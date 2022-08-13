@@ -40,7 +40,7 @@ export default function History() {
 
     setTimeout(()=>{
       user.isLoading && bonus.isLoading && totalBonus.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
-    }, 500)
+    }, 1000)
 
     
   }, [])

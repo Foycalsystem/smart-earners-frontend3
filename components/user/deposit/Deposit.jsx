@@ -56,7 +56,9 @@ export default function Deposit(){
       if(!Cookies.get('accesstoken')){
         await resolveApi.refreshTokenClinetSide()
       }
-      dispatch(makeDeposit(inp))
+      setTimeout(()=>{
+        dispatch(makeDeposit(inp))
+      }, 100)
     }
 
     useEffect(()=>{      
@@ -65,7 +67,7 @@ export default function Deposit(){
   
       setTimeout(()=>{
         user.isLoading ? setLoading(true) : setLoading(false)
-      }, 500)
+      }, 1000)
     }, [])
     
 

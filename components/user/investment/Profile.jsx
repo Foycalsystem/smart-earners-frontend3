@@ -5,9 +5,10 @@ import styled from 'styled-components'
 import {useSnap} from '@mozeyinedu/hooks-lab'
 import { resolveApi } from "../../../utils/resolveApi";
 import Cookies from "js-cookie";
+import Spinner from '../../../loaders/Spinner';
 
 
-export default function Profile({setShowActive, shwowActive}) {
+export default function Profile({setChanging, setShowActive, shwowActive}) {
     const dispatch = useDispatch()
     const state = useSelector(state=>state);
     const {user} = state.auth;
@@ -18,19 +19,23 @@ export default function Profile({setShowActive, shwowActive}) {
     }, [])
 
     const handleActive = async()=>{
+        setChanging(true)
         if(!Cookies.get('accesstoken')){
             await resolveApi.refreshTokenClinetSide()
         }
         await resolveApi.resolveInvestmentClientSide()
         setShowActive(true)
+        setChanging(false)
          
     }
     const handleMatured = async()=>{
+        setChanging(true)
         if(!Cookies.get('accesstoken')){
             await resolveApi.refreshTokenClinetSide()
         }
         await resolveApi.resolveInvestmentClientSide()
         setShowActive(false)
+        setChanging(false)
     }
 
     return (
@@ -51,6 +56,7 @@ export default function Profile({setShowActive, shwowActive}) {
                     </div>
                 </div>
             </div>
+
         </Profile_>
     )
 }
