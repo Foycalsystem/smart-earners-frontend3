@@ -3,7 +3,6 @@ import filter from "@mozeyinedu/filter";
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
-import { ScrollBar } from "../../../styles/globalStyle";
 import { resolveApi } from '../../../utils/resolveApi';
 import Cookies from 'js-cookie';
 import Feedback from '../../Feedback';
@@ -26,6 +25,7 @@ export default function Initiated({data}) {
     const [showModal, setShowModal] = useState(false);
     const {resolveDeposit} = state.deposit;
     const {config} = state.config;
+    const [pending, setPending] = useState(true)
 
     const [inp, setInp] = useState('');
     const [selectedItem, setSelectedItem] = useState('');
@@ -87,9 +87,20 @@ export default function Initiated({data}) {
       }
     }, [resolveDeposit])
 
+    useEffect(()=>{
+      setTimeout(()=>{
+        setPending(false)
+      }, 2000)
+    }, [])
+
     return (
+      
         <Wrap>
-          <Header_Table>
+          {
+             pending ? <div style={{display: 'flex', justifyContent: 'center'}}><Spinner size="25px"/></div> :
+             (
+              <>
+                <Header_Table>
             {
               data.length < 1 ? '' :
               (
@@ -138,8 +149,8 @@ export default function Initiated({data}) {
                                 {new Date(data.createdAt).getHours()} : {new Date(data.createdAt).getMinutes()} : {new Date(data.createdAt).getSeconds()}
                               </div>
                             </td>
-                            <td>{data.userId.email}</td>
-                            <td>{data.userId.username}</td>
+                            <td>{data.userId && data.userId.email}</td>
+                            <td>{data.userId && data.userId.username}</td>
                             <td>{data.nativeAmountExpected}</td>
                             <td>{data.tradeAmountExpected}</td>
                             <td>{data.code}</td>
@@ -187,7 +198,7 @@ export default function Initiated({data}) {
                 <div>
                     <span>You are about to credit the account of </span>
                     <span style={{fontWeight: 'bold'}}>
-                      {`${selectedItem && selectedItem.userId.username} (${selectedItem && selectedItem.userId.email})`}
+                      {`${selectedItem && selectedItem.userId && selectedItem.userId.username} (${selectedItem && selectedItem.userId && selectedItem.userId.email})`}
                     </span>
                     <span> with the sum of: </span>
                    
@@ -249,6 +260,10 @@ export default function Initiated({data}) {
               </div>
             </div>
           </PopUpModal>
+              </>
+             )
+          }
+          
          
         </Wrap>
     )
@@ -296,5 +311,6 @@ const MsgWrapper = styled.div`
   padding: 10px;
   text-align: center;
   margin: 10px auto;
-  box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
+  font-size: .8rem;
+  // box-shadow: 2px 2px 4px #aaa, -2pfont-size: .8rem;x -2px 4px #aaa;
 `

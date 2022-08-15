@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styled from 'styled-components';
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import { blockUser, getUsers, getUser, deleteUser, unBlockUser, makeAdmin, removeAdmin } from "../../../redux/auth/auth";
@@ -22,6 +23,7 @@ export default function Users({userInfo}) {
   const [isLoading, setLoading] = useState(true)
   const {users, user, del, block, unblock, makeadmin, removeadmin} = state.auth;
   const {config} = state.config;
+  const [ready, setReady] = useState(true)
 
   const [investor, setInvestor] = useState(0);
   const [balance, setBalance] = useState(0)
@@ -74,11 +76,11 @@ export default function Users({userInfo}) {
     dispatch(getUser())
     dispatch(getConfig())
 
-    // setTimeout(()=>{
-    //   users.isLoading && user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
-    // }, 1000)
+    setTimeout(()=>{
+      users.isLoading && user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+    }, 1000)
 
-    users.isLoading && user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
+    // users.isLoading && user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
   }, [])
 
 
@@ -103,119 +105,141 @@ export default function Users({userInfo}) {
     isAdmin ?  dispatch(removeAdmin(id)) :  dispatch(makeAdmin(id))
   }
   
+  useEffect(()=>{
+    setTimeout(()=>{
+      setReady(false)
+    }, 2000)
+  }, [])
 
   return (
-    <>
-      <Header_Table>
-        <div className="row">
-         <div className="search">
-            <input
-              type="text"
-              placeholder="Search by username, email, amount"
-              value={inp || ''}
-              onChange={(e)=>setInp(e.target.value)}
-            />
-            <div className="icon"><SearchIcon /></div>
-         </div>
-        </div>
-        <div className="row">
-          <div>Total members: {isLoading ? '---' : users.data.length }</div>
-          <div>Total Investors: {isLoading ? '---' : investor}</div>
-          <div>Overall Balance: {isLoading ? '---' : balance} {config.data.nativeCurrency}</div>
-          <div>Admin: {isLoading ? '---' : admin}</div>
-        </div>
-      </Header_Table>
-    {
-    //check if user exist
-    isLoading ? 
-    (
-      // set loading div
-      <Loader_ />
-    ) :
-    (
-      //check if empty
-      users.data.length < 1 ?
+     
+      //check if user exist
+      isLoading ?  <Loader_ /> :
       (
-       ''
-      ):
+        ready ? <div style={{display: 'flex', justifyContent: 'center'}}><Spinner size="25px"/></div> :
       (
-        <AdminWrapper>
-          <div style={{display: 'flex', justifyContent: 'center'}}>
-            {
-              (function(){
-                if(del.isLoading || block.isLoading || unblock.isLoading || makeadmin.isLoading || removeadmin.isLoading){
-                  return <Spinner size='1.5rem' />
-                }else{
-                  return ''
-                }
-              }())
-            }
-          </div>
-          <Table>
-          <table>
-                <thead>
-                  <tr>
-                    <th>S/N</th>
-                    <th>Date</th>
-                    <th>Email</th>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Balance {`(${users.data[0].currency})`}</th>
-                    <th>Investor</th>
-                    <th>AC/No</th>
-                    <th>Verified</th>
-                    <th>Blocked</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((user, i)=>{
-                    return (
-                      <tr key={user._id}>
-                        <td>{i+1}</td>
-                        <td>
-                          {month[new Date(user.createdAt).getMonth()]} {new Date(user.createdAt).getDate()}, {new Date(user.createdAt).getFullYear()}
-                        </td>
-                        <td>{user.email}</td>
-                        <td>{user.username}</td>
-                        <td onClick={()=>handleAdmin(user._id, user.isAdmin)} style={{cursor: 'pointer', fontWeight: 'bold', color: user.isAdmin ? 'green' : 'var(--major-color-purest)'}}>
-                          {
-                            (function(){
-                              if(user.isAdmin && !user.isPrimaryAdmin){
-                                return 'Admin'
-                              }
-                              else if(user.isPrimaryAdmin && user.isAdmin){
-                                return 'Primary Admin'
-                              }
-                              else{
-                                return 'User'
-                              }
-                            }())
-                          }
-                        </td>
-                        <td>{user.amount && user.amount.toFixed(4)}</td>
-                        <td>{user.hasInvested ? 'True' : 'False'}</td>
-                        <td>{user.accountNumber}</td>
-                        <td>{user.isVerified ? <VerifiedUserIcon style={{fontSize: '1rem', color: "var(--bright-color"}}/> : ''}</td>
-                        <td onClick={()=>handleBlock(user._id, user.isBlocked)} style={{cursor: 'pointer', fontWeight: 'bold', color: user.isBlocked ? '#c20' : 'var(--major-color-purest)'}}>
-                          {
-                            user.isBlocked ? "Unblock" : "Block"
-                          }
-                        </td>
-
-                        <td onClick={()=>handleDelete(user._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: '#c20'}}>Remove</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-          </table>
-          </Table>
-        </AdminWrapper>
+        <>
+          <Header_Table>
+            <div className="row">
+            <div className="search">
+                <input
+                  type="text"
+                  placeholder="Search by username, email, amount"
+                  value={inp || ''}
+                  onChange={(e)=>setInp(e.target.value)}
+                />
+                <div className="icon"><SearchIcon /></div>
+            </div>
+            </div>
+            <div className="row">
+              <div>Total members: {isLoading ? '---' : users.data.length }</div>
+              <div>Total Investors: {isLoading ? '---' : investor}</div>
+              <div>Overall Balance: {isLoading ? '---' : balance} {config.data.nativeCurrency}</div>
+              <div>Admin: {isLoading ? '---' : admin}</div>
+            </div>
+          </Header_Table>
+          {
+             users.data.length < 1 ? <Msg /> :
+             (
+               <AdminWrapper>
+                 <div style={{display: 'flex', justifyContent: 'center'}}>
+                   {
+                     (function(){
+                       if(del.isLoading || block.isLoading || unblock.isLoading || makeadmin.isLoading || removeadmin.isLoading){
+                         return <Spinner size='1.5rem' />
+                       }else{
+                         return ''
+                       }
+                     }())
+                   }
+                 </div>
+                 <Table>
+                 <table>
+                       <thead>
+                         <tr>
+                           <th>S/N</th>
+                           <th>Date</th>
+                           <th>Email</th>
+                           <th>Username</th>
+                           <th>Role</th>
+                           <th>Balance {`(${users.data[0].currency})`}</th>
+                           <th>Investor</th>
+                           <th>AC/No</th>
+                           <th>Verified</th>
+                           <th>Blocked</th>
+                           <th>Delete</th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         {filteredData.map((user, i)=>{
+                           return (
+                             <tr key={user._id}>
+                               <td>{i+1}</td>
+                               <td>
+                                 {month[new Date(user.createdAt).getMonth()]} {new Date(user.createdAt).getDate()}, {new Date(user.createdAt).getFullYear()}
+                               </td>
+                               <td>{user.email}</td>
+                               <td>{user.username}</td>
+                               <td onClick={()=>handleAdmin(user._id, user.isAdmin)} style={{cursor: 'pointer', fontWeight: 'bold', color: user.isAdmin ? 'green' : 'var(--major-color-purest)'}}>
+                                 {
+                                   (function(){
+                                     if(user.isAdmin && !user.isPrimaryAdmin){
+                                       return 'Admin'
+                                     }
+                                     else if(user.isPrimaryAdmin && user.isAdmin){
+                                       return 'Primary Admin'
+                                     }
+                                     else{
+                                       return 'User'
+                                     }
+                                   }())
+                                 }
+                               </td>
+                               <td>{user.amount && user.amount.toFixed(4)}</td>
+                               <td>{user.hasInvested ? 'True' : 'False'}</td>
+                               <td>{user.accountNumber}</td>
+                               <td>{user.isVerified ? <VerifiedUserIcon style={{fontSize: '1rem', color: "var(--bright-color"}}/> : ''}</td>
+                               <td onClick={()=>handleBlock(user._id, user.isBlocked)} style={{cursor: 'pointer', fontWeight: 'bold', color: user.isBlocked ? '#c20' : 'var(--major-color-purest)'}}>
+                                 {
+                                   user.isBlocked ? "Unblock" : "Block"
+                                 }
+                               </td>
+         
+                               <td onClick={()=>handleDelete(user._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: '#c20'}}>Remove</td>
+                             </tr>
+                           )
+                         })}
+                       </tbody>
+                 </table>
+                 </Table>
+               </AdminWrapper>
+             )
+          }
+        </>
       )
-    )
-    }    
-    </>
+      )
   )
 }
 
 
+
+
+const Msg = ()=>{
+
+  return (
+    <MsgWrapper className="none">
+      No Users At The Moment
+    </MsgWrapper>
+  )
+}
+
+
+const MsgWrapper = styled.div`
+width: 70%;
+max-width: 400px;
+padding: 10px;
+font-size: .8rem;
+text-align: center;
+margin: 10px auto;
+// box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
+`
