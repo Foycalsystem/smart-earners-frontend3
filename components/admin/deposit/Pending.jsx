@@ -25,7 +25,7 @@ export default function Pending({data}) {
     const [showModal, setShowModal] = useState(false);
     const {resolveDeposit} = state.deposit;
     const {config} = state.config;
-
+    const [pending, setPending] = useState(true)
     const [inp, setInp] = useState('');
     const [selectedItem, setSelectedItem] = useState('');
 
@@ -86,9 +86,19 @@ export default function Pending({data}) {
       }
     }, [resolveDeposit])
 
+    useEffect(()=>{
+      setTimeout(()=>{
+        setPending(false)
+      }, 2000)
+    }, [])
+
     return (
         <Wrap>
-          <Header_Table>
+          {
+            pending ? <div style={{display: 'flex', justifyContent: 'center'}}><Spinner size="25px"/></div> :
+            (
+              <>
+                <Header_Table>
             {
               data.length < 1 ? '' :
               (
@@ -146,8 +156,8 @@ export default function Pending({data}) {
                               </div>
                             </td>
 
-                            <td>{data.userId.email}</td>
-                            <td>{data.userId.username}</td>
+                            <td>{data.userId && data.userId.email}</td>
+                            <td>{data.userId && data.userId.username}</td>
                             
                             <td>{data.nativeAmountExpected && data.nativeAmountExpected.toFixed(4)}</td>
                             <td>{data.tradeAmountExpected && data.tradeAmountExpected.toFixed(4)}</td>
@@ -196,7 +206,7 @@ export default function Pending({data}) {
                 <div>
                     <span>You are about to credit the account of </span>
                     <span style={{fontWeight: 'bold'}}>
-                      {`${selectedItem && selectedItem.userId.username} (${selectedItem && selectedItem.userId.email})`}
+                      {`${selectedItem && selectedItem.userId && selectedItem.userId.username} (${selectedItem && selectedItem.userId && selectedItem.userId.email})`}
                     </span>
                     <span> with the sum of: </span>
                    
@@ -258,6 +268,9 @@ export default function Pending({data}) {
               </div>
             </div>
           </PopUpModal>
+              </>
+            )
+          }
          
         </Wrap>
     )
@@ -304,6 +317,7 @@ const MsgWrapper = styled.div`
   max-width: 400px;
   padding: 10px;
   text-align: center;
+  font-size: .8rem;
   margin: 10px auto;
-  box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
+  // box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
 `
