@@ -82,54 +82,8 @@ export default function VerifyAccount() {
 
   return (
     <VerifyWrapper>
-      <h1 style={{margin: '10px 0'}} className="title">SmartEarners' <span>Investment</span></h1>
-      <h3 className="subTitle">We Trade it, You Learn & Earn it</h3>
-  
-      {/* <div className="msg">
-        
-        {
-          (function(){
-
-              if(!isLoading){
-                if(feedback.status){
-                  if(verify.msg){
-                    if(verify.status){
-                      return (
-                        <Success>
-                          <Close onClick={handleClose}>
-                              <RiCloseLine />
-                          </Close>
-                          {verify.msg}
-                      </Success>
-                      )
-                    }{
-                      return (
-                        <Error>
-                          <Close onClick={handleClose}>
-                              <RiCloseLine />
-                          </Close>
-                          {verify.msg}
-                      </Error>
-                      )
-                    }
-                  }
-                  else{
-                    return ''
-                  }
-                }
-                else{
-                  return ''
-                }
-              }
-              else{
-                return ''
-              }
-
-          }())
-        }
-
-      </div> */}
-      
+      <h1 style={{margin: '10px 0', textAlign: 'center'}} className="title">SmartEarners'</h1>
+      <h3 style={{textAlign: 'center'}}  className="subTitle">We Trade it, You Learn & Earn it</h3>
 
       <div className="img">
 
