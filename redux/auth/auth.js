@@ -3,7 +3,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BACKEND_BASE_URL } from '../../utils/config';
 
-
 // sign up action
 export const signup = createAsyncThunk(
     'auth/signup',

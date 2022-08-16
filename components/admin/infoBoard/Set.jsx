@@ -18,7 +18,7 @@ export default function Set() {
   useEffect(()=>{
     // to clear any hanging msg from redux
     dispatch(resetNotif())
-  }, [])
+  }, [add])
 
   const initialState = {
     title: '',

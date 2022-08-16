@@ -8,7 +8,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import Cookies from "js-cookie";
 import { resolveApi } from "../../../utils/resolveApi"
-import { getUser } from '../../../redux/auth/auth';
+import { getUser, handleRead } from '../../../redux/auth/auth';
 
 export default function Notifications() {
   const dispatch = useDispatch()
@@ -22,7 +22,6 @@ export default function Notifications() {
   const [generalNotifications, setGeneralNotifications] = useState([])
   const [isActive, setActive] = useState(false)
   const [pending, setPending] = useState(false)
-
 
 
   useEffect(()=>{      
@@ -50,9 +49,10 @@ export default function Notifications() {
     }
     
     if(notificationId.includes(id)){
-      dispatch(handleRead(id))
+      setTimeout(()=>{
+        dispatch(handleRead(id))
+      }, 500)
       setPending(true)
-
     }
     
     setPending(false)
@@ -73,7 +73,7 @@ export default function Notifications() {
   return (  
     isLoading ? <Loader_ /> : 
    <Wrapper>
-    {/* {pending ?<div className="center"> <Spinner size="20px" /> </div>: ''} */}
+    {pending ?<div className="center"> <Spinner size="20px" /> </div>: ''}
     {
       generalNotifications && generalNotifications.length < 1 ? '' :
       generalNotifications && generalNotifications.map((data, index)=>{
