@@ -26,10 +26,10 @@ export default function MovingText() {
      totalInvestors: config.data.totalInvestors,
      totalSecPaid: config.data.totalSecPaid,
  
-     // withdrawal connfig
+     // withdrawal config
      maxWithdrawalLimit: config.data.maxWithdrawalLimit,
      minWithdrawalLimit: config.data.minWithdrawalLimit,
-     withdrawalCoins: config.data.withdrawalCoins,
+     withdrawalCoins: config.data.withdrawalCoins + ",",
      withdrawalCommonDiff: config.data.withdrawalCommonDiff,
      pendingWithdrawalDuration: config.data.pendingWithdrawalDuration,
  
