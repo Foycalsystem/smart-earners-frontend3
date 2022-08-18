@@ -46,13 +46,18 @@ export default function Notifications() {
   const toggle = async(index, id)=>{
     if(!Cookies.get('accesstoken')){
       await resolveApi.refreshTokenClinetSide()
-    }
-    
-    if(notificationId.includes(id)){
-      setTimeout(()=>{
+
+      if(notificationId.includes(id)){
+        setTimeout(()=>{
+          dispatch(handleRead(id))
+        }, 500)
+        setPending(true)
+      }
+    }else{
+      if(notificationId.includes(id)){
         dispatch(handleRead(id))
-      }, 500)
-      setPending(true)
+        setPending(true)
+      }
     }
     
     setPending(false)

@@ -44,7 +44,7 @@ export default function Investment() {
     // withdrawal connfig
     maxWithdrawalLimit: config.data.maxWithdrawalLimit,
     minWithdrawalLimit: config.data.minWithdrawalLimit,
-    withdrawalCoins: config.data.withdrawalCoins,
+    withdrawalCoins: config.data.withdrawalCoins + ",",
     withdrawalCommonDiff: config.data.withdrawalCommonDiff,
     pendingWithdrawalDuration: config.data.pendingWithdrawalDuration,
 

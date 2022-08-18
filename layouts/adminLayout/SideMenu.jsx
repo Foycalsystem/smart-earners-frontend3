@@ -11,8 +11,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { ScrollBar } from '../../styles/globalStyle';
-
+import InfoIcon from '@mui/icons-material/Info';
+import AddCardIcon from '@mui/icons-material/AddCard';
 
 
 export default function SideMenu_() {
@@ -37,7 +37,7 @@ const router = useRouter()
     {
         link: 'Investment',
         url: '/admin/investment',
-        icon: <SavingsIcon />
+        icon: <AddCardIcon />
     },
     {
         link: 'Withdrawals',
@@ -57,7 +57,7 @@ const router = useRouter()
     {
       link: 'Info Board',
       url: '/admin/information-board',
-      icon: <PeopleAltIcon />
+      icon: <InfoIcon />
     },
     {
       link: 'Home',

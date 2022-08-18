@@ -84,7 +84,7 @@ export default function Deposit(){
     useEffect(()=>{
       if(deposit.status){        
         // redirect to coinbase commerce using the returned url (hostedUrl)
-        window.open(deposit.data.hostedUrl)
+        window.location.href = deposit.data.hostedUrl
         setInp(initialState)
         setPending(false)
       }

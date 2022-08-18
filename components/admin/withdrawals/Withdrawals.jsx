@@ -49,7 +49,7 @@ export default function Withdrawals({userInfo}) {
      // withdrawal connfig
      maxWithdrawalLimit: config.data.maxWithdrawalLimit,
      minWithdrawalLimit: config.data.minWithdrawalLimit,
-     withdrawalCoins: config.data.withdrawalCoins,
+     withdrawalCoins: config.data.withdrawalCoins + ",",
      withdrawalCommonDiff: config.data.withdrawalCommonDiff,
      pendingWithdrawalDuration: config.data.pendingWithdrawalDuration,
  
