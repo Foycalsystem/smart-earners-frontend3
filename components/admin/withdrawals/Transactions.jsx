@@ -3,11 +3,12 @@ import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import { getWithdrawals, } from "../../../redux/admin/withdrawals";
+import { getWithdrawals,resetWithdrawal } from "../../../redux/admin/withdrawals";
 import styled from 'styled-components';
 import Rejected from "./Rejected.jsx";
 import Confirmed from "./Confirmed.jsx";
 import Request from "./Request.jsx";
+
 
 import {
   AdminWrapper,

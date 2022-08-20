@@ -2,14 +2,12 @@ import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../../loader/Loader";
 import EditIcon from '@mui/icons-material/Edit';
-import {useSnap} from '@mozeyinedu/hooks-lab';
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { handleAdd, getPlans, handleUpdate, handleDelete, handleResetPlan } from "../../../../redux/investmentPlans/investmentPlans";
 import styled from 'styled-components'
 import Spinner from '../../../../loaders/Spinner';
-import Feedback from "../../../Feedback";
 import resolveInvestmentLifespan from "../../../../utils/resolveInvestmentLifeSpan";
 import { resolveApi } from "../../../../utils/resolveApi";
 import Cookies from "js-cookie";
@@ -17,20 +15,16 @@ import { getUser } from "../../../../redux/auth/auth";
 import { toast } from 'react-toastify';
 
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation } from 'swiper';
 
-import {Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, {
-    Navigation,
-    Pagination,
-    Scrollbar, 
-    A11y,
-    Autoplay,
-  } from "swiper/core";
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+
+SwiperCore.use([Navigation]);
 
 import {
   AdminWrapper,
@@ -50,11 +44,13 @@ export default function Plans() {
   const [update, setUpdate] = useState(false);
   const [isLoading, setLoading] = useState(true)
 
+  console.log(plans)
   const initialState = {
     type: '',
     amount: '',
     lifespan: '',
     returnPercentage: '',
+    point: '',
   }
   const [initial, setInitial] = useState(initialState)
 
@@ -64,11 +60,11 @@ export default function Plans() {
     dispatch(getUser())
 
 
-    // setTimeout(()=>{
-    //   plans.isLoading ? setLoading(true) : setLoading(false)
-    // }, 1000)
+    setTimeout(()=>{
+      user.isLoading && plans.isLoading ? setLoading(true) : setLoading(false)
+    }, 1000)
 
-    user.isLoading && plans.isLoading ? setLoading(true) : setLoading(false)
+    
   }, [])
 
   
@@ -129,6 +125,7 @@ function SetPlan({update, initial, setUpdate, setInitial}){
     amount: '',
     lifespan: '',
     returnPercentage: '',
+    point: '',
   }
 
   const [inp, setInp] = useState(initialState)
@@ -155,9 +152,16 @@ function SetPlan({update, initial, setUpdate, setInitial}){
         amount: inp.amount,
         lifespan: inp.lifespan,
         returnPercentage: inp.returnPercentage,
+        point: inp.point,
       }
     }
-    !update ? dispatch(handleAdd(inp)) : dispatch(handleUpdate(updatingData))
+    if(!Cookies.get('accesstoken')){
+      setTimeout(()=>{
+        !update ? dispatch(handleAdd(inp)) : dispatch(handleUpdate(updatingData))
+      }, 500)
+    }else{
+      !update ? dispatch(handleAdd(inp)) : dispatch(handleUpdate(updatingData))
+    }
   }
 
   useEffect(()=>{
@@ -237,6 +241,17 @@ function SetPlan({update, initial, setUpdate, setInitial}){
           />
         </InputWrapper>
 
+          <InputWrapper>
+            <label htmlFor="">Points:</label>
+            <input
+              type="number"
+              name='point'
+              placeholder="Point"
+              value={inp.point || ''}
+              onChange={getInp}
+            />
+          </InputWrapper>
+
         <div className="center">{pending? <Spinner size='20px'/> : ""}</div>
 
         <InputWrapper>
@@ -246,6 +261,7 @@ function SetPlan({update, initial, setUpdate, setInitial}){
             value={pending ? 'Loading...' : (update ? 'Update Plan' : 'Add Pann')}
           />
         </InputWrapper>
+        
         {
           !update ? '':
           <InputWrapper>
@@ -267,49 +283,46 @@ function GetPlans({setUpdate, update, data, setInitial, initial}){
   return (
     <Plan>
       <AllPlan>
-        <SwipeWrapper_>
-          <Swiper
-              className='swiper'
-              modules={[Navigation, Pagination, Scrollbar, Autoplay, A11y]}
-              spaceBetween={10}
-              autoplay = { {delay: 5000}}
-              scrollbar={{draggable: true}}
-              // loop
-              pagination = {{ clickable: true}}
-              slidesPerView={3}
-              breakpoints={
-                  {
-                      0:{
-                          width: 0,
-                          slidesPerView: 1,
-                          spaceBetween: 10
-                      },
-                      500:{
-                          width: 700,
-                          slidesPerView: 2,
-                          spaceBetween: 10
-                      },
-                      680:{
-                          width: 680,
-                          slidesPerView: 2,
-                          spaceBetween: 10
-                      },
-                      920:{
-                          width: 920,
-                          slidesPerView: 3,
-                          spaceBetween: 10
-                      },
-                  }
-                }>
-                {data.map((each, idx) => 
-                    (
-                      <SwiperSlide key={idx} className='swipe'>
-                          <SinglePlan data={each} setUpdate={setUpdate} update={update} setInitial={setInitial} initial={initial}/>
-                      </SwiperSlide>
-                    )
-                ) }
-            </Swiper>
-          </SwipeWrapper_>   
+        <Swiper
+          breakpoints={{
+            // when window width is >= 640px
+            640: {
+              width: 500,
+              slidesPerView: 1,
+            },
+            300: {
+              width: 280,
+              slidesPerView: 1,
+            },
+            400: {
+              width: 300,
+              slidesPerView: 1,
+            },
+            // when window width is >= 768px
+            768: {
+              width: 768,
+              slidesPerView: 2,
+            },
+          }}
+          id="main"
+          width="260"
+          height="200"
+          autoplay
+          spaceBetween={5}
+          slidesPerView={1}
+          >
+          {
+            data.map((data, i)=>{
+              return (
+                <SwiperSlide key={i} tag="li" style={{ listStyle: 'none' }}>
+                  <div style={{width: '100%', height: '100%'}}>
+                    <SinglePlan data={data} setUpdate={setUpdate} update={update} setInitial={setInitial} initial={initial}/>
+                  </div>
+                </SwiperSlide>
+              )
+            })
+          }
+        </Swiper>
       </AllPlan>
     </Plan>
   )
@@ -338,7 +351,9 @@ const SinglePlan = ({setUpdate, data, setInitial}) => {
       amount: data.amount,
       lifespan: data.lifespan,
       returnPercentage: data.returnPercentage,
+      point: data.point,
     })
+
     window.scroll({
       top:0,
       left:0,
@@ -376,20 +391,20 @@ const SinglePlan = ({setUpdate, data, setInitial}) => {
 
             <span className="bottom">
                 <aside className="amount">
-                    <p>Amount</p>
-                    <p style={{fontSize: '.9rem', fontWeight: 'bold'}}>{data.amount} {data.currency}</p>
+                    <p>Amount: <span style={{fontWeight: 'bold'}}>{data.amount} {data.currency}</span></p>
+                    <p>Points: <span style={{fontWeight: 'bold'}}>{data.point ? data.point : 'Coming Soon...'}</span></p>
                 </aside>
                 <aside style={{borderLeft:'1px solid #ccc',paddingLeft: '5px'}} className="returns">
                     <p>Returns</p>
-                    <p style={{fontSize: '.9rem', fontWeight: 'bold'}}>{resolveInvestmentLifespan(data.returnPercentage, data.lifespan)}</p>
+                    <p style={{fontWeight: 'bold'}}>{resolveInvestmentLifespan(data.returnPercentage, data.lifespan)}</p>
                 </aside>
             </span>
             <div className="actions">
               <div className="actionBtn" onClick={()=>handleEdit(data)}>
-                <EditIcon  style={{color: 'var(--bright-color', fontSize: '2rem'}}/>
+                <EditIcon  style={{color: 'var(--bright-color', fontSize: '1.7rem'}}/>
               </div>
               <div className="actionBtn" onClick={()=>handleDelete_(data._id)}>
-                <DeleteForeverIcon style={{color: '#c20', fontSize: '2rem'}} />
+                <DeleteForeverIcon style={{color: '#c20', fontSize: '1.7rem'}} />
               </div>
             </div>
         </section>
@@ -410,9 +425,12 @@ const StyledSinglePlan = styled.div`
     width: 300px;
   }
 
+  p{
+    font-size: .8rem;
+  }
   .content{
     width: 100%;
-    padding: 20px;
+    padding: 20px 10px;
     display: flex;
     flex-flow: column nowrap;
 
@@ -420,7 +438,7 @@ const StyledSinglePlan = styled.div`
         width: 100%;
         height: 30px;
         display: flex;
-        color: #fff;
+        color: var(--bright-color);
         justify-content: flex-start;
         align-items: flex-start;
         border-bottom: 2px solid whitesmoke;
@@ -439,15 +457,7 @@ const StyledSinglePlan = styled.div`
         width: 50%;
         margin-top: 10px;
       }
-      .amount p:nth-child(2){
-        font-weight: 600;
-        font-size: 1rem;
-      }
-
-      .returns p:nth-child(2){
-        font-weight: 600;
-        font-size: 1rem;
-      }
+      
     }
 
     .actions{
@@ -466,21 +476,77 @@ const StyledSinglePlan = styled.div`
 
 `
 
+
 const AllPlan = styled.div`
-  width: 98%;
-  max-width: 1200px;
+  width: 90%;
+  max-width: 1000px;
   margin: auto;
   padding: 10px 0;
-`
-const SwipeWrapper_ = styled.div`
-  width: 100%;
-  margin: auto;
 
-  .swipe{
-    @media(max-width: 400px){
-      width: 300px;
-    }
+  #title,#bp-wrapper {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.swiper-container {
+  width: 200px;
+  max-height: 230px;
+  margin-right: 10px;
+}
+
+#bp-640,
+#bp-768 {
+  display: none;
+}
+
+@media screen and (min-width: 640px) {
+  .swiper-container {
+    width: 900px;
   }
+
+  #bp-480,
+  #bp-768 {
+    display: none !important;
+  }
+
+  #bp-640 {
+    display: inline !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .swiper-container {
+    width: 768px;
+  }
+
+  #bp-480,
+  #bp-640 {
+    display: none !important;
+  }
+
+  #bp-768 {
+    display: inline !important;
+  }
+}
+
+.swiper-pagination {
+  bottom: 0;
+  padding-bottom: 10px;
+}
+
+.swiper-wrapper {
+  padding-inline-start: 0;
+}
+
+#thumbs.swiper-container {
+  margin-bottom: 20px;
+}
+
+#thumbs .swiper-slide {
+  cursor: pointer;
+}
+
 `
 
 const Plan = styled.div`
@@ -524,4 +590,11 @@ const Plan = styled.div`
     display: flex;
     justify-content: center;
   }
+`
+
+const Row = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `

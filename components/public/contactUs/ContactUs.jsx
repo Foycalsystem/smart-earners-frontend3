@@ -1,49 +1,138 @@
 import styled from 'styled-components'
-import { useState, useRef } from 'react'
-import emailjs from '@emailjs/browser'
+import { useState, useEffect } from 'react'
 import SocialLinks from '../../SocialLinks'
-
+import { getConfig } from '../../../redux/admin/web_config'
+import { useDispatch, useSelector } from 'react-redux';
+import { resetMsg, handleSendAdmin } from '../../../redux/message/message';
+import Spinner from '../../../loaders/Spinner';
+import Loader_ from '../../user/loader/Loader'
+import { toast } from 'react-toastify';
 
 export default function ContactUs() {
-  const form = useRef()
+  const dispatch = useDispatch()
+  const state = useSelector(state=>state)
+  const {config} = state.config
+  const {sendAdmin} = state.message
+  const [isLoading, setLoading] = useState(true)
+  const [pending, setPending] = useState(false)
+  const [disbale, setDisbale] = useState(true)
+
+
+  // clear any hanging msg from redux
+  useEffect(()=>{
+    dispatch(resetMsg())
+  }, [sendAdmin])
+
+  useEffect(()=>{
+    dispatch(getConfig())
+
+    setTimeout(()=>{
+      config.isLoading ? setLoading(true) : setLoading(false)
+    }, 1000)
+
+  }, [])
+
+  // handle form
+  const initialState = {
+    email: '',
+    subject: '',
+    message: '',
+  }
+  const [inp, setInp] = useState(initialState)
+  const getInp =(e)=>{
+    const {name, value} = e.target;
+    setInp({...inp, [name]:value});
+  }
 
   const sendEmail = (e) => {
     e.preventDefault();
-
-    emailjs.sendForm(
-      // process.env.NEXT_PUBLIC_SERVICE_ID,
-      'service_khzu7f2',
-      // process.env.NEXT_PUBLIC_TEMPLATE_ID,
-      'template_oflpaz1',
-      form.current,
-      // process.env.NEXT_PUBLIC_PUBLIC_KEY)
-      'LSiCmJNgAM1jgbTYo')
-
-    .then((result)=> {
-        console.log(result.text);
-
-    }, (error) => {
-      console.log(error.text)
-    })
+    setPending(true)
+    dispatch(handleSendAdmin(inp))
   }
 
-  
+
+
+  const customId = "custom-id-yes"
+  useEffect(()=>{
+    if(sendAdmin.msg){
+      toast(sendAdmin.msg, {
+        type: sendAdmin.status ? 'success' : 'error',
+        toastId: customId
+      })         
+    }
+  }, [sendAdmin])
+
+  useEffect(()=>{
+    if(sendAdmin.status){        
+      setInp(initialState)
+      setPending(false)
+    }
+    if(sendAdmin.msg){  
+      setPending(false)
+    }
+  }, [sendAdmin])
+   
   return (
+    isLoading ? <Loader_ /> :
     <StyledContact>
-       <h3>Message Us</h3>
-       <form ref={form} onSubmit={sendEmail}>
-          <input disabled  name="sender_name" placeholder="Name" />
-          <input disabled name="sender_email" placeholder="Email" />
-          <textarea disabled  name="message" placeholder="Message Here..."></textarea>              
-          <input disabled  type="submit" value="Send"/>
-        </form>
+      <h3>Message us</h3>
+      <form onSubmit={sendEmail}>
+          
+          <InputWrapper>
+            <input
+              disabled={config.data.customerSupport && config.data.customerSupport.toLowerCase() !== 'yes' || disbale}
+              name="email"
+              value={inp.email || ""}
+              onChange={getInp}
+              placeholder="Email"
+            />
+          </InputWrapper>
 
-       <div style={{display: 'flex', justifyContent: 'center'}}> <SocialLinks text={"Reach Us"}/> </div>
+          <InputWrapper>
+            <input
+              disabled={config.data.customerSupport && config.data.customerSupport.toLowerCase() !== 'yes' || disbale}
+              name="subject"
+              value={inp.subject || ""}
+              onChange={getInp}
+              placeholder="Subject"
+            />
+          </InputWrapper>
 
-       <div style={{textAlign: 'center', marginTop: '30px', fontStyle: 'italic', fontSize: '.8rem'}}>
-        <div>333 Fremount St, San Francisco, CA</div>
-        <div>94105, United States</div>
-       </div>
+          <InputWrapper>
+            <textarea
+              disabled={config.data.customerSupport && config.data.customerSupport.toLowerCase() !== 'yes' || disbale}
+              name="message"
+              value={inp.message || ""}
+              onChange={getInp}
+              placeholder="Message Here..."
+            ></textarea>     
+          </InputWrapper>
+
+          {
+            pending ? <div className="center"><Spinner size="20px" /></div> : ''
+          }
+          <InputWrapper>
+            <input
+              disabled={config.data.customerSupport && config.data.customerSupport.toLowerCase() !== 'yes' || pending || disbale}
+              type="submit"
+              value={pending ? "Loading..." : "Send"}
+            />
+          </InputWrapper>
+         
+      </form>
+
+      {
+        config.data.customerSupport && config.data.customerSupport.toLowerCase() === 'yes' ? 
+        (
+          <>
+            <div style={{display: 'flex', justifyContent: 'center'}}> <SocialLinks text={"Reach us"}/> </div>
+            <div style={{textAlign: 'center', marginTop: '30px', fontStyle: 'italic', fontSize: '.8rem'}}>
+              <div>333 Fremount St, San Francisco, CA</div>
+              <div>94105, United States</div>
+            </div>
+          </>
+        ): ''
+      }
     </StyledContact>
   )
 }
@@ -65,12 +154,21 @@ const StyledContact = styled.section`
     margin-bottom: 20px;
   }
 
+  .center{
+    display: flex;
+    justify-content: center
+  }
+`
+const InputWrapper = styled.div`
+    width: 100%;
+    margin-bottom: 25px;
+    position: relative;
+  
   input, textarea{
     width: 100%;
-    padding: 8px 10px;
+    padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    margin-bottom: 10px;
 
     &:focus{
       border: 2px solid green;

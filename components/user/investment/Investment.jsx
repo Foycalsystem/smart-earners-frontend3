@@ -205,12 +205,12 @@ const SinglePlan = ({data, investBtn}) => {
 
             <span className="bottom">
                 <aside className="amount">
-                    <p>Amount</p>
-                    <p style={{fontSize: '.8rem', fontWeight: 'bold'}}>{data.amount} {data.currency}</p>
+                    <p>Amount: <span style={{fontWeight: 'bold'}}>{data.amount} {data.currency}</span></p>
+                    <p>Points: <span style={{fontWeight: 'bold'}}>{data.point ? data.point : 'Coming Soon...'}</span></p>
                 </aside>
                 <aside style={{borderLeft:'1px solid #ccc',paddingLeft: '5px'}} className="returns">
                     <p>Returns</p>
-                    <p style={{fontSize: '.8rem', fontWeight: 'bold'}}>{resolveInvestmentLifespan(data.returnPercentage, data.lifespan)}</p>
+                    <p style={{fontWeight: 'bold'}}>{resolveInvestmentLifespan(data.returnPercentage, data.lifespan)}</p>
                 </aside>
             </span>
             <button onClick={()=>investBtn(data)} {...snap()}>
@@ -386,7 +386,7 @@ const StyledSinglePlan = styled.div`
 
   .content{
     width: 100%;
-    padding: 20px 5px ;
+    padding: 20px 10px;
     display: flex;
     flex-flow: column nowrap;
 
@@ -394,13 +394,13 @@ const StyledSinglePlan = styled.div`
         width: 100%;
         height: 30px;
         display: flex;
-        color: #fff;
+        color: var(--bright-color);
         justify-content: flex-start;
         align-items: flex-start;
         border-bottom: 2px solid whitesmoke;
         p{
           font-size: 1.2rem;
-          font-weight: 600;
+          font-weight: bold;
         }
     }
 
@@ -413,14 +413,9 @@ const StyledSinglePlan = styled.div`
         width: 50%;
         margin-top: 10px;
       }
-      .amount p:nth-child(2){
-        font-weight: 600;
-        font-size: 1rem;
-      }
-
-      .returns p:nth-child(2){
-        font-weight: 600;
-        font-size: 1rem;
+      
+      p{
+        font-size: .75rem;
       }
     }
 

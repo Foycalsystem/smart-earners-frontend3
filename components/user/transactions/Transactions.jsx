@@ -36,11 +36,11 @@ export default function Transactions({toggleState}) {
     dispatch(getUser())
     dispatch(getConfig())
 
-    // setTimeout(()=>{
-    //     config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
-    // }, 1000)
+    setTimeout(()=>{
+        config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
+    }, 1000)
 
-    config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
+    // config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
   }, [])
   
   useEffect(()=>{
@@ -51,7 +51,6 @@ export default function Transactions({toggleState}) {
     setTransfer(txns.data.filter(data=> data.type === 'transfer'));
 
     setAll(txns.data.filter(data=> data.status !== 'canceled'));
-    
   }, [txns])
 
 

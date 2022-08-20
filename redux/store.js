@@ -9,6 +9,7 @@ import depositeReducer from './admin/deposit';
 import transactionsReducer from './transactions/transactions';
 import referralReducer from './referrals/referrals';
 import notificationReducer from './admin/notifications';
+import send from './message/message';
 
 
 
@@ -24,7 +25,8 @@ export const store = configureStore({
         deposit: depositeReducer,
         transactions: transactionsReducer,
         referrals: referralReducer,
-        notifications: notificationReducer
+        notifications: notificationReducer,
+        message: send
     }
 });
 

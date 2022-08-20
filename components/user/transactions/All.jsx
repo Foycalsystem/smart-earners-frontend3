@@ -151,13 +151,13 @@ export default function All({data, toggleState, txns, id}) {
                                   <div>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
                                       <div className='item'>
-                                      <span>You sent the sum of </span><span style={{fontWeight: 'bold'}}>{data.amount} {data.currency}</span> <span>to </span> <span>{data.receiver.username}</span>
+                                      <span>You sent the sum of </span><span style={{fontWeight: 'bold'}}>{data.amount} {data.currency}</span> <span>to </span> <span style={{fontWeight: 'bold'}}>{data.receiver ? data.receiver.username : '(User Removed)'}</span>
                                       </div>
 
                                       {
                                       clicked === index ?
                                       <div className="dropdown">
-                                          <div>Receiver: {data.receiver.username}</div>
+                                          <div>Receiver: {data.receiver ? data.receiver.username : '(User Removed)'}</div>
                                           <div>Account No: {data.accountNumber}</div>
                                           <div>Id: {data._id}</div>
                                       </div> : null
