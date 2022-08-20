@@ -19,6 +19,11 @@ const InputWrapper = styled.div`
     .item {
         color: #972309;
     }
+
+    label{
+      font-size: .8rem;
+      font-weight: bold;
+    }
 `
 
 const Input = styled.input`

@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { getPlans } from '../../../redux/investmentPlans/investmentPlans.js';
 import styled from 'styled-components';
 import { SectionTitle } from '../../../styles/globalStyle.js';
-import { SectionSubTitle } from '../../../styles/globalStyle.js';
 import resolveInvestmentLifespan from '../../../utils/resolveInvestmentLifeSpan.js';
 import Spinner from '../../../loaders/Spinner';
 import {useRouter} from 'next/router'
@@ -53,48 +52,46 @@ const Plans = ({userInfo}) => {
                 <>
                     <h4 style={{textAlign: 'center', fontWeight: '500'}}>Find the Package Plan that is most convenient for you</h4>
                     <AllPlan>
-                        {
-                          <Swiper
-                            breakpoints={{
-                              // when window width is >= 640px
-                              640: {
-                                width: 500,
-                                slidesPerView: 1,
-                              },
-                              300: {
-                                width: 280,
-                                slidesPerView: 1,
-                              },
-                              400: {
-                                width: 300,
-                                slidesPerView: 1,
-                              },
-                              // when window width is >= 768px
-                              768: {
-                                width: 768,
-                                slidesPerView: 2,
-                              },
-                            }}
-                            id="main"
-                            width="260"
-                            height="200"
-                            autoplay
-                            spaceBetween={5}
-                            slidesPerView={1}
-                          >
-                            {
-                                plans.data.map((data, i)=>{
-                                    return (
-                                      <SwiperSlide key={i} tag="li" style={{ listStyle: 'none' }}>
-                                          <div style={{width: '100%', height: '100%'}}>
-                                              <SinglePlan data={data}/>
-                                          </div>
-                                      </SwiperSlide>
-                                    )
-                                })
-                            }
-                          </Swiper>
+                        <Swiper
+                          breakpoints={{
+                            // when window width is >= 640px
+                            640: {
+                              width: 500,
+                              slidesPerView: 1,
+                            },
+                            300: {
+                              width: 280,
+                              slidesPerView: 1,
+                            },
+                            400: {
+                              width: 300,
+                              slidesPerView: 1,
+                            },
+                            // when window width is >= 768px
+                            768: {
+                              width: 768,
+                              slidesPerView: 2,
+                            },
+                          }}
+                          id="main"
+                          width="260"
+                          height="200"
+                          autoplay
+                          spaceBetween={5}
+                          slidesPerView={1}
+                        >
+                          {
+                              plans.data.map((data, i)=>{
+                                  return (
+                                    <SwiperSlide key={i} tag="li" style={{ listStyle: 'none' }}>
+                                        <div style={{width: '100%', height: '100%'}}>
+                                            <SinglePlan data={data}/>
+                                        </div>
+                                    </SwiperSlide>
+                                  )
+                              })
                           }
+                        </Swiper>
                     </AllPlan>
                 </>
             )
@@ -118,12 +115,12 @@ const SinglePlan = ({data}) => {
 
             <span className="bottom">
                 <aside className="amount">
-                    <p>Amount</p>
-                    <p style={{fontSize: '.9rem', fontWeight: 'bold'}}>{data.amount} {data.currency}</p>
+                    <p>Amount: <span style={{fontWeight: 'bold'}}>{data.amount} {data.currency}</span></p>
+                    <p>Points: <span style={{fontWeight: 'bold'}}>{data.point ? data.point : 'Coming Soon...'}</span></p>
                 </aside>
                 <aside style={{borderLeft:'1px solid #ccc',paddingLeft: '5px'}} className="returns">
                     <p>Returns</p>
-                    <p style={{fontSize: '.9rem', fontWeight: 'bold'}}>{resolveInvestmentLifespan(data.returnPercentage, data.lifespan)}</p>
+                    <p style={{fontWeight: 'bold'}}>{resolveInvestmentLifespan(data.returnPercentage, data.lifespan)}</p>
                 </aside>
             </span>
             <button onClick={()=>router.push('/dashboard')}>Invest Now</button>
@@ -163,7 +160,7 @@ const StyledSinglePlan = styled.div`
 
   .content{
     width: 100%;
-    padding: 20px 5px ;
+    padding: 20px 10px ;
     display: flex;
     flex-flow: column nowrap;
 
@@ -171,7 +168,7 @@ const StyledSinglePlan = styled.div`
         width: 100%;
         height: 30px;
         display: flex;
-        color: #fff;
+        color: var(--bright-color);
         justify-content: flex-start;
         align-items: flex-start;
         border-bottom: 2px solid whitesmoke;
@@ -190,14 +187,8 @@ const StyledSinglePlan = styled.div`
         width: 50%;
         margin-top: 10px;
       }
-      .amount p:nth-child(2){
-        font-weight: 600;
-        font-size: 1rem;
-      }
-
-      .returns p:nth-child(2){
-        font-weight: 600;
-        font-size: 1rem;
+      p{
+        font-size: .75rem;
       }
     }
 

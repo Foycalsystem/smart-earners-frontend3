@@ -5,12 +5,11 @@ import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import { resolveApi } from '../../../utils/resolveApi';
 import Cookies from 'js-cookie';
-import Feedback from '../../Feedback';
 import PopUpModal from '../../modals/popUpModal/PopUpModal';
-import { handleResolve } from "../../../redux/admin/deposit";
+import { handleResolve, handleResetDeposit } from "../../../redux/admin/deposit";
 import conversionRate from '../../../utils/conversionRate';
 import Spinner from "../../../loaders/Spinner";
-
+import { toast } from 'react-toastify';
 
 import {
   Header_Table,
@@ -25,20 +24,21 @@ export default function Initiated({data}) {
     const [showModal, setShowModal] = useState(false);
     const {resolveDeposit} = state.deposit;
     const {config} = state.config;
-    const [pending, setPending] = useState(true)
+    const [ready, setReady] = useState(false)
+    const [pending, setPending] = useState(false)
 
     const [inp, setInp] = useState('');
     const [selectedItem, setSelectedItem] = useState('');
 
     const [formInp, setFormInp] = useState('');
-    const [feedback, setFeedback] = useState({
-      msg: '',
-      status: false
-    })
 
     const month = ['Jan', 'Feb','Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-
+     // clear any hanging msg from redux
+     useEffect(()=>{
+      dispatch(handleResetDeposit())
+    }, [resolveDeposit])
+    
     useEffect(()=>{
         const newData = filter({
         data: data,
@@ -70,34 +70,39 @@ export default function Initiated({data}) {
       if(!Cookies.get('accesstoken')){
         await resolveApi.refreshTokenClinetSide()
       }
+      setPending(true)
       dispatch(handleResolve({
         id: selectedItem._id,
         data: {amount: formInp}
       }))
-
-      setFeedback({
-        msg: resolveDeposit.msg,
-        status: resolveDeposit.status
-      })
     }
 
+    const customId = "custom-id-yes"
     useEffect(()=>{
-      if(resolveDeposit.status){
+      if(resolveDeposit.msg){
+        toast(resolveDeposit.msg, {
+          type: resolveDeposit.status ? 'success' : 'error',
+          toastId: customId
+        }) 
+        setPending(false)
+      }
+      if(resolveDeposit.msg && resolveDeposit.status){
         setFormInp('')
+        setShowModal(false);
       }
     }, [resolveDeposit])
 
     useEffect(()=>{
       setTimeout(()=>{
-        setPending(false)
-      }, 2000)
+        setReady(true)
+      }, 500)
     }, [])
 
     return (
       
         <Wrap>
           {
-             pending ? <div style={{display: 'flex', justifyContent: 'center'}}><Spinner size="25px"/></div> :
+             !ready ? <div style={{display: 'flex', justifyContent: 'center'}}><Spinner size="25px"/></div> :
              (
               <>
                 <Header_Table>
@@ -183,16 +188,8 @@ export default function Initiated({data}) {
              )
           }
 
-          <PopUpModal title={'Resolve Deposit'} showModal={showModal} setFeedback={setFeedback} setShowModal={setShowModal}>
+          <PopUpModal title={'Resolve Deposit'} showModal={showModal} setShowModal={setShowModal}>
             <div style={{width: '300px', padding: '20px'}}>
-              <div className="center"> 
-                  <Feedback
-                    msg={resolveDeposit.msg}
-                    status={resolveDeposit.status}
-                    feedback={feedback}
-                    setFeedback={setFeedback}
-                  />
-              </div>
 
               <div style={{fontSize: '.9rem', textAlign: 'center'}}>{
                 <div>
@@ -221,7 +218,7 @@ export default function Initiated({data}) {
 
               <div className='center'>
                 {
-                  resolveDeposit.isLoading ? <Spinner size="20px"/> : ''
+                  pending ? <Spinner size="20px"/> : ''
                 }
               </div>
 
@@ -246,7 +243,7 @@ export default function Initiated({data}) {
 
                 <button
                   onClick={handleConfirm}
-                  disabled={resolveDeposit.isLoading || formInp == ''}
+                  disabled={pending || formInp == ''}
                   style={{
                     cursor: 'pointer',
                     borderRadius: '3px',
@@ -255,7 +252,7 @@ export default function Initiated({data}) {
                     color: '#fff',
                     fontWeight: 600,
                     border: 'none'
-                  }}>{resolveDeposit.isLoading ? 'Loading...' : 'Rsolve'}</button>
+                  }}>{pending ? 'Loading...' : 'Rsolve'}</button>
                   
               </div>
             </div>

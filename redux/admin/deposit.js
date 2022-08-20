@@ -75,7 +75,6 @@ export const handleResolve= createAsyncThunk(
 
 
 
-
 const initialState = {
     deposit: { isLoading: false, status: false, msg: ''},
     txns: { isLoading: false, status: false, msg: '', data:[]},
