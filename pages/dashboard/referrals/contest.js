@@ -28,10 +28,10 @@ export async function getServerSideProps(context){
     }
   }else{
     return {
-        redirect: {
-            destination: '/dashboard/referrals',
-            permanent: false,
-          },
+        // redirect: {
+        //     destination: '/dashboard/referrals',
+        //     permanent: false,
+        //   },
       props: {accesstoken: accesstoken ? accesstoken : null}
     }
   }

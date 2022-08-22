@@ -4,10 +4,16 @@ import Loader_ from "../loader/Loader";
 import { getConfig, updateConfig} from "../../../redux/admin/web_config";
 import EditIcon from '@mui/icons-material/Edit';
 import {useSnap} from '@mozeyinedu/hooks-lab';
-import Link from 'next/link';
-import Spinner from "../../../loaders/Spinner";
 import { resolveApi } from "../../../utils/resolveApi";
 import Cookies from "js-cookie";
+import moment from 'moment'
+import resolveSeconds from "../../../utils/resolveSeconds";
+import styled from 'styled-components'
+import ContestPrize from "../../contest/ContestPrize";
+import Link from 'next/link';
+import Spinner from "../../../loaders/Spinner";
+import StartAt from "../../contest/StartAt";
+import StopAt from "../../contest/StopAt";
 
 import {
   AdminWrapper,
@@ -20,7 +26,7 @@ import {
 } from "../styles";
 import { useRouter } from "next/router";
 
-export default function Investment() {
+export default function ReferralContest() {
   const router = useRouter()
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
@@ -88,14 +94,11 @@ export default function Investment() {
   return (
     <>
       <Header>
-        <Link href='/admin/investment' passHref>
-          <a className={router.asPath === '/admin/investment' ? 'active' : ''}>Config</a>
+        <Link href='/admin/referral-contest' passHref>
+          <a className={router.asPath === '/admin/referral-contest' ? 'active' : ''}>Config</a>
         </Link>
-        <Link href='/admin/investment/transactions' passHref>
-          <a className={router.asPath === '/admin/investment/transactions' ? 'active' : ''}>Transactions</a>
-        </Link>
-        <Link href='/admin/investment/plans' passHref>
-          <a className={router.asPath === '/admin/investment/plans' ? 'active' : ''}>Plans</a>
+        <Link href='/admin/referral-contest/contestants' passHref>
+          <a className={router.asPath === '/admin/referral-contest/contestants' ? 'active' : ''}>Contestants</a>
         </Link>
       </Header>
 
@@ -115,32 +118,29 @@ export default function Investment() {
 }
 
 
-
-
-
 function SetForm({config, update, initialState}) {
     const {snap} = useSnap(.5);
     const [edit, setEdit] = useState(false);
     const dispatch = useDispatch()
-    const router = useRouter()
   
     
     const [inp, setInp] = useState(initialState)
-  
-  
+
     const getInput=(e)=>{
       const {name, value} = e.target;
       setInp({...inp, [name]:value})
     }
 
-    const submit= async(e)=>{
-        e.preventDefault();
-        if(!Cookies.get('accesstoken')){
-          await resolveApi.refreshTokenClinetSide()
-        }
-        dispatch(updateConfig(inp));
-        setInp(initialState);
-        setEdit(false)
+    const submit = async(e)=>{
+      e.preventDefault();
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+      }
+
+      dispatch(updateConfig(inp));
+      
+      setInp(initialState);
+      setEdit(false)
     }
 
     useEffect(()=>{
@@ -148,68 +148,100 @@ function SetForm({config, update, initialState}) {
     }, [config])
   
     return (
-      <div>
-        <Form style={{position: 'relative'}}>
-            {
-              !update.isLoading ? "" : 
-              (
-                <div style={{
-                  position: 'absolute', 
-                  top: 0,
-                  bottom:0,
-                  left: 0,
-                  right: 0,
-                  display: 'flex',
-                  justifyContent:'center',
-                  alignItems: 'center',
-                  zIndex: 2
-                  }}>
-                    <Spinner size="20px"/>
-    
-                </div>
-              )
-            }
+      <Form style={{position: 'relative'}}>
+          {
+            !update.isLoading ? "" : 
+            (
+              <div style={{
+                position: 'absolute', 
+                top: 0,
+                bottom:0,
+                left: 0,
+                right: 0,
+                display: 'flex',
+                justifyContent:'center',
+                alignItems: 'center',
+                zIndex: 2
+                }}>
+                  <Spinner size="20px"/>
+  
+              </div>
+            )
+          }
+          
+          <Container>
+              <div {...snap()} onClick={()=>setEdit(!edit)} className="title">
+                  <span style={{fontSize: '1rem'}}>Referrals</span>
+                  <span className="edit">
+                      <EditIcon />
+                  </span>
+              </div>
 
-            <Container>
+              {
+                  edit ?
+                  (
+                      <button onClick={submit} className="btn">Submit</button>
+                  ): ''
+              }
+              
+              <InputWrapper title="Open Referral Contest Reg">
+                  <Label htmlFor="">Open Referral Contest Reg: <span className="item">{config.data.startContestReg}</span></Label>
+                  <Input
+                    disabled={!edit}
+                    type="text"
+                    value={inp.startContestReg || ''}
+                    name='startContestReg'
+                    onChange={getInput}
+                  />
+              </InputWrapper>
 
-                <div {...snap()} onClick={()=>setEdit(!edit)} className="title">
-                    <span  style={{fontSize: '1rem'}}>Investment</span>
-                    <span className="edit">
-                        <EditIcon />
-                    </span>
-                </div>
+              <InputWrapper title="Start Referral Contest">
+                  <Label htmlFor="">Start Referral Contest: <span className="item">{config.data.allowReferralContest}</span></Label>
+                  <Input
+                    disabled={!edit}
+                    type="text"
+                    value={inp.allowReferralContest || ''}
+                    name='allowReferralContest'
+                    onChange={getInput}
+                  />
+              </InputWrapper>
 
-                {
-                    edit ?
-                    (
-                        <button onClick={submit} className="btn">Submit</button>
-                    ): ''
-                }
+              <InputWrapper title="Date to start Referral Contest">
+                  <Label htmlFor="">Referral Contest Starts At: <StartAt config={config}/></Label>
+                  <Input
+                    disabled={!edit}
+                    type="datetime-local"
+                    value={inp.referralContestStarts || ''}
+                    name='referralContestStarts'
+                    onChange={getInput}
+                  />
+              </InputWrapper>
 
-                  <InputWrapper title="Mininmum amount for Master Plan">
-                      <Label htmlFor="">Master Plan Mininum Amount: <span className="item">{config.data.masterPlanAmountLimit} {config.data.nativeCurrency}</span></Label>
-                      <Input
-                        disabled={!edit}
-                        type="number"
-                        value={inp.masterPlanAmountLimit || ''}
-                        name='masterPlanAmountLimit'
-                        onChange={getInput}
-                      />
-                  </InputWrapper>
+              <InputWrapper title="Date to start Referral Contest">
+                  <Label htmlFor="">Referral Contest Stops At: <StopAt config={config}/></Label>
+                  <Input
+                    disabled={!edit}
+                    type="datetime-local"
+                    value={inp.referralContestStops || ''}
+                    name='referralContestStops'
+                    onChange={getInput}
+                  />
+              </InputWrapper>
 
-                  <InputWrapper title="Max active investment per user">
-                      <Label htmlFor="">Max Active Investment: <span className="item">{config.data.investmentLimits}</span></Label>
-                      <Input
-                        disabled={!edit}
-                        type="number"
-                        value={inp.investmentLimits || ''}
-                        name='investmentLimits'
-                        onChange={getInput}
-                      />
-                  </InputWrapper>
+              <InputWrapper title="Referral Contest Duration in Seconds">
+                  <Label htmlFor="">Referral Contest Prize: </Label>
+                  <ContestPrize config={config}/>
+                  <Input
+                    disabled={!edit}
+                    type="text"
+                    value={inp.referralContestPrize || ''}
+                    name='referralContestPrize'
+                    onChange={getInput}
+                  />
+              </InputWrapper>
 
-                   {/* ============================hidden input for proper update============================ */}
-              <>
+               {/* ============================hidden input for proper update============================ */}
+               <>
                 {/* moving text */}
                   <Input
                       disabled={!edit}
@@ -220,7 +252,7 @@ function SetForm({config, update, initialState}) {
                   />
 
                   {/* investment */}
-                  {/* <Input
+                  <Input
                       disabled={!edit}
                       type="hidden"
                       value={inp.masterPlanAmountLimit || ''}
@@ -233,10 +265,10 @@ function SetForm({config, update, initialState}) {
                       value={inp.investmentLimits || ''}
                       name='investmentLimits'
                       onChange={getInput}
-                    /> */}
+                    />
 
                   {/* referral */}
-                  <Input
+                  {/* <Input
                       disabled={!edit}
                       type="hidden"
                       value={inp.referralBonusPercentage || ''}
@@ -263,14 +295,14 @@ function SetForm({config, update, initialState}) {
                       value={inp.referralContestStarts || ''}
                       name='referralContestStarts'
                       onChange={getInput}
-                    />
+                  />
                   <Input
                       disabled={!edit}
                       type="hidden"
                       value={inp.referralContestStops || ''}
                       name='referralContestStops'
                       onChange={getInput}
-                    />
+                  />
                   <Input
                       disabled={!edit}
                       type="hidden"
@@ -291,7 +323,8 @@ function SetForm({config, update, initialState}) {
                       value={inp.startContestReg || ''}
                       name='startContestReg'
                       onChange={getInput}
-                  />
+                  />*/}
+
 
                   {/* transfer */}
                   <Input
@@ -428,8 +461,7 @@ function SetForm({config, update, initialState}) {
               </>
 
 
-            </Container>
-        </Form>
-      </div>
+          </Container>
+      </Form>
     )
 }

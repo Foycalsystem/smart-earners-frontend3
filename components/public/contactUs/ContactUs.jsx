@@ -15,7 +15,7 @@ export default function ContactUs() {
   const {sendAdmin} = state.message
   const [isLoading, setLoading] = useState(true)
   const [pending, setPending] = useState(false)
-  const [disbale, setDisbale] = useState(true)
+  const [disbale, setDisbale] = useState(false)
 
 
   // clear any hanging msg from redux
