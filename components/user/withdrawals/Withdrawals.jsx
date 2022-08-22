@@ -97,11 +97,11 @@ export default function Withdrawals({userInfo}){
       dispatch(getUser())
       dispatch(getConfig())
 
-      user.isLoading ? setLoading(true) : setLoading(false)
+      // user.isLoading ? setLoading(true) : setLoading(false)
   
-      // setTimeout(()=>{
-      //   user.isLoading ? setLoading(true) : setLoading(false)
-      // }, 2000)
+      setTimeout(()=>{
+        user.isLoading ? setLoading(true) : setLoading(false)
+      }, 1000)
     }, [])
 
     useEffect(()=>{

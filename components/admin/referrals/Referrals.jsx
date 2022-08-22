@@ -6,6 +6,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import {useSnap} from '@mozeyinedu/hooks-lab';
 import { resolveApi } from "../../../utils/resolveApi";
 import Cookies from "js-cookie";
+import moment from 'moment'
+import resolveSeconds from "../../../utils/resolveSeconds";
+import styled from 'styled-components'
+import ContestPrize from "../../contest/ContestPrize";
+import Spinner from "../../../loaders/Spinner";
+import StartAt from "../../contest/StartAt";
+import StopAt from "../../contest/StopAt";
 
 
 import {
@@ -16,7 +23,8 @@ import {
   Input,
   Label
 } from "../styles";
-import Spinner from "../../../loaders/Spinner";
+
+
 
 export default function Referrals({userInfo}) {
   const dispatch = useDispatch()
@@ -58,19 +66,23 @@ export default function Referrals({userInfo}) {
      referralBonusPercentage: config.data.referralBonusPercentage,
      referralBonusPercentageForMasterPlan: config.data.referralBonusPercentageForMasterPlan,
      referralBonusMaxCountForMasterPlan: config.data.referralBonusMaxCountForMasterPlan,
+     referralContestStarts: config.data.referralContestStarts,
+     referralContestStops: config.data.referralContestStops,
+     allowReferralContest: config.data.allowReferralContest,
+     startContestReg: config.data.startContestReg,
+     referralContestPrize: config.data.referralContestPrize + ",",
  
      // moving text
      movingText: config.data.movingText,
-}
-
+  }
 
   useEffect(()=>{
     dispatch(getConfig())
 
-    // setTimeout(()=>{
-    //   config.isLoading ? setLoading(true) : setLoading(false)
-    // }, 1000)
-    config.isLoading ? setLoading(true) : setLoading(false)
+    setTimeout(()=>{
+      config.isLoading ? setLoading(true) : setLoading(false)
+    }, 500)
+    // config.isLoading ? setLoading(true) : setLoading(false)
 
   }, [])
 
@@ -96,8 +108,7 @@ function SetForm({config, update, initialState}) {
   
     
     const [inp, setInp] = useState(initialState)
-  
-  
+
     const getInput=(e)=>{
       const {name, value} = e.target;
       setInp({...inp, [name]:value})
@@ -188,7 +199,7 @@ function SetForm({config, update, initialState}) {
                     onChange={getInput}
                   />
               </InputWrapper>
-
+              
                {/* ============================hidden input for proper update============================ */}
                <>
                 {/* moving text */}
@@ -237,7 +248,43 @@ function SetForm({config, update, initialState}) {
                       value={inp.referralBonusMaxCountForMasterPlan || ''}
                       name='referralBonusMaxCountForMasterPlan'
                       onChange={getInput}
-                  /> */}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralContestStarts || ''}
+                      name='referralContestStarts'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralContestStops || ''}
+                      name='referralContestStops'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.allowReferralContest || ''}
+                      name='allowReferralContest'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralContestPrize || ''}
+                      name='referralContestPrize'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.startContestReg || ''}
+                      name='startContestReg'
+                      onChange={getInput}
+                  />*/}
+
 
                   {/* transfer */}
                   <Input
@@ -378,4 +425,3 @@ function SetForm({config, update, initialState}) {
       </Form>
     )
 }
-

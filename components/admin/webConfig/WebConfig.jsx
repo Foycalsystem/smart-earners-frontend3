@@ -54,6 +54,12 @@ export default function WebConfig({userInfo}) {
     referralBonusPercentage: config.data.referralBonusPercentage,
     referralBonusPercentageForMasterPlan: config.data.referralBonusPercentageForMasterPlan,
     referralBonusMaxCountForMasterPlan: config.data.referralBonusMaxCountForMasterPlan,
+    referralContestStarts: config.data.referralContestStarts,
+    referralContestStops: config.data.referralContestStops,
+    allowReferralContest: config.data.allowReferralContest,
+    startContestReg: config.data.startContestReg,
+    referralContestPrize: config.data.referralContestPrize + ",",
+
 
     // moving text
     movingText: config.data.movingText,
@@ -71,7 +77,8 @@ export default function WebConfig({userInfo}) {
 
     setTimeout(()=>{
       config.isLoading ? setLoading(true) : setLoading(false)
-    }, 1000)
+    }, 500)
+
   }, [config])
 
 
@@ -295,6 +302,41 @@ function SetForm({config, initialState}) {
                       type="hidden"
                       value={inp.referralBonusMaxCountForMasterPlan || ''}
                       name='referralBonusMaxCountForMasterPlan'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralContestStarts || ''}
+                      name='referralContestStarts'
+                      onChange={getInput}
+                    />
+                    <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralContestStops || ''}
+                      name='referralContestStops'
+                      onChange={getInput}
+                    />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.allowReferralContest || ''}
+                      name='allowReferralContest'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.referralContestPrize || ''}
+                      name='referralContestPrize'
+                      onChange={getInput}
+                  />
+                  <Input
+                      disabled={!edit}
+                      type="hidden"
+                      value={inp.startContestReg || ''}
+                      name='startContestReg'
                       onChange={getInput}
                   />
 

@@ -84,8 +84,8 @@ export default function Rejected({data}) {
                                 {new Date(data.updatedAt).getHours()} : {new Date(data.updatedAt).getMinutes()} : {new Date(data.updatedAt).getSeconds()}
                               </div>
                             </td>
-                            <td>{data.userId.email}</td>
-                            <td>{data.userId.username}</td>
+                            <td>{data.userId.email? data.userId.email : '(User Removed)'}</td>
+                            <td>{data.userId.username ? data.userId.username : '(User Removed)'}</td>
                             <td>{data.amount}</td>
                             <td>{data.convertedAmount}</td>
                             <td>{data.coin}</td>

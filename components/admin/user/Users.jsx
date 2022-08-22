@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from 'styled-components';
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
+import {useSnap} from '@mozeyinedu/hooks-lab'
 import { blockUser, getUsers, getUser, deleteUser, unBlockUser, makeAdmin, removeAdmin } from "../../../redux/auth/auth";
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import Spinner from "../../../loaders/Spinner";
@@ -10,6 +11,7 @@ import { getConfig } from "../../../redux/admin/web_config";
 import SearchIcon from '@mui/icons-material/Search';
 import Cookies from "js-cookie";
 import { resolveApi } from "../../../utils/resolveApi";
+import conversionRate from "../../../utils/conversionRate";
 
 import {
   AdminWrapper,
@@ -18,6 +20,8 @@ import {
 } from "../styles";
 
 export default function Users({userInfo}) {
+  const {snap} = useSnap(.5)
+
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const [isLoading, setLoading] = useState(true)
@@ -30,6 +34,9 @@ export default function Users({userInfo}) {
   const [admin, setAdmin] = useState(0);
   const [inp, setInp] = useState('');
   const [filteredData, setFilter] = useState(users.data);
+  const num = 10
+  const [count, setCount] = useState(num);
+  const [opening, setOpening] = useState(false);
 
   const month = ['Jan', 'Feb','Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
  
@@ -82,7 +89,9 @@ export default function Users({userInfo}) {
 
     // users.isLoading && user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
   }, [])
-
+  // conversionRate
+  // nativeCurrency
+  // tradeCurrency
 
   const handleDelete = async(id)=>{
     if(!Cookies.get('accesstoken')){
@@ -111,6 +120,15 @@ export default function Users({userInfo}) {
     }, 2000)
   }, [])
 
+  const handleViewMore =()=>{
+    setOpening(true)
+
+    setTimeout(()=>{
+      setOpening(false)
+      setCount(prevState=>prevState + num)
+    }, 1000)
+  }
+
   return (
      
       //check if user exist
@@ -132,10 +150,10 @@ export default function Users({userInfo}) {
             </div>
             </div>
             <div className="row">
-              <div>Total members: {isLoading ? '---' : users.data.length }</div>
-              <div>Total Investors: {isLoading ? '---' : investor}</div>
-              <div>Overall Balance: {isLoading ? '---' : balance} {config.data.nativeCurrency}</div>
-              <div>Admin: {isLoading ? '---' : admin}</div>
+              <div>Total members: <span style={{fontWeight: 'bold'}}>{isLoading ? '---' : users.data.length }</span></div>
+              <div>Total Investors: <span style={{fontWeight: 'bold'}}>{isLoading ? '---' : investor}</span></div>
+              <div>Overall Balance: <span style={{fontWeight: 'bold'}}>{isLoading ? '---' : balance.toFixed(4)} {config.data.nativeCurrency}</span></div>
+              <div>Admin: <span style={{fontWeight: 'bold'}}>{isLoading ? '---' : admin}</span></div>
             </div>
           </Header_Table>
           {
@@ -162,7 +180,8 @@ export default function Users({userInfo}) {
                            <th>Email</th>
                            <th>Username</th>
                            <th>Role</th>
-                           <th>Balance {`(${users.data[0].currency})`}</th>
+                           <th>Balance {`(${config.data.nativeCurrency})`}</th>
+                           <th>Balance {`(${config.data.tradeCurrency})`}</th>
                            <th>Investor</th>
                            <th>AC/No</th>
                            <th>Verified</th>
@@ -171,12 +190,12 @@ export default function Users({userInfo}) {
                          </tr>
                        </thead>
                        <tbody>
-                         {filteredData.map((user, i)=>{
+                         {filteredData.slice(0, count).map((user, i)=>{
                            return (
                              <tr key={user._id}>
                                <td>{i+1}</td>
                                <td>
-                                 {month[new Date(user.createdAt).getMonth()]} {new Date(user.createdAt).getDate()}, {new Date(user.createdAt).getFullYear()}
+                                 {user.createdAt && new Date(user.createdAt).toLocaleString()}
                                </td>
                                <td>{user.email}</td>
                                <td>{user.username}</td>
@@ -196,6 +215,7 @@ export default function Users({userInfo}) {
                                  }
                                </td>
                                <td>{user.amount && user.amount.toFixed(4)}</td>
+                               <td>{user.amount && conversionRate.SEC_TO_USD(user.amount, config.data.conversionRate).toFixed(4)}</td>
                                <td>{user.hasInvested ? 'True' : 'False'}</td>
                                <td>{user.accountNumber}</td>
                                <td>{user.isVerified ? <VerifiedUserIcon style={{fontSize: '1rem', color: "var(--bright-color"}}/> : ''}</td>
@@ -212,6 +232,17 @@ export default function Users({userInfo}) {
                        </tbody>
                  </table>
                  </Table>
+
+                  {
+                    count >= filteredData.length ? '' :
+                    <ViewMore>
+                      {
+                        opening ? <div> <Spinner size="20px"/></div> : ''
+                      }
+                      <div onClick={handleViewMore} className="more" {...snap()}>View More...</div>
+                    </ViewMore>
+                  }
+
                </AdminWrapper>
              )
           }
@@ -242,4 +273,25 @@ font-size: .8rem;
 text-align: center;
 margin: 10px auto;
 // box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
+`
+
+const ViewMore = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+ .more{
+   user-select: none;
+   -webkit-user-select: none;
+   font-size: .7rem;
+   cursor: pointer;
+   border: 1px solid;
+   border-radius: 5px;
+   padding: 7px;
+
+   &:hover{
+     opacity: .4
+   }
+ }
 `

@@ -13,6 +13,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import InfoIcon from '@mui/icons-material/Info';
 import AddCardIcon from '@mui/icons-material/AddCard';
+import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 
 
 export default function SideMenu_() {
@@ -50,9 +51,14 @@ const router = useRouter()
         icon: <CurrencyExchangeIcon />
     },
     {
-        link: 'Referral',
+        link: 'Referrals',
         url: '/admin/referrals',
         icon: <PeopleAltIcon />
+    },
+    {
+      link: 'Referral Contest',
+      url: '/admin/referral-contest',
+      icon: <SportsKabaddiIcon />
     },
     {
       link: 'Info Board',

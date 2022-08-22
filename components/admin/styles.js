@@ -204,7 +204,7 @@ const Header_Table = styled.div`
     border-spacing: 0.5rem;
     height: 100%;
     border-collapse: collapse;
-    width: 1000px;
+    width: ${({width})=>width ? width : '1000px'};
     text-align: left;
     cursor: default;
   }
