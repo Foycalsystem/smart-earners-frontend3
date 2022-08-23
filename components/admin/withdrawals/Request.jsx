@@ -129,8 +129,8 @@ export default function Request({data}) {
                             {new Date(data.createdAt).getHours()} : {new Date(data.createdAt).getMinutes()} : {new Date(data.createdAt).getSeconds()}
                           </div>
                         </td>
-                        <td>{data.userId.email ? data.userId.email : '(User Removed)'}</td>
-                        <td>{data.userId.username ? data.userId.username: '(User Removed)'}</td>
+                        <td>{data.userId ? data.userId.email : '(User Removed)'}</td>
+                        <td>{data.userId ? data.userId.username: '(User Removed)'}</td>
                         <td>{data.amount}</td>
                         <td>{data.convertedAmount}</td>
                         <td>{data.coin}</td>
@@ -160,7 +160,7 @@ export default function Request({data}) {
               <div style={{fontSize: '.9rem', textAlign: 'center'}}>{
                 <>
                     <span style={{fontWeight: 'bold'}}>
-                      {selectedItem && (selectedItem.userId.username ? selectedItem.userId.username : '(User Removed)')}
+                      {selectedItem && (selectedItem.userId ? selectedItem.userId.username : '(User Removed)')}
                     </span>
                     <span> is requesting to make a withdrawal of the Sum of </span>
                     <span style={{fontWeight: 'bold'}}>
@@ -246,7 +246,8 @@ const MsgWrapper = styled.div`
   width: 70%;
   max-width: 400px;
   padding: 10px;
+  font-size: .7rem;
   text-align: center;
   margin: 10px auto;
-  box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
+  // box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #aaa;
 `
