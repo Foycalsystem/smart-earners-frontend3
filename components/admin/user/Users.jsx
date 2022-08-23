@@ -34,7 +34,7 @@ export default function Users({userInfo}) {
   const [admin, setAdmin] = useState(0);
   const [inp, setInp] = useState('');
   const [filteredData, setFilter] = useState(users.data);
-  const num = 10
+  const num = 100
   const [count, setCount] = useState(num);
   const [opening, setOpening] = useState(false);
 

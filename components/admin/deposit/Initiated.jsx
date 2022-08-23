@@ -154,8 +154,8 @@ export default function Initiated({data}) {
                                 {new Date(data.createdAt).getHours()} : {new Date(data.createdAt).getMinutes()} : {new Date(data.createdAt).getSeconds()}
                               </div>
                             </td>
-                            <td>{data.userId && data.userId.email}</td>
-                            <td>{data.userId && data.userId.username}</td>
+                            <td>{data.userId ? data.userId.email: '(User Removed)'}</td>
+                            <td>{data.userId ? data.userId.username: '(User Removed)'}</td>
                             <td>{data.nativeAmountExpected}</td>
                             <td>{data.tradeAmountExpected}</td>
                             <td>{data.code}</td>
@@ -195,7 +195,7 @@ export default function Initiated({data}) {
                 <div>
                     <span>You are about to credit the account of </span>
                     <span style={{fontWeight: 'bold'}}>
-                      {`${selectedItem && selectedItem.userId && selectedItem.userId.username} (${selectedItem && selectedItem.userId && selectedItem.userId.email})`}
+                      {`${selectedItem && selectedItem.userId ? selectedItem.userId.username : '(User Removed)'} (${selectedItem && selectedItem.userId ? selectedItem.userId.email : '(User Removed)'})`}
                     </span>
                     <span> with the sum of: </span>
                    

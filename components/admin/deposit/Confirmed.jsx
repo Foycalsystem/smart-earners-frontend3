@@ -102,8 +102,8 @@ export default function Confirmed({data}) {
                                 </div>
                               </td>
 
-                              <td>{data.userId && data.userId.email}</td>
-                              <td>{data.userId && data.userId.username}</td>
+                              <td>{data.userId ? data.userId.email : '(User Removed)'}</td>
+                              <td>{data.userId ? data.userId.username : '(User Removed)'}</td>
                               
                               <td>{data.nativeAmountExpected && data.nativeAmountExpected.toFixed(4)}</td>
                               <td>{data.tradeAmountExpected && data.tradeAmountExpected.toFixed(4)}</td>
