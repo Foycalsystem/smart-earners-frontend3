@@ -9,13 +9,14 @@ import Link from 'next/link';
 import Spinner from "../../../loaders/Spinner";
 import { resolveApi } from "../../../utils/resolveApi";
 import Cookies from "js-cookie";
-import { getAllContests } from "../../../redux/referrals/referrals";
+import { getAllContests, resetData, rewardQualifiedUsers, resetBonusMsg } from "../../../redux/referrals/referrals";
 import SearchIcon from '@mui/icons-material/Search';
 import filter from "@mozeyinedu/filter";
 import StartAt from "../../contest/StartAt";
 import StopAt from "../../contest/StopAt";
 import ContestPrize from "../../contest/ContestPrize";
 import CountdownTimer from "../../CountdownTimer";
+import {toast} from 'react-toastify'
 
 import {
   AdminWrapper,
@@ -32,7 +33,7 @@ import {
 import { useRouter } from "next/router";
 
 export default function Contestants() {
-    const {snap} = useSnap(.5)
+  const {snap} = useSnap(.5)
 
   const router = useRouter()
   const dispatch = useDispatch()
@@ -40,13 +41,20 @@ export default function Contestants() {
   const [isLoading, setLoading] = useState(true)
   const {config,} = state.config;
   const {user} = state.auth;
-  const {contestants} = state.referrals
+  const {contestants, reset, resolve} = state.referrals
   const [inp, setInp] = useState('');
   const [filteredData, setFilter] = useState(contestants.data);
   const num = 10
   const [count, setCount] = useState(num);
   const [opening, setOpening] = useState(false);
+  const [pendingResolve, setPendingResolve] = useState(false);
+  const [pendingClear, setPendingClear] = useState(false);
 
+
+    // clear any hanging msg from redux
+    useEffect(()=>{
+      dispatch(resetBonusMsg())
+    }, [contestants, reset, resolve ])
 
   useEffect(()=>{
     setLoading(true)
@@ -80,8 +88,70 @@ export default function Contestants() {
     }, 1000)
   }
 
+  const handleResolve =async()=>{
+    setPendingResolve(true)
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+
+      setTimeout(()=>{
+        dispatch(rewardQualifiedUsers())
+      }, 100)
+      
+    }else{
+      dispatch(rewardQualifiedUsers())
+    }
+  }
+
+  const handleClear =async()=>{
+    setPendingClear(true)
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+
+      setTimeout(()=>{
+        dispatch(resetData())
+      }, 100)
+      
+    }else{
+      dispatch(resetData())
+    }
+  }
+
+  // chandle clear data
+  const customId = "custom-id-yes";
+  useEffect(()=>{
+    if(resolve.msg){
+      toast(resolve.msg, {
+        type: resolve.status ? 'success' : 'error',
+        toastId: customId
+      })         
+    }
+  }, [resolve])
+
+  useEffect(()=>{
+    if(resolve.msg){      
+      setPendingResolve(false)
+    }
+  }, [resolve])
+
+  // chandle reset data
+  useEffect(()=>{
+    if(reset.msg){
+      toast(reset.msg, {
+        type: reset.status ? 'success' : 'error',
+        toastId: customId
+      })         
+    }
+  }, [reset])
+
+  useEffect(()=>{
+    if(reset.msg){      
+      setPendingClear(false)
+    }
+  }, [reset])
+
   return (
     <>
+    
       <Header>
         <Link href='/admin/referral-contest' passHref>
           <a className={router.asPath === '/admin/referral-contest' ? 'active' : ''}>Config</a>
@@ -123,11 +193,34 @@ export default function Contestants() {
                 <ContestPrize config={config}/>
             </div>
           </Header_Table>
+          
           {
              contestants.data && contestants.data.length < 1 ? <Msg text={'No Data At The Moment'} /> :
              (
                <AdminWrapper>
+                
+                <ActionWrapper>
+                  <button
+                    {...snap()}
+                    disabled={pendingClear}
+                    onClick={handleClear}
+                    style={{
+                      color: '#c20',
+                    }}>{pendingClear ? 'Loading...' : 'Clear Data'}
+                  </button>
+
+                  <button
+                    {...snap()}
+                    disabled={pendingResolve}
+                    onClick={handleResolve}
+                    style={{
+                      color: 'var(--major-color-purest)',
+                    }}>{pendingResolve ? 'Loading...' : 'Resolve Contest'}
+                  </button>
+                </ActionWrapper>
+                
                  <Table  width="450px">
+                  
                     <table>
                         <thead>
                             <tr>
@@ -136,14 +229,14 @@ export default function Contestants() {
                             <th>Username</th>
                             <th>Downlines</th>
                             <th>Points</th>
+                            <th>Rewards {`(${config.data.nativeCurrency})`}</th>
                             <th>Paid</th>
-                            <th>Resolve</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredData.slice(0, count).map((data, i)=>{
                             return (
-                                <tr key={i}>
+                              <tr key={i}>
                                 <td>{i+1}</td>
                                 <td>
                                     {data.updatedAt && new Date(data.updatedAt).toLocaleString()}
@@ -151,9 +244,9 @@ export default function Contestants() {
                                 <td>{data.userId.username ? data.userId.username : '(User Removed)'}</td>
                                 <td>{data.userId.referree && data.userId.referree.length}</td>
                                 <td>{data.point}</td>
+                                <td>{data.amountRewards}</td>
                                 <td>{data.paid ? 'True' : 'False'}</td>
-                                <td onClick={()=>handleResolve(data._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: '#c20'}}>Resolve</td>
-                                </tr>
+                              </tr>
                             )
                             })}
                         </tbody>
@@ -167,9 +260,9 @@ export default function Contestants() {
                         opening ? <div> <Spinner size="20px"/></div> : ''
                     }
                     <div onClick={handleViewMore} className="more" {...snap()}>View More...</div>
-                    </ViewMore>
+                    </ViewMore>                    
                 }
-               </AdminWrapper>
+              </AdminWrapper>
              )
           }
         </>
@@ -205,22 +298,46 @@ const Msg = ({text, color})=>{
 
   
 const ViewMore = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
- .more{
-   user-select: none;
-   -webkit-user-select: none;
-   font-size: .7rem;
-   cursor: pointer;
-   border: 1px solid;
-   border-radius: 5px;
-   padding: 7px;
+  .more{
+    user-select: none;
+    -webkit-user-select: none;
+    font-size: .7rem;
+    cursor: pointer;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 7px;
 
-   &:hover{
-     opacity: .4
+    &:hover{
+      opacity: .4
+    }
+  }
+`
+
+
+const ActionWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
+  button{
+    border: none;
+    text-align: center;
+    font-size: .8rem;
+    user-select: none;
+    -webki-user-select: none;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px;
+    border: 2px solid;
+    font-weight: bold;
+  
+    &:focus{
+      outline: none;
+    }
    }
- }
 `

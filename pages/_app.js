@@ -47,6 +47,7 @@ function MyApp({ Component, pageProps }) {
   resolveApi.refreshTokenClinetSide();
   resolveApi.resolveInvestmentClientSide();
   resolveApi.removeUnverifiedusersClientSide();
+  // resolveApi.resolveReferralContest();
 
 
   useEffect(()=>{
@@ -100,23 +101,7 @@ function MyApp({ Component, pageProps }) {
           <ToastContainer_ />
           <Component {...pageProps} userInfo={userInfo} toggleState={toggleState}/>
       </Layouts>
-
-
-      {/* {
-        loading ? <Preloader /> : 
-        (
-          <>
-            <GlobalStyle toggleState={toggleState}/>
-            <ToggleBtn toggleState={toggleState} onClick={toggle}>
-              <MdLightMode style={{color: toggleState ? '#fff' : '#000'}} />
-            </ToggleBtn>
-            
-            <Layouts userInfo={userInfo} toggleState={toggleState}>
-                <Component {...pageProps} userInfo={userInfo} />
-            </Layouts>
-          </>
-        )
-      } */}
+      
     </Provider>
   )
 }
