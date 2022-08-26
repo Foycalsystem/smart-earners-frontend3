@@ -55,10 +55,15 @@ export default function Deposit(){
       setPending(true)
       if(!Cookies.get('accesstoken')){
         await resolveApi.refreshTokenClinetSide()
-      }
-      setTimeout(()=>{
+
+        setTimeout(()=>{
+          dispatch(makeDeposit(inp))
+        }, 100)
+        
+      }else{
         dispatch(makeDeposit(inp))
-      }, 100)
+      }
+     
     }
 
     useEffect(()=>{      

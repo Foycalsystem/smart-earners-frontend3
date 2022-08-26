@@ -133,6 +133,7 @@ export default function Contest() {
                                 <th>Username</th>
                                 <th>Downlines</th>
                                 <th>Points</th>
+                                <th>Rewards {`(${config.data.nativeCurrency})`}</th>
                                 <th>Paid</th>
                                 </tr>
                             </thead>
@@ -147,6 +148,7 @@ export default function Contest() {
                                     <td>{data.userId.username ? data.userId.username : '(User Removed)'}</td>
                                     <td>{data.userId.referree && data.userId.referree.length}</td>
                                     <td>{data.point}</td>
+                                    <td>{data.amountRewards}</td>
                                     <td>{data.paid ? 'True' : 'False'}</td>
                                     </tr>
                                 )

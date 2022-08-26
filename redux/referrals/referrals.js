@@ -65,6 +65,51 @@ export const getAllContests= createAsyncThunk(
     }
 )
 
+export const rewardQualifiedUsers= createAsyncThunk(
+    'referral/rewardQualifiedUsers',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.put(`/referral-contest/resolve`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
+export const resetData= createAsyncThunk(
+    'referral/resetData',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.put(`/referral-contest/reset`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
+
 
 
 const initialState = {
@@ -72,6 +117,8 @@ const initialState = {
     totalBonus: { isLoading: false, status: false, msg: '', data: []},
     addCode: { isLoading: false, status: false, msg: ''},
     contestants: { isLoading: false, status: false, msg: ''},
+    resolve: { isLoading: false, status: false, msg: ''},
+    reset: { isLoading: false, status: false, msg: ''},
 }
 
 export const referralReducer = createSlice({
@@ -80,8 +127,10 @@ export const referralReducer = createSlice({
     reducers: {
         resetBonusMsg(state){
             state.bonus.isLoading = false; state.bonus.status = false;state.bonus.msg = '';
-            state.allBonus.isLoading = false; state.allBonus.status = false;state.allBonus.msg = '';
+            state.totalBonus.isLoading = false; state.totalBonus.status = false;state.totalBonus.msg = '';
             state.contestants.isLoading = false; state.contestants.status = false;state.contestants.msg = '';
+            state.resolve.isLoading = false; state.resolve.status = false;state.resolve.msg = '';
+            state.reset.isLoading = false; state.reset.status = false;state.reset.msg = '';
         }
     },
     extraReducers: {  
@@ -130,6 +179,8 @@ export const referralReducer = createSlice({
             }
         }, 
 
+
+
         // get all referral contest
         [getAllContests.pending]: (state)=>{
             state.contestants.isLoading = true;
@@ -150,7 +201,51 @@ export const referralReducer = createSlice({
                 state.contestants.status = false;
                 state.contestants.msg = 'Error occured';
             }
-        }, 
+        },
+        
+        // reward users
+        [rewardQualifiedUsers.pending]: (state)=>{
+            state.resolve.isLoading = true;
+        },
+        [rewardQualifiedUsers.fulfilled]: (state, {payload})=>{
+            state.resolve.isLoading = false;
+            state.resolve.status = payload.status;
+            state.resolve.msg = payload.msg;
+            state.contestants.data = payload.data;
+        },
+        [rewardQualifiedUsers.rejected]: (state, {payload})=>{
+            state.resolve.isLoading = false;
+            if(payload){
+                state.resolve.status = payload.status;
+                state.resolve.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.resolve.status = false;
+                state.resolve.msg = 'Error occured';
+            }
+        },
+
+        // clear data
+        [resetData.pending]: (state)=>{
+            state.reset.isLoading = true;
+        },
+        [resetData.fulfilled]: (state, {payload})=>{
+            state.reset.isLoading = false;
+            state.reset.status = payload.status;
+            state.reset.msg = payload.msg;
+            state.contestants.data = payload.data;
+        },
+        [resetData.rejected]: (state, {payload})=>{
+            state.reset.isLoading = false;
+            if(payload){
+                state.reset.status = payload.status;
+                state.reset.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.reset.status = false;
+                state.reset.msg = 'Error occured';
+            }
+        },
     }
     
 })

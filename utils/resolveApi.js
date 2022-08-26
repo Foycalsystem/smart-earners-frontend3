@@ -98,6 +98,16 @@ const resolveApi = {
       }
   },
 
+  resolveReferralContest: async()=>{
+    try{
+        const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}referral-contest/resolve`, { withCredentials: true,})
+        return;
+    }
+    catch(err){
+        return
+    }
+  },
+
   refreshTokenClinetSide: async()=>{
       try{
         if(Cookies.get('refreshtoken')){
