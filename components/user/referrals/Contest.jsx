@@ -85,7 +85,7 @@ export default function Contest() {
     <Wrapper>
       <GoBackBtn />
       <Detials onClick={()=>setShowModal(true)} {...snap()}>View Detials</Detials>
-      <PopUpModal title="The Break Down" showModal={showModal} setShowModal={setShowModal}>
+      <PopUpModal title="The Breakdown" showModal={showModal} setShowModal={setShowModal}>
         <DetailContent>
           <p>Aside the 10% Referral bonuses for inviting a user, We Added extra prices in contest to be won according to your efforts and number of Active downlines!</p>
 
