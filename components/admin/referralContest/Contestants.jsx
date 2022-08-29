@@ -9,7 +9,7 @@ import Link from 'next/link';
 import Spinner from "../../../loaders/Spinner";
 import { resolveApi } from "../../../utils/resolveApi";
 import Cookies from "js-cookie";
-import { getAllContests, resetData, rewardQualifiedUsers, resetBonusMsg } from "../../../redux/referrals/referrals";
+import { getAllContests, resetData, rewardQualifiedUsers, removeUser, resetBonusMsg } from "../../../redux/referrals/referrals";
 import SearchIcon from '@mui/icons-material/Search';
 import filter from "@mozeyinedu/filter";
 import StartAt from "../../contest/StartAt";
@@ -31,6 +31,7 @@ import {
 } from "../styles";
 
 import { useRouter } from "next/router";
+import position from "../../../utils/resolvePosition";
 
 export default function Contestants() {
   const {snap} = useSnap(.5)
@@ -40,8 +41,7 @@ export default function Contestants() {
   const state = useSelector(state=>state);
   const [isLoading, setLoading] = useState(true)
   const {config,} = state.config;
-  const {user} = state.auth;
-  const {contestants, reset, resolve} = state.referrals
+  const {contestants, reset, resolve, remove} = state.referrals
   const [inp, setInp] = useState('');
   const [filteredData, setFilter] = useState(contestants.data);
   const num = 10
@@ -49,6 +49,7 @@ export default function Contestants() {
   const [opening, setOpening] = useState(false);
   const [pendingResolve, setPendingResolve] = useState(false);
   const [pendingClear, setPendingClear] = useState(false);
+  const [pendingRemove, setPendingRemove] = useState(false);
 
 
     // clear any hanging msg from redux
@@ -79,6 +80,7 @@ export default function Contestants() {
     setFilter(newData)
   }, [inp, contestants])
 
+  // click to view more
   const handleViewMore =()=>{
     setOpening(true)
 
@@ -88,6 +90,7 @@ export default function Contestants() {
     }, 1000)
   }
 
+  // pay users after the contest is over
   const handleResolve =async()=>{
     setPendingResolve(true)
     if(!Cookies.get('accesstoken')){
@@ -102,6 +105,7 @@ export default function Contestants() {
     }
   }
 
+  // reset the contest data for next contest
   const handleClear =async()=>{
     setPendingClear(true)
     if(!Cookies.get('accesstoken')){
@@ -116,7 +120,23 @@ export default function Contestants() {
     }
   }
 
-  // chandle clear data
+  // remove users from the contest
+  const hanldeRemove =async(id)=>{
+    setPendingRemove(true)
+    if(!Cookies.get('accesstoken')){
+      await resolveApi.refreshTokenClinetSide()
+
+      setTimeout(()=>{
+        dispatch(removeUser(id))
+      }, 100)
+      
+    }else{
+      dispatch(removeUser(id))
+    }
+  }
+
+
+  // pay user
   const customId = "custom-id-yes";
   useEffect(()=>{
     if(resolve.msg){
@@ -127,13 +147,14 @@ export default function Contestants() {
     }
   }, [resolve])
 
+  // pay user
   useEffect(()=>{
     if(resolve.msg){      
       setPendingResolve(false)
     }
   }, [resolve])
 
-  // chandle reset data
+  // reset 
   useEffect(()=>{
     if(reset.msg){
       toast(reset.msg, {
@@ -143,11 +164,31 @@ export default function Contestants() {
     }
   }, [reset])
 
+  // rest
   useEffect(()=>{
     if(reset.msg){      
       setPendingClear(false)
     }
   }, [reset])
+
+   // remov user
+  useEffect(()=>{
+    if(remove.msg){
+      toast(remove.msg, {
+        type: remove.status ? 'success' : 'error',
+        toastId: customId
+      })         
+    }
+  }, [remove])
+
+  // remov user
+  useEffect(()=>{
+    if(remove.msg){      
+      setPendingRemove(false)
+    }
+  }, [remove])
+
+  console.log(contestants)
 
   return (
     <>
@@ -206,7 +247,7 @@ export default function Contestants() {
                     onClick={handleClear}
                     style={{
                       color: '#c20',
-                    }}>{pendingClear ? 'Loading...' : 'Clear Data'}
+                    }}>{pendingClear ? 'Loading...' : 'Reset Data'}
                   </button>
 
                   <button
@@ -219,33 +260,40 @@ export default function Contestants() {
                   </button>
                 </ActionWrapper>
                 
+                {
+                  pendingRemove ? <div style={{display: 'flex', justifyContent: 'center'}}> <Spinner size="20px" /></div> : ''
+                }
                  <Table  width="450px">
                   
                     <table>
                         <thead>
                             <tr>
-                            <th>S/N</th>
+                            <th>Position</th>
                             <th>Date</th>
                             <th>Username</th>
                             <th>Downlines</th>
+                            <th>Current Balance {`(${config.data.nativeCurrency})`}</th>
                             <th>Points</th>
                             <th>Rewards {`(${config.data.nativeCurrency})`}</th>
-                            <th>Paid</th>
+                            <th style={{color: 'red', textAlign: 'center'}}>***</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredData.slice(0, count).map((data, i)=>{
                             return (
                               <tr key={i}>
-                                <td>{i+1}</td>
+                                <td>
+                                  {data.position !==null ? data.position : i+1}{position(data.position !==null ? data.position : i+1)}
+                                </td>
                                 <td>
                                     {data.updatedAt && new Date(data.updatedAt).toLocaleString()}
                                 </td>
-                                <td>{data.userId.username ? data.userId.username : '(User Removed)'}</td>
-                                <td>{data.userId.referree && data.userId.referree.length}</td>
+                                <td>{data.userId ? data.userId.username : '(User Removed)'}</td>
+                                <td>{data.userId && data.userId.referree.length}</td>
+                                <td>{data.userId && data.userId.amount.toFixed(4)}</td>
                                 <td>{data.point}</td>
                                 <td>{data.amountRewards}</td>
-                                <td>{data.paid ? 'True' : 'False'}</td>
+                                <td onClick={()=> pendingRemove ? '' : hanldeRemove(data._id)} style={{color: 'red', cursor: 'pointer', fontWeight: 600, userSelect: 'none'}}>Remove</td>
                               </tr>
                             )
                             })}
