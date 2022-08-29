@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { ScrollBar } from '../../../styles/globalStyle';
 import { MdClose, MdMenu} from 'react-icons/md'
 
 
-export default function PopUpModal({showModal, setShowModal, userInfo, children, title}) {
+export default function PopUpModal({showModal, setShowModal, children, title}) {
     const closeMenu =(e)=>{
         if(e.target === e.currentTarget){
             setShowModal(false)
@@ -32,7 +33,7 @@ export default function PopUpModal({showModal, setShowModal, userInfo, children,
         <Content>
             <Close onClick={closeMenu2} className="close"><MdClose color="#fff" /></Close>
             <div className="title">{title}</div>
-            <div>{children}</div>
+            <Children>{children}</Children>
         </Content>
     </Modal_>
   )
@@ -57,23 +58,26 @@ const Modal_ = styled.div`
 
 const Content = styled.div`
     // width: 80%;
-    max-width: 600px;
     min-height: 200px;
     max-height: 500px;
     background: #fff;
+    font-size: .8rem;
     border-radius: 4px;
     position: absolute;
     transition: all .3s;
     transform: translateY(${({show})=>show ? '-1000%' : 0});
+
+    
 
     .title{
         width: 100%;
         height: 30px;
         color: #fff;
         text-align: center;
-        font-weight: 600;
+        font-weight: 400;
+        font-size: .9rem;
         border-radius: 4px 4px 0 0;
-        padding: 5px;
+        padding: 5px 10px;
         background: var(--major-color-purest)
     }
 `
@@ -82,5 +86,12 @@ const Close = styled.div`
     position: absolute;
     right: 0px;
     top: 0px;
+    font-size: .7rem;
     cursor pointer;
+`
+
+const Children = styled.div`
+    overflow-y: auto;
+    max-height: calc(500px - 35px);
+    ${ScrollBar()};
 `

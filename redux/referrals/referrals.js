@@ -109,6 +109,28 @@ export const resetData= createAsyncThunk(
     }
 )
 
+export const removeUser= createAsyncThunk(
+    'referral/removeUser',
+    async(id, {rejectWithValue})=>{
+        try{
+            const res = await axios.delete(`/referral-contest/remove-user/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
 
 
 
@@ -119,6 +141,7 @@ const initialState = {
     contestants: { isLoading: false, status: false, msg: ''},
     resolve: { isLoading: false, status: false, msg: ''},
     reset: { isLoading: false, status: false, msg: ''},
+    remove: { isLoading: false, status: false, msg: ''},
 }
 
 export const referralReducer = createSlice({
@@ -131,6 +154,7 @@ export const referralReducer = createSlice({
             state.contestants.isLoading = false; state.contestants.status = false;state.contestants.msg = '';
             state.resolve.isLoading = false; state.resolve.status = false;state.resolve.msg = '';
             state.reset.isLoading = false; state.reset.status = false;state.reset.msg = '';
+            state.remove.isLoading = false; state.remove.status = false;state.remove.msg = '';
         }
     },
     extraReducers: {  
@@ -244,6 +268,28 @@ export const referralReducer = createSlice({
                 // to get rid of next js server error
                 state.reset.status = false;
                 state.reset.msg = 'Error occured';
+            }
+        },
+
+        // clear data
+        [removeUser.pending]: (state)=>{
+            state.remove.isLoading = true;
+        },
+        [removeUser.fulfilled]: (state, {payload})=>{
+            state.remove.isLoading = false;
+            state.remove.status = payload.status;
+            state.remove.msg = payload.msg;
+            state.contestants.data = payload.data;
+        },
+        [removeUser.rejected]: (state, {payload})=>{
+            state.remove.isLoading = false;
+            if(payload){
+                state.remove.status = payload.status;
+                state.remove.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.remove.status = false;
+                state.remove.msg = 'Error occured';
             }
         },
     }

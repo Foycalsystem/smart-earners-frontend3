@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import position from '../../utils/resolvePosition'
 
 export default function ContestPrize({config}) {
   return (
@@ -16,20 +17,7 @@ export default function ContestPrize({config}) {
                 return (
                 <tr key={i}>
                     <td>
-                    {i+1}{(function(){
-                        if(`${i+1}` === '1' || `${i+1}` === '21' || `${i+1}` === '31' || `${i+1}` === '41'  || `${i+1}` === '51' || `${i+1}` === '61' || `${i+1}` === '71' || `${i+1}` === '81' || `${i+1}` === '91'){
-                        return 'st'
-                        }
-                        else if(`${i+1}`.includes('2')){
-                        return 'nd'
-                        }
-                        else if(`${i+1}`.includes('3')){
-                        return 'rd'
-                        }
-                        else{
-                        return 'th'
-                        }
-                    }())}
+                    {i+1}{position(i+1)}
                     </td>
                     <td>{data}</td>
                 </tr>
