@@ -4,7 +4,9 @@ import Loader_ from "../loader/Loader";
 import { getConfig, updateConfig} from "../../../redux/admin/web_config";
 import EditIcon from '@mui/icons-material/Edit';
 import {useSnap} from '@mozeyinedu/hooks-lab';
+import { useRouter } from "next/router";
 import { getUser } from "../../../redux/auth/auth";
+import Link from 'next/link';
 import Cookies from "js-cookie";
 import Spinner from "../../../loaders/Spinner";
 import { resolveApi } from "../../../utils/resolveApi";
@@ -14,12 +16,14 @@ import {
   Form,
   InputWrapper,
   Container,
+  Header,
   Input,
   Label
 } from "../styles";
 
 
 export default function Withdrawals({userInfo}) {
+  const router = useRouter()
   const dispatch = useDispatch()
   const state = useSelector(state=>state);
   const [isLoading, setLoading] = useState(true)
@@ -84,15 +88,26 @@ export default function Withdrawals({userInfo}) {
   }, [])
 
   return (
-    
-    //check if config exist
-    isLoading ? <Loader_ /> :
-    
-    (
-      <AdminWrapper>
-        <SetForm config={config} update={update} initialState={initialState}/>
-      </AdminWrapper>
-    )    
+    <>
+     <Header>
+          <Link href='/admin/transfer' passHref>
+            <a className={router.asPath === '/admin/transfer' ? 'active' : ''}>Config</a>
+          </Link>
+          <Link href='/admin/transfer/transactions' passHref>
+            <a className={router.asPath === '/admin/transfer/transactions' ? 'active' : ''}>Transactions</a>
+          </Link>
+      </Header>
+      {
+        //check if config exist
+        isLoading ? <Loader_ /> :
+        
+        (
+          <AdminWrapper>
+            <SetForm config={config} update={update} initialState={initialState}/>
+          </AdminWrapper>
+        )
+      }
+    </>   
   )
 }
 

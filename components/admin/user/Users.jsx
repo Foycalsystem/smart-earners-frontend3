@@ -18,6 +18,7 @@ import {
   Header_Table,
   Table
 } from "../styles";
+import PopUpModal from "../../modals/popUpModal/PopUpModal";
 
 export default function Users({userInfo}) {
   const {snap} = useSnap(.5)
@@ -130,8 +131,8 @@ export default function Users({userInfo}) {
   }
 
   return (
-     
-      //check if user exist
+    <>
+    { //check if user exist
       isLoading ?  <Loader_ /> :
       (
         ready ? <div style={{display: 'flex', justifyContent: 'center'}}><Spinner size="25px"/></div> :
@@ -187,6 +188,7 @@ export default function Users({userInfo}) {
                            <th>Verified</th>
                            <th>Blocked</th>
                            <th>Delete</th>
+                           <th>View</th>
                          </tr>
                        </thead>
                        <tbody>
@@ -226,6 +228,8 @@ export default function Users({userInfo}) {
                                </td>
          
                                <td onClick={()=>handleDelete(user._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: '#c20'}}>Remove</td>
+
+                               <td onClick={()=>handleView(user._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: '#0f0', background: 'var(--major-color-purest'}}>View</td>
                              </tr>
                            )
                          })}
@@ -249,6 +253,8 @@ export default function Users({userInfo}) {
         </>
       )
       )
+    }
+    </>
   )
 }
 

@@ -36,7 +36,7 @@ export default function Bonuses({data}) {
                 data.map((data)=>{
                 return (
                 <Card key={data._id}>
-                    <div style={{textAlign: 'center'}}>You earned <span style={{fontWeight: 'bold'}}>{data.amount} {data.currency} </span> from your downline, <span style={{fontWeight: 'bold'}}>{data.referreeId.username}</span></div>
+                    <div style={{textAlign: 'center'}}>You earned <span style={{fontWeight: 'bold'}}>{data.amount} {data.currency} </span> from your downline, <span style={{fontWeight: 'bold'}}>{data.referreeId ? data.referreeId.username : '???'}</span></div>
                     <div style={{textAlign: 'center'}}>{date.updatedDate(data)}</div>
                 </Card> 
                 ) 
