@@ -91,6 +91,28 @@ export const handleDelete= createAsyncThunk(
 )
 
 
+// delete plan
+export const adminGetAllinvestmentsTnx= createAsyncThunk(
+    'config/adminGetAllinvestmentsTnx',
+    async(id, {rejectWithValue})=>{
+        try{
+            const res = await axios.get(`/investment/get-all-investments-admin`,{
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;  
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
 
 
 
@@ -99,6 +121,7 @@ const initialState = {
     add: { isLoading: false, status: false, msg: ''},
     update: { isLoading: false, status: false, msg: ''},
     deletePlan: { isLoading: false, status: false, msg: ''},
+    investmentTxnAdmin: { isLoading: false, status: false, msg: '', data: []},
 }
 
 export const plansReducer = createSlice({
@@ -110,6 +133,7 @@ export const plansReducer = createSlice({
             state.add.isLoading = false; state.add.status = false; state.add.msg = '';
             state.update.isLoading = false; state.update.status = false; state.update.msg = '';
             state.deletePlan.isLoading = false; state.deletePlan.status = false; state.deletePlan.msg = '';
+            state.investmentTxnAdmin.isLoading = false; state.investmentTxnAdmin.status = false; state.investmentTxnAdmin.msg = '';
         }
     },
     extraReducers: {
@@ -214,6 +238,29 @@ export const plansReducer = createSlice({
                 // to get rid of next js server error
                 state.deletePlan.status = false;
                 state.deletePlan.msg = 'Error occured';
+            }
+        }, 
+
+        // delete plan
+        [adminGetAllinvestmentsTnx.pending]: (state)=>{
+            state.investmentTxnAdmin.isLoading = true;
+        },
+        [adminGetAllinvestmentsTnx.fulfilled]: (state, {payload})=>{
+            state.investmentTxnAdmin.isLoading = false;
+            state.investmentTxnAdmin.status = payload.status;
+            state.investmentTxnAdmin.msg = payload.msg;
+            state.investmentTxnAdmin.data = payload.data;
+
+        },
+        [adminGetAllinvestmentsTnx.rejected]: (state, {payload})=>{
+            state.investmentTxnAdmin.isLoading = false;
+            if(payload){
+                state.investmentTxnAdmin.status = payload.status;
+                state.investmentTxnAdmin.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.investmentTxnAdmin.status = false;
+                state.investmentTxnAdmin.msg = 'Error occured';
             }
         }, 
     }

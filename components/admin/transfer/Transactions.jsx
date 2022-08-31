@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import styled from 'styled-components';
-import EditIcon from '@mui/icons-material/Edit';
 import Spinner from "../../../loaders/Spinner";
+import EditIcon from '@mui/icons-material/Edit';
 import {useSnap} from '@mozeyinedu/hooks-lab';
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import { getConfig } from "../../../redux/admin/web_config";
-import { adminGetAllinvestmentsTnx } from "../../../redux/investmentPlans/investmentPlans";
+import { getAllTxn } from "../../../redux/admin/transfer";
 import filter from "@mozeyinedu/filter";
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -32,19 +32,19 @@ export default function Transactions() {
     const state = useSelector(state=>state);
     const [isLoading, setLoading] = useState(true)
     const {config} = state.config;
-    const {investmentTxnAdmin} = state.plans;
+    const {transferTxn} = state.transfer;
     const [inp, setInp] = useState('');
-    const [filteredData, setFilter] = useState(investmentTxnAdmin.data);
+    const [filteredData, setFilter] = useState(transferTxn.data);
     const num = 100
     const [count, setCount] = useState(num);
     const [opening, setOpening] = useState(false);
 
     useEffect(()=>{
-        dispatch(adminGetAllinvestmentsTnx())
+        dispatch(getAllTxn())
         dispatch(getConfig())
 
         setTimeout(()=>{
-          investmentTxnAdmin.isLoading && config.isLoading  ? setLoading(true) : setLoading(false)
+          transferTxn.isLoading && config.isLoading  ? setLoading(true) : setLoading(false)
         }, 500 )
 
         // user.isLoading && config.isLoading ? setLoading(true) : setLoading(false)
@@ -53,14 +53,14 @@ export default function Transactions() {
 
     useEffect(()=>{
       const newData = filter({
-        data: investmentTxnAdmin.data,
+        data: transferTxn.data,
         keys: [ "username", "email", "amount", "accountNumber"],
         input: inp
       })
   
       setFilter(newData)
   
-    }, [inp, investmentTxnAdmin])
+    }, [inp, transferTxn])
 
     const handleViewMore =()=>{
       setOpening(true)
@@ -75,16 +75,14 @@ export default function Transactions() {
   return (
     <div>
       <Header>
-        <Link href='/admin/investment' passHref>
-          <a className={router.asPath === '/admin/investment' ? 'active' : ''}>Config</a>
+        <Link href='/admin/transfer' passHref>
+        <a className={router.asPath === '/admin/transfer' ? 'active' : ''}>Config</a>
         </Link>
-        <Link href='/admin/investment/transactions' passHref>
-          <a className={router.asPath === '/admin/investment/transactions' ? 'active' : ''}>Transactions</a>
-        </Link>
-        <Link href='/admin/investment/plans' passHref>
-          <a className={router.asPath === '/admin/investment/plans' ? 'active' : ''}>Plans</a>
+        <Link href='/admin/transfer/transactions' passHref>
+        <a className={router.asPath === '/admin/transfer/transactions' ? 'active' : ''}>Transactions</a>
         </Link>
       </Header>
+
 
       {
         //check if config exist
@@ -93,7 +91,7 @@ export default function Transactions() {
         (
           <AdminWrapper>
             {
-              investmentTxnAdmin.data.length < 1 ? <Msg /> : 
+              transferTxn.data.length < 1 ? <Msg /> : 
               <>
                 <Header_Table>
                   <div className="search">
@@ -130,6 +128,7 @@ export default function Transactions() {
 
 function Hx({data, config, count}){
 
+  console.log(data)
     return (      
       <Table>
         <table>
