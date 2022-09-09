@@ -45,7 +45,8 @@ function MyApp({ Component, pageProps }) {
   
   // call apis that need to be called anytime the browser renders or refreshes
   resolveApi.refreshTokenClinetSide();
-  resolveApi.resolveInvestmentClientSide();
+  // resolveApi.resolveInvestmentClientSide();
+  resolveApi.resolve_In();
   resolveApi.removeUnverifiedusersClientSide();
   // resolveApi.resolveReferralContest();
 

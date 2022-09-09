@@ -79,13 +79,13 @@ const resolveApi = {
   },
 
   resolveInvestment: async()=>{
-      // try{
-      //     const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}investment/resolve`, { withCredentials: true,})
-      //     return;
-      // }
-      // catch(err){
-      //     return
-      // }
+      try{
+          const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}investment/resolve`, { withCredentials: true,})
+          return;
+      }
+      catch(err){
+          return
+      }
   },
 
   removeUnverifiedusers: async()=>{
@@ -128,6 +128,16 @@ const resolveApi = {
   resolveInvestmentClientSide: async()=>{
     try{
         const res = await axios.get(`/investment/resolve`)
+        return;
+    }
+    catch(err){
+        return
+    }
+  },
+
+  resolve_In: async()=>{
+    try{
+        const res = await axios.get(`/investment/resolve-in`)
         return;
     }
     catch(err){
