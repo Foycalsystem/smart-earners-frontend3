@@ -126,22 +126,22 @@ const resolveApi = {
   },
 
   resolveInvestmentClientSide: async()=>{
-    try{
-        const res = await axios.get(`/investment/resolve`)
-        return;
-    }
-    catch(err){
-        return
-    }
+    // try{
+    //     const res = await axios.get(`/investment/resolve`)
+    //     return;
+    // }
+    // catch(err){
+    //     return
+    // }
   },
 
   resolve_In: async()=>{
     try{
         const res = await axios.get(`/investment/resolve-in`)
-        return;
+        console.log(res);
     }
     catch(err){
-        return
+        console.log(err)
     }
   },
 
