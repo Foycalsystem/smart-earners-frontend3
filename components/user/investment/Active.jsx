@@ -63,7 +63,7 @@ export default function Active({data, txn}) {
                             <div style={{fontWeight: 600}}>Matures</div>
                             {
                               (function(){
-                                let maturein = data && new Date(data.createdAt).getTime() / 1000 + data.lifespan
+                                let maturein = data && new Date(data.createdAt).getTime() / 1000 + data.lifespan + 7200
                                 let formated = new Date(maturein * 1000);
 
                                 return (

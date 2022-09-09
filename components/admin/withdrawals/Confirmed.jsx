@@ -19,7 +19,7 @@ export default function Confirmed({data}) {
     useEffect(()=>{
         const newData = filter({
         data: data,
-        keys: [ "username", "email", "amount", "accountNumber", "_id"],
+        keys: [ "username", "email", "amount", "accountNumber", "walletAddress", "_id"],
         input: inp
         })
 
@@ -39,7 +39,7 @@ export default function Confirmed({data}) {
                   <div className="search">
                       <input
                       type="text"
-                      placeholder="Search by username, email, amount or id"
+                      placeholder="Search by wallet address, username, email, amount or id"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                       />

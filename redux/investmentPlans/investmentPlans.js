@@ -115,6 +115,28 @@ export const adminGetAllinvestmentsTnx= createAsyncThunk(
 )
 
 
+// resolve investment manually (matures investment)
+export const resolveInvestment= createAsyncThunk(
+    'config/resolveInvestment',
+    async(id, {rejectWithValue})=>{
+        try{
+            const res = await axios.put(`/investment/resolve-manual/${id}`, {}, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;  
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
 
 const initialState = {
     plans: { isLoading: false, status: false, msg: '', data: []},
@@ -122,6 +144,7 @@ const initialState = {
     update: { isLoading: false, status: false, msg: ''},
     deletePlan: { isLoading: false, status: false, msg: ''},
     investmentTxnAdmin: { isLoading: false, status: false, msg: '', data: []},
+    resolve: { isLoading: false, status: false, msg: ''}
 }
 
 export const plansReducer = createSlice({
@@ -134,6 +157,7 @@ export const plansReducer = createSlice({
             state.update.isLoading = false; state.update.status = false; state.update.msg = '';
             state.deletePlan.isLoading = false; state.deletePlan.status = false; state.deletePlan.msg = '';
             state.investmentTxnAdmin.isLoading = false; state.investmentTxnAdmin.status = false; state.investmentTxnAdmin.msg = '';
+            state.resolve.isLoading = false; state.resolve.status = false; state.resolve.msg = '';
         }
     },
     extraReducers: {
@@ -261,6 +285,29 @@ export const plansReducer = createSlice({
                 // to get rid of next js server error
                 state.investmentTxnAdmin.status = false;
                 state.investmentTxnAdmin.msg = 'Error occured';
+            }
+        }, 
+
+        // delete plan
+        [resolveInvestment.pending]: (state)=>{
+            state.resolve.isLoading = true;
+        },
+        [resolveInvestment.fulfilled]: (state, {payload})=>{
+            state.resolve.isLoading = false;
+            state.resolve.status = payload.status;
+            state.resolve.msg = payload.msg;
+            state.investmentTxnAdmin.data = payload.data;
+
+        },
+        [resolveInvestment.rejected]: (state, {payload})=>{
+            state.resolve.isLoading = false;
+            if(payload){
+                state.resolve.status = payload.status;
+                state.resolve.msg = payload.msg;
+            }else{
+                // to get rid of next js server error
+                state.resolve.status = false;
+                state.resolve.msg = 'Error occured';
             }
         }, 
     }

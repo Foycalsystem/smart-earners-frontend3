@@ -44,7 +44,7 @@ export default function Transactions() {
 
 
   useEffect(()=>{
-    setInitiated(txns.data.filter(data=> data.status === 'charge-created'));
+    setInitiated(txns.data.filter(data=> data.status === 'charge-created' && data.status !=='charge-failed'));
 
     setPending(txns.data.filter(data=> data.status === 'charge-pending'));
 

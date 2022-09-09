@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import styled from 'styled-components';
-import EditIcon from '@mui/icons-material/Edit';
 import Spinner from "../../../loaders/Spinner";
 import {useSnap} from '@mozeyinedu/hooks-lab';
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import { getConfig } from "../../../redux/admin/web_config";
-import { adminGetAllinvestmentsTnx } from "../../../redux/investmentPlans/investmentPlans";
+import { adminGetAllinvestmentsTnx, resolveInvestment, handleResetPlan } from "../../../redux/investmentPlans/investmentPlans";
 import filter from "@mozeyinedu/filter";
 import SearchIcon from '@mui/icons-material/Search';
+import conversionRate from "../../../utils/conversionRate";
+import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
+import { resolveApi } from "../../../utils/resolveApi"
 
 import {
   AdminWrapper,
@@ -54,7 +57,7 @@ export default function Transactions() {
     useEffect(()=>{
       const newData = filter({
         data: investmentTxnAdmin.data,
-        keys: [ "username", "email", "amount", "accountNumber"],
+        keys: [ "lifespan", "returnPercentage", "amount", "rewards"],
         input: inp
       })
   
@@ -71,7 +74,6 @@ export default function Transactions() {
       }, 1000)
     }
 
- 
   return (
     <div>
       <Header>
@@ -99,7 +101,7 @@ export default function Transactions() {
                   <div className="search">
                     <input
                       type="text"
-                      placeholder="Search by username, email, amount"
+                      placeholder="Search by amount, rewards, lifespan and returned percentage"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                     />
@@ -129,38 +131,107 @@ export default function Transactions() {
 
 
 function Hx({data, config, count}){
+  const {snap} = useSnap(.5)
+  const dispatch = useDispatch()
+  const state = useSelector(state=>state);
+  const {resolve} = state.plans;
+  const [pending, setPending] = useState(false);
 
-    return (      
-      <Table>
-        <table>
-              <thead>
-                <tr>
-                  <th>S/N</th>
-                  <th>Date</th>
-                  <th>Email</th>
-                  <th>Username</th>
-                  <th>Role</th>
-                  <th>Balance {`(${config.data.nativeCurrency})`}</th>
-                  <th>Balance {`(${config.data.tradeCurrency})`}</th>
-                  <th>Investor</th>
-                  <th>AC/No</th>
-                  <th>Verified</th>
-                  <th>Blocked</th>
-                  <th>Delete</th>
-                  <th>View</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.slice(0, count).map((user, i)=>{
-                  return (
-                    <tr key={user._id}>
-                      
-                    </tr>
-                  )
-                })}
-              </tbody>
-        </table>
-      </Table>
+   // clear any hanging msg from redux
+   useEffect(()=>{
+    dispatch(handleResetPlan())
+  }, [resolve])
+
+  const handleResolve=async(id)=>{
+    setPending(true)
+      if(!Cookies.get('accesstoken')){
+        await resolveApi.refreshTokenClinetSide()
+
+        setTimeout(()=>{
+          dispatch(resolveInvestment(id))
+        }, 100)
+        
+      }
+      else{
+        dispatch(resolveInvestment(id))
+      }
+  }
+
+  const customId = "custom-id-yes"
+  useEffect(()=>{
+    if(resolve.msg){
+      toast(resolve.msg, {
+        type: resolve.status ? 'success' : 'error',
+        toastId: customId
+      })         
+    }
+  }, [])
+
+  useEffect(()=>{
+    if(resolve.status){      
+      setPending(false)
+    }
+  }, [resolve])
+
+    return (   
+      <>
+        { pending ? <div style={{display: 'flex', justifyContent: 'center'}}><Spinner size="20px"/></div> : ""}
+        <Table>
+          <table>
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Current Balance {`(${config.data.nativeCurrency})`}</th>
+                    <th>Current Balance {`(${config.data.tradeCurrency})`}</th>
+                    <th>Date Created</th>
+                    <th>Date Mature</th>
+                    <th>Plan</th>
+                    <th>Amount Invested  {`(${config.data.nativeCurrency})`}</th>
+                    <th>Rewards {`(${config.data.nativeCurrency})`}</th>
+                    <th>Status</th>
+                    <th>Resolve</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.slice(0, count).map((data, i)=>{
+                    return (
+                      <tr key={data._id}>
+                          <td>{i+1}</td>
+                          <td>{data.userId ? data.userId.email : '(User Remove)'}</td>
+                          <td>{data.userId ? data.userId.username : '(User Remove)'}</td>
+                          <td>{data.currentBalance ? data.currentBalance.toFixed(4) : '---'}</td>
+                          <td>{data.currentBalance ? conversionRate.SEC_TO_USD(data.currentBalance, config.data.conversionRate).toFixed(4) : '---'}</td>
+                          <td>
+                            {data.createdAt && new Date(data.createdAt).toLocaleString()}
+                          </td>
+                          <td>
+                            {
+                              !data.isActive ? new Date(data.updatedAt).toLocaleString() : 
+                          
+                              (function(){
+                                let maturein = data && new Date(data.createdAt).getTime() / 1000 + data.lifespan + 7200
+                                let formated = new Date(maturein * 1000);
+
+                                return new Date(formated).toLocaleString()
+                              }())
+                            }
+                          </td>
+                          <td>{data.type}</td>
+                          <td>{data.amount && data.amount.toFixed(4)}</td>
+                          <td>{data.rewards && data.rewards.toFixed(4)}</td>
+                          <td style={{color: data.isActive ? '#c20' : 'var(--major-color-purest)'}}>{data.isActive ? 'Active' : 'Matured'}</td>
+
+                          <td {...snap()} onDoubleClick={pending ? ()=>{} : ()=>handleResolve(data._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: 'var(--bright-color)'}}>Resolve</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+          </table>
+        </Table>
+      </>   
+      
     )
 }
 

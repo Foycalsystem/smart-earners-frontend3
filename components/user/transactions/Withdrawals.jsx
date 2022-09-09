@@ -66,7 +66,7 @@ export default function Withdrawals({data, toggleState}) {
                     <Card toggleState={toggleState} key={data._id}>
                       <div style={
                         (function(){
-                          if(data.status === 'successful'){
+                          if(data.status === 'confirmed'){
                            return {color: 'green'}
                           }
                           else if(data.status === 'pending'){
@@ -81,7 +81,7 @@ export default function Withdrawals({data, toggleState}) {
                       </div>
                       {
                         (function(){
-                          if(data.status === 'successful'){
+                          if(data.status === 'confirmed'){
                             return (
                               <div>
                                 <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -213,6 +213,7 @@ const Card = styled.div`
     left: 0px;
     font-size: .65rem;
     right: 0px;
+    word-break: break-all;
     padding: 5px 10px;
     width: 100%;
     min-height: 100px;
