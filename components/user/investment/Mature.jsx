@@ -25,7 +25,7 @@ export default function Mature({data, txn}) {
             data.length < 1 ? <Msg /> :
             <Wrapper>
             {
-            data && data.slice(0, 5).map(data=>{
+            data && data.slice(0, 100).map(data=>{
                 return (
                   <Card key={data._id}>
                     <div className="title">
