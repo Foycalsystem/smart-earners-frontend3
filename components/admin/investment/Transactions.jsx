@@ -211,7 +211,7 @@ function Hx({data, config, count}){
                               !data.isActive ? new Date(data.updatedAt).toLocaleString() : 
                           
                               (function(){
-                                let maturein = data && new Date(data.createdAt).getTime() / 1000 + data.lifespan + 7200
+                                let maturein = data && new Date(data.createdAt).getTime() / 1000 + data.lifespan
                                 let formated = new Date(maturein * 1000);
 
                                 return new Date(formated).toLocaleString()
@@ -223,7 +223,9 @@ function Hx({data, config, count}){
                           <td>{data.rewards && data.rewards.toFixed(4)}</td>
                           <td style={{color: data.isActive ? '#c20' : 'var(--major-color-purest)'}}>{data.isActive ? 'Active' : 'Matured'}</td>
 
-                          <td {...snap()} onDoubleClick={pending ? ()=>{} : ()=>handleResolve(data._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: 'var(--bright-color)'}}>Resolve</td>
+                          {
+                            data.isActive ? <td {...snap()} onDoubleClick={pending ? ()=>{} : ()=>handleResolve(data._id)} style={{cursor: 'pointer', fontWeight: 'bold', color: 'var(--bright-color)'}}>Resolve</td> : <td></td>
+                          }
                       </tr>
                     )
                   })}
