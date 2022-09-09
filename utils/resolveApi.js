@@ -80,8 +80,8 @@ const resolveApi = {
 
   resolveInvestment: async()=>{
       try{
-          const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}investment/resolve`, { withCredentials: true,})
-          return;
+        const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}investment/resolve`, { withCredentials: true,})
+        return;
       }
       catch(err){
           return
@@ -127,7 +127,7 @@ const resolveApi = {
 
   resolveInvestmentClientSide: async()=>{
     try{
-        const res = await axios.get(`/investment/resolve`)
+        const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}investment/resolve`)
         return;
     }
     catch(err){

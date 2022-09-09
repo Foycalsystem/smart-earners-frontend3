@@ -23,7 +23,7 @@ export default function Profile({setChanging, setShowActive, shwowActive}) {
         if(!Cookies.get('accesstoken')){
             await resolveApi.refreshTokenClinetSide()
         }
-        await resolveApi.resolveInvestmentClientSide()
+        // await resolveApi.resolveInvestmentClientSide()
         setShowActive(true)
         setChanging(false)
          
@@ -33,7 +33,7 @@ export default function Profile({setChanging, setShowActive, shwowActive}) {
         if(!Cookies.get('accesstoken')){
             await resolveApi.refreshTokenClinetSide()
         }
-        await resolveApi.resolveInvestmentClientSide()
+        // await resolveApi.resolveInvestmentClientSide()
         setShowActive(false)
         setChanging(false)
     }
