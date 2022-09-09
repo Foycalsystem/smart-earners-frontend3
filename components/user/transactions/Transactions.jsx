@@ -33,7 +33,6 @@ export default function Transactions({toggleState}) {
 
   const [type, setType] = useState('all') // deposit, withdrawals or transfer
   const [deposit, setDeposit] = useState([])
-  const [depositt, setDepositT] = useState([])
   const [withdrawals, setWithdrawals] = useState([])
   const [transfer, setTransfer] = useState([])
   const [all, setAll] = useState([])
@@ -58,7 +57,7 @@ export default function Transactions({toggleState}) {
   useEffect(()=>{
 
     setDeposit(txns_users.data);
-    setDepositT(txns.data.filter(data=> data.type === 'deposit' && data.status !== 'canceled'));
+    // setDeposit(txns.data.filter(data=> data.type === 'deposit' && data.status !== 'canceled'));
 
     setWithdrawals(withdrawals_users.data);
     // setWithdrawals(txns.data.filter(data=> data.type === 'withdrawal'));
@@ -67,8 +66,7 @@ export default function Transactions({toggleState}) {
     // setTransfer(txns.data.filter(data=> data.type === 'transfer'));
 
     // setAll(txns.data.filter(data=> data.status !== 'canceled'));
-    setAllTnx([...transferTxn_users.data, ...withdrawals_users.data, ...txns_users.data]);
-
+    setAllTnx([...transferTxn_users.data, ...txns_users.data, ...withdrawals_users.data]);
 
     // sort base on time
     function resolveSort(a, b){
@@ -80,9 +78,8 @@ export default function Transactions({toggleState}) {
       return date1 - date2
     }
     setAll(allTnx.sort(resolveSort))
-    console.log(all)
-    
-  }, [txns])
+
+  }, [transferTxn_users, txns_users, withdrawals_users])
 
   return (
     <div>
@@ -140,7 +137,7 @@ export default function Transactions({toggleState}) {
             (
               (function(){
                 if(type==='all'){
-                  return <All isLoading={isLoading} toggleState={toggleState} data={all} id={txns.id}/>
+                  return <All isLoading={isLoading} toggleState={toggleState} data={allTnx} id={user.data._id}/>
                 }
                 else if(type==='deposit'){
                   return <Deposit toggleState={toggleState} data={deposit}/>
@@ -149,7 +146,7 @@ export default function Transactions({toggleState}) {
                   return <Withdrawals toggleState={toggleState} data={withdrawals}/>
                 }
                 else if(type==='transfer'){
-                    return <Transfer toggleState={toggleState} data={transfer} id={txns.id}/>
+                    return <Transfer toggleState={toggleState} data={transfer} id={user.data._id}/>
                 }
                 else{
                   return ''
