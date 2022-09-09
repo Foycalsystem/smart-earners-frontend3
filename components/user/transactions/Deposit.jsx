@@ -24,6 +24,7 @@ export default function Deposit({data, toggleState}) {
         })
 
         setFilter(newData)
+        console.log(data)
 
     }, [inp, data])
 
@@ -66,10 +67,10 @@ export default function Deposit({data, toggleState}) {
                           if(data.status === 'charge-created'){
                            return {color: '#c20'}
                           }
-                          else if(data.status === 'pending'){
+                          else if(data.status === 'charge-pending'){
                             return {color: 'var(--major-color-purest'}
                           }
-                          else if(data.status === 'successful'){
+                          else if(data.status === 'charge-confirmed'){
                             return {color: 'green'}
                           }
                         }())
@@ -78,7 +79,7 @@ export default function Deposit({data, toggleState}) {
                       </div>
                       {
                         (function(){
-                          if(data.status==='successful'){
+                          if(data.status==='charge-confirmed'){
                             return (
                               <div>
                                 <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -98,7 +99,7 @@ export default function Deposit({data, toggleState}) {
                               </div>
                             )
                           }
-                          else if(data.status === 'pending'){
+                          else if(data.status === 'charge-pending'){
                             return (
                               <div style={{cursor: 'pointer', fontSize: '.6rem'}}>
                                 <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>

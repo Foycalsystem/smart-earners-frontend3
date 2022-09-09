@@ -51,6 +51,31 @@ export const getWithdrawals= createAsyncThunk(
 )
 
 // get all withdrawal hxs
+export const getWithdrawals_users= createAsyncThunk(
+    'withdraw/getWithdrawals_users',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.get(`/withdrawal/get-all-transactions-users`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message, data: ''});
+            }
+        }
+    }
+)
+
+
+
+// get all withdrawal hxs
 export const getWithdrawal= createAsyncThunk(
     'withdraw/getWithdrawal',
     async(id, {rejectWithValue})=>{
@@ -124,6 +149,7 @@ export const handleConfirmed= createAsyncThunk(
 const initialState = {
     request: { isLoading: false, status: false, msg: ''},
     withdrawals: { isLoading: false, status: false, msg: '', data: []},
+    withdrawals_users: { isLoading: false, status: false, msg: '', data: []},
     withdrawal: { isLoading: false, status: false, msg: '', data: ''},
     reject: { isLoading: false, status: false, msg: ''},
     confirm: { isLoading: false, status: false, msg: ''},
@@ -136,6 +162,7 @@ export const withdrawalsReducer = createSlice({
         resetWithdrawal(state){
             state.request.isLoading = false;state.request.status = false; state.request.msg = ""
             state.withdrawals.isLoading = false;state.withdrawals.status = false; state.withdrawals.msg = "";
+            state.withdrawals_users.isLoading = false;state.withdrawals_users.status = false; state.withdrawals_users.msg = "";
             state.withdrawal.isLoading = false;state.withdrawal.status = false; state.withdrawal.msg = "";
             state.reject.isLoading = false;state.reject.status = false; state.reject.msg = "";
             state.confirm.isLoading = false;state.confirm.status = false; state.confirm.msg = "";
@@ -187,6 +214,30 @@ export const withdrawalsReducer = createSlice({
                 state.withdrawals.msg = 'Error occured';
             }
         },
+
+        // make withdrawal request
+        [getWithdrawals_users.pending]: (state)=>{
+            state.withdrawals_users.isLoading = true;
+        },
+        [getWithdrawals_users.fulfilled]: (state, {payload})=>{
+            state.withdrawals_users.isLoading = false;
+            state.withdrawals_users.status = payload.status;
+            state.withdrawals_users.msg = payload.msg;
+            state.withdrawals_users.data = payload.data;
+        },
+        [getWithdrawals_users.rejected]: (state, {payload})=>{
+            state.withdrawals_users.isLoading = false;
+            if(payload){
+                state.withdrawals_users.status = payload.status;
+                state.withdrawals_users.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.withdrawals_users.status = false;
+                state.withdrawals_users.msg = 'Error occured';
+            }
+        },
+
 
         // confirm request
         [handleConfirmed.pending]: (state)=>{

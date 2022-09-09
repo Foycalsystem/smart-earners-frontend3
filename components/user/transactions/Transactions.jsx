@@ -10,6 +10,9 @@ import Spinner from "../../../loaders/Spinner";
 import { getUser } from "../../../redux/auth/auth";
 import { getConfig } from "../../../redux/admin/web_config";
 import { getTnx } from "../../../redux/transactions/transactions";
+import {getWithdrawals_users} from  "../../../redux/admin/withdrawals";
+import {getAllTxn_users} from  "../../../redux/admin/transfer";
+import {getDepositTnx_users} from  "../../../redux/admin/deposit";
 
 import {
   AdminWrapper,
@@ -23,15 +26,23 @@ export default function Transactions({toggleState}) {
   const {txns} = state.transactions;
   const {user} = state.auth;
   const {config} = state.config;
+  const {withdrawals_users} = state.withdrawal;
+  const {txns_users} = state.deposit;
+  const {transferTxn_users} = state.transfer;
   const [isLoading, setLoading] = useState(true)
 
   const [type, setType] = useState('all') // deposit, withdrawals or transfer
   const [deposit, setDeposit] = useState([])
+  const [depositt, setDepositT] = useState([])
   const [withdrawals, setWithdrawals] = useState([])
   const [transfer, setTransfer] = useState([])
   const [all, setAll] = useState([])
+  const [allTnx, setAllTnx] = useState([])
 
   useEffect(()=>{
+    dispatch(getWithdrawals_users())
+    dispatch(getAllTxn_users())
+    dispatch(getDepositTnx_users())
     dispatch(getTnx())
     dispatch(getUser())
     dispatch(getConfig())
@@ -44,15 +55,31 @@ export default function Transactions({toggleState}) {
   }, [])
   
   useEffect(()=>{
-    setDeposit(txns.data.filter(data=> data.type === 'deposit' && data.status !== 'canceled'));
+    setDeposit(txns_users.data);
+    setDepositT(txns.data.filter(data=> data.type === 'deposit' && data.status !== 'canceled'));
 
-    setWithdrawals(txns.data.filter(data=> data.type === 'withdrawal'));
+    setWithdrawals(withdrawals_users.data);
+    // setWithdrawals(txns.data.filter(data=> data.type === 'withdrawal'));
 
-    setTransfer(txns.data.filter(data=> data.type === 'transfer'));
+    setTransfer(transferTxn_users.data);
+    // setTransfer(txns.data.filter(data=> data.type === 'transfer'));
 
-    setAll(txns.data.filter(data=> data.status !== 'canceled'));
+    // setAll(txns.data.filter(data=> data.status !== 'canceled'));
+    setAllTnx([...transferTxn_users.data, ...withdrawals_users.data, ...txns_users.data]);
+
+
+    // sort base on time
+    function resolveSort(a, b){
+      const date1 = new Date(a.createdAt
+        );
+      const date2 = new Date(b.createdAt
+        )
+
+      return date1 - date2
+    }
+    setAll(allTnx.sort(resolveSort))
+    
   }, [txns])
-
 
   return (
     <div>

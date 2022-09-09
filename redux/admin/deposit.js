@@ -50,6 +50,29 @@ export const getDepositTnx= createAsyncThunk(
     }
 )
 
+// get deposit for uers
+export const getDepositTnx_users= createAsyncThunk(
+    'deposit/getDepositTnx_uers',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.get(`/deposit/get-all-users`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;           
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message, data: ''});
+            }
+        }
+    }
+)
+
 // resolve deposit
 export const handleResolve= createAsyncThunk(
     'deposit/handleResolve',
@@ -78,6 +101,7 @@ export const handleResolve= createAsyncThunk(
 const initialState = {
     deposit: { isLoading: false, status: false, msg: ''},
     txns: { isLoading: false, status: false, msg: '', data:[]},
+    txns_users: { isLoading: false, status: false, msg: '', data:[]},
     resolveDeposit: { isLoading: false, status: false, msg: '', data:''},
 }
 
@@ -88,6 +112,7 @@ export const depositeReducer = createSlice({
         handleResetDeposit(state){
             state.deposit.isLoading = false; state.deposit.status = false; state.deposit.msg = ''
             state.txns.isLoading = false; state.txns.status = false; state.txns.msg = ''
+            state.txns_users.isLoading = false; state.txns_users.status = false; state.txns_users.msg = ''
             state.resolveDeposit.isLoading = false; state.resolveDeposit.status = false; state.resolveDeposit.msg = ''
         }
     },
@@ -136,6 +161,29 @@ export const depositeReducer = createSlice({
                 // to get rid of next js server error
                 state.txns.status = false;
                 state.txns.msg = 'Error occured';
+            }
+        },
+
+         // get deposit txn
+         [getDepositTnx_users.pending]: (state)=>{
+            state.txns_users.isLoading = true;
+        },
+        [getDepositTnx_users.fulfilled]: (state, {payload})=>{
+            state.txns_users.isLoading = false;
+            state.txns_users.status = payload.status;
+            state.txns_users.msg = payload.msg;
+            state.txns_users.data = payload.data;
+        },
+        [getDepositTnx_users.rejected]: (state, {payload})=>{
+            state.txns_users.isLoading = false;
+            if(payload){
+                state.txns_users.status = payload.status;
+                state.txns_users.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.txns_users.status = false;
+                state.txns_users.msg = 'Error occured';
             }
         },
 

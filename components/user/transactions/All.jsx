@@ -25,6 +25,7 @@ export default function All({data, toggleState, txns, id}) {
         })
 
         setFilter(newData)
+        console.log(data)
 
     }, [inp, data])
 
@@ -66,14 +67,14 @@ export default function All({data, toggleState, txns, id}) {
                         <div style={
                           (function(){
                               // deposit transactions``
-                              if(data.type === 'deposit'){
+                              if(data.code){
                                 return {color: 'var(--major-color-purest)'}
                               }
                               // transfer transactions
-                              else if(data.type === 'transfer'){
+                              else if(data.accountNumber){
                                 return {color: '#c20'}
                               }
-                              else if(data.type === 'withdrawal'){
+                              else if(data.walletAddress){
                                   return {color: 'green'}
                               }
                           }())
@@ -83,7 +84,7 @@ export default function All({data, toggleState, txns, id}) {
                         {
                           (function(){
                               // deposit transactions``
-                              if(data.type === 'deposit' && data.status==='successful'){
+                              if(data.code && data.status==='charge-confirmed'){
                                
                                   return (
                                   <div>
@@ -104,7 +105,7 @@ export default function All({data, toggleState, txns, id}) {
                                   </div>
                                   )
                               }
-                              else if(data.type === 'deposit' && data.status === 'pending'){
+                              else if(data.code && data.status === 'charge-pending'){
                                   return (
                                   <div style={{cursor: 'pointer', fontSize: '.6rem'}}>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -124,7 +125,7 @@ export default function All({data, toggleState, txns, id}) {
                                   </div>
                                   )
                               }
-                              else if(data.type === 'deposit' && data.status === 'charge-created'){
+                              else if(data.code && data.status === 'charge-created'){
                                   return (
                                   <div style={{cursor: 'pointer'}}>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -146,7 +147,7 @@ export default function All({data, toggleState, txns, id}) {
                               }
 
                               // transfer transactions
-                              else if(data.type === 'transfer' && id === data.sender._id){
+                              else if(data.accountNumber && id === data.sender._id){
                                   return (
                                   <div>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -167,7 +168,7 @@ export default function All({data, toggleState, txns, id}) {
                                   
                                   )
                               }
-                              else if(data.type === 'transfer' && id === data.receiver._id){
+                              else if(data.accountNumber && id === data.receiver._id){
                                   return (
                                   <div>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -188,7 +189,7 @@ export default function All({data, toggleState, txns, id}) {
                               }
 
                               // withdrawal transactions
-                              else if(data.type === 'withdrawal' && data.status === 'successful'){
+                              else if(data.walletAddress && data.status === 'confirmed'){
                                   return (
                                     <div>
                                       <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -207,7 +208,7 @@ export default function All({data, toggleState, txns, id}) {
                                     </div>
                                   )
                               }
-                              else if(data.type === 'withdrawal' && data.status === 'pending'){
+                              else if(data.walletAddress && data.status === 'pending'){``
                               return (
                                   <div>
                                   <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -226,7 +227,7 @@ export default function All({data, toggleState, txns, id}) {
                                   </div>
                               )
                               }
-                              else if(data.type === 'withdrawal' && data.status === 'rejected'){
+                              else if(data.walletAddress && data.status === 'rejected'){
                               return (
                                   <div>
                                   <div style={{cursor: 'pointer', fontSize: '.6rem'}} onClick={()=>toggle(index)}>{date.createdDate(data)}</div>
@@ -315,6 +316,7 @@ const Card = styled.div`
     font-size: .65rem;
     right: 0px;
     padding: 5px 10px;
+    word-break: break-all;
     width: 100%;
     min-height: 100px;
     z-index:1;

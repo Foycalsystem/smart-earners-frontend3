@@ -50,12 +50,36 @@ export const getAllTxn= createAsyncThunk(
     }
 )
 
+// resend verification link
+export const getAllTxn_users= createAsyncThunk(
+    'transfer/getAllTxn_users',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.get(`/transfer/get-all-transactions-users`, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;          
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message, data: ''});
+            }
+        }
+    }
+)
+
 
 
 
 const initialState = {
     check: { isLoading: false, status: false, msg: '', data: ''},
     transferTxn: { isLoading: false, status: false, msg: '', data: []},
+    transferTxn_users: { isLoading: false, status: false, msg: '', data: []},
 }
 
 export const transferReducer = createSlice({
@@ -64,6 +88,8 @@ export const transferReducer = createSlice({
     reducers: {
         resetTransfer(state){
             state.check.isLoading = false; state.check.status = false; state.check.msg = '';
+            state.transferTxn.isLoading = false; state.transferTxn.status = false; state.transferTxn.msg = '';
+            state.transferTxn_users.isLoading = false; state.transferTxn_users.status = false; state.transferTxn_users.msg = '';
         }
     },
     extraReducers: {
@@ -91,7 +117,7 @@ export const transferReducer = createSlice({
             }
         },
 
-        // check user
+        // get user admin
         [getAllTxn.pending]: (state)=>{
             state.transferTxn.isLoading = true;
         },
@@ -111,6 +137,29 @@ export const transferReducer = createSlice({
                 // to get rid of next js server error
                 state.transferTxn.status = false;
                 state.transferTxn.msg = 'Error occured';
+            }
+        },
+
+        // get user -users
+        [getAllTxn_users.pending]: (state)=>{
+            state.transferTxn_users.isLoading = true;
+        },
+        [getAllTxn_users.fulfilled]: (state, {payload})=>{
+            state.transferTxn_users.isLoading = false;
+            state.transferTxn_users.status = payload.status;
+            state.transferTxn_users.msg = payload.msg;
+            state.transferTxn_users.data = payload.data;
+        },
+        [getAllTxn_users.rejected]: (state, {payload})=>{
+            state.transferTxn_users.isLoading = false;
+            if(payload){
+                state.transferTxn_users.status = payload.status;
+                state.transferTxn_users.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.transferTxn_users.status = false;
+                state.transferTxn_users.msg = 'Error occured';
             }
         },
     }
