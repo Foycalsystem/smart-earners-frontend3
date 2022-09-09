@@ -38,6 +38,7 @@ export default function Transactions({toggleState}) {
   const [transfer, setTransfer] = useState([])
   const [all, setAll] = useState([])
   const [allTnx, setAllTnx] = useState([])
+  const [preparingData, setPreparingData] = useState(false)
 
   useEffect(()=>{
     dispatch(getWithdrawals_users())
@@ -48,13 +49,14 @@ export default function Transactions({toggleState}) {
     dispatch(getConfig())
 
     setTimeout(()=>{
-        config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
+        config.isLoadin && user.isLoadin && withdrawals_users.isLoading  && txns_users.isLoading && transferTxn_users.isLoading ? setLoading(true) : setLoading(false)
     }, 1000)
 
     // config.isLoadin && user.isLoadin && txns.isLoading ? setLoading(true) : setLoading(false)
   }, [])
   
   useEffect(()=>{
+
     setDeposit(txns_users.data);
     setDepositT(txns.data.filter(data=> data.type === 'deposit' && data.status !== 'canceled'));
 
@@ -78,6 +80,7 @@ export default function Transactions({toggleState}) {
       return date1 - date2
     }
     setAll(allTnx.sort(resolveSort))
+    console.log(all)
     
   }, [txns])
 
@@ -89,7 +92,7 @@ export default function Transactions({toggleState}) {
               <button onClick={()=>setType('all')} className="all">All</button>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
-                  txns.isLoading ? <Spinner size='10px' /> :
+                  isLoading ? <Spinner size='10px' /> :
                   (
                     all.length < 1 ? '---' : all.length
                   )
@@ -100,7 +103,7 @@ export default function Transactions({toggleState}) {
               <button onClick={()=>setType('deposit')} className="deposit">Deposit</button>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
-                  txns.isLoading ? <Spinner size='10px' /> :
+                  isLoading ? <Spinner size='10px' /> :
                   (
                     deposit.length < 1 ? '---' : deposit.length
                   )
@@ -112,7 +115,7 @@ export default function Transactions({toggleState}) {
               <button onClick={()=>setType('withdrawals')} className="withdrawals">Withdrawals</button>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
-                  txns.isLoading ? <Spinner size='10px' /> :
+                  isLoading ? <Spinner size='10px' /> :
                   (
                    withdrawals.length < 1 ? '---' :withdrawals.length
                   )
@@ -124,7 +127,7 @@ export default function Transactions({toggleState}) {
               <button onClick={()=>setType('transfer')} className="transfer">Transfer</button>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 {
-                  txns.isLoading ? <Spinner size='10px' /> :
+                  isLoading ? <Spinner size='10px' /> :
                   (
                     transfer.length < 1 ? '---' : transfer.length
                   )
@@ -137,7 +140,7 @@ export default function Transactions({toggleState}) {
             (
               (function(){
                 if(type==='all'){
-                  return <All txns={txns} toggleState={toggleState} data={all} id={txns.id}/>
+                  return <All isLoading={isLoading} toggleState={toggleState} data={all} id={txns.id}/>
                 }
                 else if(type==='deposit'){
                   return <Deposit toggleState={toggleState} data={deposit}/>

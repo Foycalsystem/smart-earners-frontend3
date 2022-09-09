@@ -12,7 +12,7 @@ import {
 } from '../../admin/styles';
 
 
-export default function All({data, toggleState, txns, id}) {
+export default function All({data, toggleState, isLoading, id}) {
     const [inp, setInp] = useState('');
     const [filteredData, setFilter] = useState(data);
     const [clicked, setClicked] = useState(false)
@@ -25,7 +25,6 @@ export default function All({data, toggleState, txns, id}) {
         })
 
         setFilter(newData)
-        console.log(data)
 
     }, [inp, data])
 
@@ -37,7 +36,7 @@ export default function All({data, toggleState, txns, id}) {
     }
 
     return (
-        txns.isLoading ? <Spinner /> : 
+        isLoading ? <Spinner /> : 
         <div>
             <Header_Table>
               {
