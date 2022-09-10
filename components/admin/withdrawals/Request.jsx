@@ -86,7 +86,7 @@ export default function Request({data}) {
                 <div className="search">
                     <input
                     type="text"
-                    placeholder="Search by username, email, amount or id"
+                    placeholder="Search by username, email, amount, id or wallet"
                     value={inp || ''}
                     onChange={(e)=>setInp(e.target.value)}
                     />

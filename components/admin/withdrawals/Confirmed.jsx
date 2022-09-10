@@ -39,7 +39,7 @@ export default function Confirmed({data}) {
                   <div className="search">
                       <input
                       type="text"
-                      placeholder="Search by wallet address, username, email, amount or id"
+                      placeholder="Search by wallet address, username, email, amount, wallet or id"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                       />

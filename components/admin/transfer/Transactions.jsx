@@ -54,7 +54,7 @@ export default function Transactions() {
     useEffect(()=>{
       const newData = filter({
         data: transferTxn.data,
-        keys: [ "username", "email", "amount", "accountNumber"],
+        keys: [ "username", "email", "amount"],
         input: inp
       })
   

@@ -78,7 +78,7 @@ export default function Users({userInfo}) {
   useEffect(()=>{
     const newData = filter({
       data: users.data,
-      keys: [ "username", "email", "amount", "accountNumber"],
+      keys: [ "username", "email", "amount", "createdAt", "updatedAt", "accountNumber"],
       input: inp
     })
 

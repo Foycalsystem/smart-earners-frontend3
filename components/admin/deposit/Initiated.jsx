@@ -42,7 +42,7 @@ export default function Initiated({data}) {
     useEffect(()=>{
         const newData = filter({
         data: data,
-        keys: [ "code", "nativeAmountExpected", "nativeAmountReceived", "tradeAmountExpected", "tradeAmountReceived", "_id"],
+        keys: [ "username", "email", "code", "nativeAmountExpected", "nativeAmountReceived", "tradeAmountExpected", "tradeAmountReceived", "_id"],
         input: inp
         })
 
@@ -113,7 +113,7 @@ export default function Initiated({data}) {
                   <div className="search">
                       <input
                       type="text"
-                      placeholder="Search by code, amount or id"
+                      placeholder="Search username, email, by code, amount or id"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                       />
