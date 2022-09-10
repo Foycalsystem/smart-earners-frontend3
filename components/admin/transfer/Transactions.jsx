@@ -136,24 +136,22 @@ function Hx({data, config, count}){
                 <tr>
                   <th>S/N</th>
                   <th>Date</th>
-                  <th>Email</th>
-                  <th>Username</th>
-                  <th>Role</th>
-                  <th>Balance {`(${config.data.nativeCurrency})`}</th>
-                  <th>Balance {`(${config.data.tradeCurrency})`}</th>
-                  <th>Investor</th>
-                  <th>AC/No</th>
-                  <th>Verified</th>
-                  <th>Blocked</th>
-                  <th>Delete</th>
-                  <th>View</th>
+                  <th>Sender</th>
+                  <th>Receiver</th>
+                  <th>Amount {`(${config.data.nativeCurrency})`}</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {data.slice(0, count).map((user, i)=>{
+                {data.slice(0, count).map((data, i)=>{
                   return (
-                    <tr key={user._id}>
-                      
+                    <tr key={data._id}>
+                      <td>{i+1}</td>
+                      <td>{data.createdAt && new Date(data.createdAt).toLocaleString()}</td>
+                      <td>{data.sender ? data.sender.username : 'User Removed'}</td>
+                      <td>{data.receiver ? data.receiver.username : 'User Removed'}</td>
+                      <td>{data.amount && data.amount.toFixed(2)}</td>
+                      <td>{data.status}</td>
                     </tr>
                   )
                 })}
