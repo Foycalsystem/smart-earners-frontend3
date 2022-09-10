@@ -57,7 +57,7 @@ export default function Transactions() {
     useEffect(()=>{
       const newData = filter({
         data: investmentTxnAdmin.data,
-        keys: [ "lifespan", "returnPercentage", "amount", "rewards"],
+        keys: [ "username", "email", "lifespan", "returnPercentage", "amount", "rewards"],
         input: inp
       })
   
@@ -101,7 +101,7 @@ export default function Transactions() {
                   <div className="search">
                     <input
                       type="text"
-                      placeholder="Search by amount, rewards, lifespan and returned percentage"
+                      placeholder="Search by username, email, amount, rewards, lifespan and returned percentage"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                     />

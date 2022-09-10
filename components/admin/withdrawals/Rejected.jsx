@@ -36,7 +36,7 @@ export default function Rejected({data}) {
                   <div className="search">
                       <input
                       type="text"
-                      placeholder="Search by username, email, amount or id"
+                      placeholder="Search by username, email, amount, wallet or id"
                       value={inp || ''}
                       onChange={(e)=>setInp(e.target.value)}
                       />

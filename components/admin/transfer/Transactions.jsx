@@ -54,7 +54,7 @@ export default function Transactions() {
     useEffect(()=>{
       const newData = filter({
         data: transferTxn.data,
-        keys: [ "username", "email", "amount", "accountNumber"],
+        keys: [ "username", "email", "amount"],
         input: inp
       })
   
@@ -148,8 +148,8 @@ function Hx({data, config, count}){
                     <tr key={data._id}>
                       <td>{i+1}</td>
                       <td>{data.createdAt && new Date(data.createdAt).toLocaleString()}</td>
-                      <td>{data.sender ? data.sender.username : 'User Removed'}</td>
-                      <td>{data.receiver ? data.receiver.username : 'User Removed'}</td>
+                      <td>{data.sender ? `${data.sender.username} (${data.sender.email})` : 'User Removed'}</td>
+                      <td>{data.receiver ? `${data.receiver.username} (${data.receiver.email})` : 'User Removed'}</td>
                       <td>{data.amount && data.amount.toFixed(2)}</td>
                       <td>{data.status}</td>
                     </tr>
