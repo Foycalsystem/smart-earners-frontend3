@@ -185,8 +185,8 @@ export default function Contest() {
                                         <td>
                                             {data.updatedAt && new Date(data.updatedAt).toLocaleString()}
                                         </td>
-                                        <td>{data.userId.username ? data.userId.username : '(User Removed)'}</td>
-                                        <td>{data.userId.referree && data.userId.referree.length}</td>
+                                        <td>{data.userId ? data.userId.username : '(User Removed)'}</td>
+                                        <td>{data.userId && data.userId.referree.length}</td>
                                         <td>{data.point}</td>
                                         <td>{data.amountRewards}</td>
                                       </tr>
