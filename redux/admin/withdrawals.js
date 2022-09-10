@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { BACKEND_BASE_URL } from '../../utils/config';
 
 
-// request
+// request (lefted to auth reducer)
 export const withdawalRequest= createAsyncThunk(
     'withdraw/withdawalRequest',
     async(data, {rejectWithValue})=>{
@@ -170,27 +170,27 @@ export const withdrawalsReducer = createSlice({
     },
     extraReducers: {
 
-        // make withdrawal request
-        [withdawalRequest.pending]: (state)=>{
-            state.request.isLoading = true;
-        },
-        [withdawalRequest.fulfilled]: (state, {payload})=>{
-            state.request.isLoading = false;
-            state.request.status = payload.status;
-            state.request.msg = payload.msg;
-        },
-        [withdawalRequest.rejected]: (state, {payload})=>{
-            state.request.isLoading = false;
-            if(payload){
-                state.request.status = payload.status;
-                state.request.msg = payload.msg;
+        // // make withdrawal request (lefted to auth reducer slice)
+        // [withdawalRequest.pending]: (state)=>{
+        //     state.request.isLoading = true;
+        // },
+        // [withdawalRequest.fulfilled]: (state, {payload})=>{
+        //     state.request.isLoading = false;
+        //     state.request.status = payload.status;
+        //     state.request.msg = payload.msg;
+        // },
+        // [withdawalRequest.rejected]: (state, {payload})=>{
+        //     state.request.isLoading = false;
+        //     if(payload){
+        //         state.request.status = payload.status;
+        //         state.request.msg = payload.msg;
 
-            }else{
-                // to get rid of next js server error
-                state.request.status = false;
-                state.request.msg = 'Error occured';
-            }
-        },
+        //     }else{
+        //         // to get rid of next js server error
+        //         state.request.status = false;
+        //         state.request.msg = 'Error occured';
+        //     }
+        // },
 
         // make withdrawal request
         [getWithdrawals.pending]: (state)=>{

@@ -96,8 +96,11 @@ const Plans = ({userInfo}) => {
 
     
     useEffect(()=>{
-      setActiveTxn(txn.data.filter(data=> data.isActive));
-      setMaturedTxn(txn.data.filter(data=> !data.isActive));
+      if(txn.data.length > 0){
+        setActiveTxn(txn.data.filter(data=> data.isActive));
+        setMaturedTxn(txn.data.filter(data=> !data.isActive));
+      }
+
     }, [txn])
 
   return (
