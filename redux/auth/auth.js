@@ -407,7 +407,7 @@ export const investPlan= createAsyncThunk(
     }
 )
 
-
+// get investment transactions
 export const getTxn= createAsyncThunk(
     'investment/getTxn',
     async(data, {rejectWithValue})=>{
@@ -429,6 +429,30 @@ export const getTxn= createAsyncThunk(
         }
     }
 )
+
+// pay users or remove coin from users
+export const payusers= createAsyncThunk(
+    'payusers/payusers',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.put(`/payusers/${data.id}`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data; 
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message});
+            }
+        }
+    }
+)
+
 
 const initialState = {
     signup: { isLoading: false, status: false, msg: ''},
@@ -453,6 +477,8 @@ const initialState = {
     invest: { isLoading: false, status: false, msg: ''},
     // get investment transactions
     txn: { isLoading: false, status: false, msg: '', data: []},
+    //pay users or remove coin from users
+    payUsers: { isLoading: false, status: false, msg: '', data: ''},
 }
 
 export const authReducer = createSlice({
@@ -479,6 +505,7 @@ export const authReducer = createSlice({
             state.pay.isLoading = false; state.pay.status = false; state.pay.msg = '';
             state.invest.isLoading = false; state.invest.status = false; state.invest.msg = '';
             state.txn.isLoading = false; state.txn.status = false; state.txn.msg = '';
+            state.payUsers.isLoading = false; state.payUsers.status = false; state.payUsers.msg = '';
         }
     },
     extraReducers: {
@@ -943,6 +970,41 @@ export const authReducer = createSlice({
                 state.invest.msg = 'Error occured';
             }
         }, 
+
+        // pay users or remove coin from users
+        [payusers.pending]: (state)=>{
+            state.payUsers.isLoading = true;
+        },
+        [payusers.fulfilled]: (state, {payload})=>{
+            state.payUsers.isLoading = false;
+            state.payUsers.status = payload.status;
+            state.payUsers.msg = payload.msg;
+            
+            // get the current users
+            const currentUsers = JSON.parse(JSON.stringify(state.users.data));
+            const returnedUserIndex = currentUsers.findIndex(user=>{
+                return user._id === payload.data._id
+            })
+
+            if(returnedUserIndex !==-1){
+                currentUsers[returnedUserIndex] = payload.data
+                state.users.data = currentUsers;
+            }else{
+                state.users.data = currentUsers;
+            }
+        },
+        [payusers.rejected]: (state, {payload})=>{
+            state.user.isLoading = false;
+            if(payload){
+                state.payUsers.status = payload.status;
+                state.payUsers.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.payUsers.status = false;
+                state.payUsers.msg = 'Error occured';
+            }
+        },
     }
     
 })

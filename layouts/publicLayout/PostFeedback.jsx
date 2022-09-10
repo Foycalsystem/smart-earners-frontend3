@@ -20,6 +20,7 @@ export default function PostFeedback(){
       name: '',
       body: ''
     }
+    
     const [inp, setInp] = useState(initialState)
     const getInp =(e)=>{
       const {name, value} = e.target;
