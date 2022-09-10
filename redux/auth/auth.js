@@ -453,6 +453,29 @@ export const payusers= createAsyncThunk(
     }
 )
 
+// request for withdrawal
+export const withdawalRequest= createAsyncThunk(
+    'withdraw/withdawalRequest',
+    async(data, {rejectWithValue})=>{
+        try{
+            const res = await axios.post(`/withdrawal/request`, data, {
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('accesstoken')}`
+                }
+            });
+            return res.data;           
+        }
+        catch(err){
+            if(err.response.data){
+                return rejectWithValue({status: false, msg: err.response.data.msg});
+            }
+            else{
+                return rejectWithValue({status: false, msg: err.message, data: ''});
+            }
+        }
+    }
+)
+
 
 const initialState = {
     signup: { isLoading: false, status: false, msg: ''},
@@ -479,6 +502,8 @@ const initialState = {
     txn: { isLoading: false, status: false, msg: '', data: []},
     //pay users or remove coin from users
     payUsers: { isLoading: false, status: false, msg: '', data: ''},
+    // withdrawal request
+    request: { isLoading: false, status: false, msg: '', data: ''},
 }
 
 export const authReducer = createSlice({
@@ -506,6 +531,7 @@ export const authReducer = createSlice({
             state.invest.isLoading = false; state.invest.status = false; state.invest.msg = '';
             state.txn.isLoading = false; state.txn.status = false; state.txn.msg = '';
             state.payUsers.isLoading = false; state.payUsers.status = false; state.payUsers.msg = '';
+            state.request.isLoading = false; state.request.status = false; state.request.msg = '';
         }
     },
     extraReducers: {
@@ -1003,6 +1029,38 @@ export const authReducer = createSlice({
                 // to get rid of next js server error
                 state.payUsers.status = false;
                 state.payUsers.msg = 'Error occured';
+            }
+        },
+
+        // make withdrawal request
+        [withdawalRequest.pending]: (state)=>{
+            state.request.isLoading = true;
+        },
+        [withdawalRequest.fulfilled]: (state, {payload})=>{
+            state.request.isLoading = false;
+            state.request.status = payload.status;
+            state.request.msg = payload.msg;
+
+            // get the returned data (amount withdrawned) and remove it from the user total balance
+            const currentState = JSON.parse(JSON.stringify(state.user.data));
+            currentState.amount = currentState.amount - payload.data.amount;
+            state.user.data = currentState;
+
+            // update the txn list
+            const currentStateTxn = JSON.parse(JSON.stringify(state.txn.data));
+            currentStateTxn.push(payload.data.data)
+            state.txn.data = currentStateTxn;
+        },
+        [withdawalRequest.rejected]: (state, {payload})=>{
+            state.request.isLoading = false;
+            if(payload){
+                state.request.status = payload.status;
+                state.request.msg = payload.msg;
+
+            }else{
+                // to get rid of next js server error
+                state.request.status = false;
+                state.request.msg = 'Error occured';
             }
         },
     }

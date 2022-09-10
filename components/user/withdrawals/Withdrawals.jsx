@@ -4,11 +4,12 @@ import {useSelector, useDispatch} from 'react-redux';
 import Loader_ from "../loader/Loader";
 import Spinner from "../../../loaders/Spinner";
 import {useSnap} from '@mozeyinedu/hooks-lab'
-import { withdawalRequest, resetWithdrawal} from "../../../redux/admin/withdrawals";
+import { resetWithdrawal} from "../../../redux/admin/withdrawals";
 import { getConfig } from "../../../redux/admin/web_config";
 import { resolveApi } from "../../../utils/resolveApi"
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify';
+import { withdawalRequest } from "../../../redux/auth/auth";
 
 import { 
   Wrapper,
@@ -39,9 +40,8 @@ export default function Withdrawals({userInfo}){
       dispatch(resetWithdrawal())
     }, [])
 
-    const {user} = state.auth;
+    const {user, request} = state.auth;
     const {config} = state.config;
-    const {request} = state.withdrawal;
 
     const initialState = {
       walletAddress: '',
