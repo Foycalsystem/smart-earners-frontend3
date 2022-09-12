@@ -14,7 +14,7 @@ const resolveApi = {
       try{
           if(refreshtoken){
               // const res = await fetch('http://localhost:4000/')
-              const res = await axios.get(`${url}auth/generate-accesstoken`, {
+              const res = await axios.get(`${'http://localhost:4000/'}auth/generate-accesstoken`, {
                 withCredentials: true,
                 headers: {
                       "Authorization": `Bearer ${refreshtoken}`,

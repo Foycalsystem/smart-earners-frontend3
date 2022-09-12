@@ -96,6 +96,21 @@ function MyApp({ Component, pageProps }) {
       <ToggleBtn toggleState={toggleState} onClick={toggle}>
         <MdLightMode style={{color: toggleState ? '#fff' : '#000'}} />
       </ToggleBtn>
+      {
+        process.env.NEXT_PUBLIC_MODE === 'test' ? 
+          <div style={{
+            position: 'fixed', 
+            top: 0, 
+            right: '40px', 
+            color: '#fff', 
+            background: 'red', 
+            padding: '2px', 
+            fontSize: '.7rem', 
+            zIndex: 10000
+          }}>
+            {`(${process.env.NEXT_PUBLIC_MODE} mode)`}
+          </div> : ''
+      }
       
 
       <Layouts userInfo={userInfo} toggleState={toggleState}>

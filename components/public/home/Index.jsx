@@ -8,6 +8,7 @@ import Plans from "./Plans"
 
 export default function Index({userInfo}) {
 
+
     return (
         <div>
             <Hero userInfo={userInfo}/>
