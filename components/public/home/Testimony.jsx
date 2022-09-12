@@ -173,7 +173,7 @@ function Card_1({data, userInfo}){
             </Ava>
             <div style={{textAlign: 'center', fontSize: '.8rem'}}>{data.body}</div>
             <HeroSectionSubTitle style={{fontSize: '1rem', margin: '2px'}}>{data.name}</HeroSectionSubTitle>
-            <div style={{color: '#F1AD00', fontSize: '.8rem'}}>{moment(data.date).calendar()}</div>       
+            <div style={{color: '#F1AD00', fontSize: '.8rem'}}>{moment(data.createdAt).calendar()}</div>       
             {
                 userInfo.type === 'admin' ? 
                 (
