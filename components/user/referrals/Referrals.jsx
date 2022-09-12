@@ -14,6 +14,11 @@ import { RWebShare } from "react-web-share";
 import {useRouter} from 'next/router'
 const MODE = process.env.NEXT_PUBLIC_MODE;
 
+const url = process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : (MODE === 'test' ? 'https://jellyfish-app-3ccuo.ondigitalocean.app/' : 'https://api.teamsmartearners.com/')
+
+const url2 = process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'
+
+
 
 export default function Referrals({userInfo}) {
   const dispatch = useDispatch()
@@ -84,7 +89,7 @@ export default function Referrals({userInfo}) {
                 <RWebShare
                   data={{
                     text: "Hey 👋 friend! \nI'm inviting you to join smartearners, the best forex trading management platform, use this link to register, and start earning weekly profit",
-                    url: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : (MODE === 'test' ? "https://jellyfish-app-3ccuo.ondigitalocean.app/" : 'https://teamsmartearners.com')}/signup?refcode=${user.data.referralCode}`,
+                    url: `${url}/signup?refcode=${user.data.referralCode}`,
                     title: "SmartEarners",
                   }}>
                   <div style={{border: '1px solid #dfdfdf', width: '75px', margin: '6px auto', padding: '3px' , borderRadius: '5px', fontWeight: '600', userSelect: 'none', cursor:'pointer'}}>Share 🔗</div>

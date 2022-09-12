@@ -4,20 +4,17 @@ import cookie from 'cookie';
 import Cookies from 'js-cookie'
 const MODE = process.env.NEXT_PUBLIC_MODE;
 
+const url = process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : (MODE === 'test' ? 'https://jellyfish-app-3ccuo.ondigitalocean.app/' : 'https://api.teamsmartearners.com/')
+
+const url2 = process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'
+
 
 const resolveApi = {
   refreshToken: async(context, refreshtoken)=>{
       try{
           if(refreshtoken){
               // const res = await fetch('http://localhost:4000/')
-              // const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}auth/generate-accesstoken`, {
-              //   withCredentials: true,
-              //   headers: {
-              //         "Authorization": `Bearer ${refreshtoken}`,
-              //       }
-              //   })
-
-              const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : (MODE === 'test' ? 'https://jellyfish-app-3ccuo.ondigitalocean.app/' : 'https://api.teamsmartearners.com/')}auth/generate-accesstoken`, {
+              const res = await axios.get(`${url}auth/generate-accesstoken`, {
                 withCredentials: true,
                 headers: {
                       "Authorization": `Bearer ${refreshtoken}`,
@@ -88,7 +85,7 @@ const resolveApi = {
 
   resolveInvestment: async()=>{
       try{
-          const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : (MODE === 'test' ? 'https://jellyfish-app-3ccuo.ondigitalocean.app/' : 'https://api.teamsmartearners.com/')}investment/resolve`, { withCredentials: true,})
+          const res = await axios.get(`${url}investment/resolve`, { withCredentials: true,})
           return;
       }
       catch(err){
@@ -100,7 +97,7 @@ const resolveApi = {
       try{
           // const res = await axios.delete(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}auth/remove-unverified-users`, { withCredentials: true,})
 
-          const res = await axios.delete(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : (MODE === 'test' ? 'https://jellyfish-app-3ccuo.ondigitalocean.app/' : 'https://api.teamsmartearners.com/')}auth/remove-unverified-users`, { withCredentials: true,})
+          const res = await axios.delete(`${url}auth/remove-unverified-users`, { withCredentials: true,})
 
           return;
       }
@@ -113,7 +110,7 @@ const resolveApi = {
     try{
         // const res = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : 'https://api.teamsmartearners.com/'}referral-contest/resolve`, { withCredentials: true,});
 
-        const rest = await axios.get(`${process.env.NODE_ENV === 'development' ? `http://localhost:4000/` : (MODE === 'test' ? 'https://jellyfish-app-3ccuo.ondigitalocean.app/' : 'https://api.teamsmartearners.com/')}referral-contest/resolve`, { withCredentials: true,})
+        const rest = await axios.get(`${url}referral-contest/resolve`, { withCredentials: true,})
         return;
     }
     catch(err){
