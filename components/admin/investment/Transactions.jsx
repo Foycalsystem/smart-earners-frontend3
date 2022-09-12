@@ -201,8 +201,8 @@ function Hx({data, config, count}){
                           <td>{i+1}</td>
                           <td>{data.userId ? data.userId.email : '(User Remove)'}</td>
                           <td>{data.userId ? data.userId.username : '(User Remove)'}</td>
-                          {/* <td>{data.currentBalance ? data.currentBalance.toFixed(4) : '---'}</td>
-                          <td>{data.currentBalance ? conversionRate.SEC_TO_USD(data.currentBalance, config.data.conversionRate).toFixed(4) : '---'}</td> */}
+                          {/* <td>{data.currentBalance ? data.currentBalance.toFixed(4) : '---'}</td> */}
+                          {/* <td>{data.currentBalance ? conversionRate.SEC_TO_USD(data.currentBalance, config.data.conversionRate).toFixed(4) : '---'}</td> */}
                           <td>
                             {data.createdAt && new Date(data.createdAt).toLocaleString()}
                           </td>
