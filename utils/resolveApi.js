@@ -148,9 +148,11 @@ const resolveApi = {
   resolve_In: async()=>{
     try{
         const res = await axios.get(`/investment/resolve-in`)
+        console.log(res.data)
         return
     }
     catch(err){
+      console.log(err)
         return
     }
   },
